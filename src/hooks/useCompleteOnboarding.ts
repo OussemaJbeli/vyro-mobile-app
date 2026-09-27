@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { commitOnboarding } from '@/db/onboarding';
+import { applyRoutine } from '@/db/routine';
 import { scheduleRepo } from '@/db/repositories/schedule';
 import { useAppStore } from '@/store/appStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { toast } from '@/store/uiStore';
 import { type OnboardingDraft } from '@/types/onboarding';
+import { weekStart } from '@/domain/scheduling/recurrence';
 import { today } from '@/utils/dates';
 import { toUserMessage } from '@/utils/errors';
 
@@ -23,10 +25,14 @@ export function useCompleteOnboarding() {
   const complete = async (draft: OnboardingDraft): Promise<boolean> => {
     setBusy(true);
     try {
-      const goalTitle = draft.goal ? t(`onboarding:goal.options.${draft.goal.kind}`) : '';
+      const goalTitle = (kind: string): string =>
+        t(`onboarding:goal.options.${kind}` as 'onboarding:goal.options.custom');
       await commitOnboarding(db, draft, { today: today(), goalTitle });
-      // The starter plan's rules become real sessions right away.
-      await scheduleRepo(db).materialize(today());
+      // The VYRO week: the same week every week, filled from this Monday.
+      const vyro = draft.plan === 'vyro' && draft.acceptPlan;
+      if (vyro) await applyRoutine(db, { today: today(), force: true });
+      // The plan's rules become real sessions right away.
+      await scheduleRepo(db).materialize(vyro ? weekStart(today(), 1) : today());
       const settings = useSettingsStore.getState();
       settings.hydrate({
         ...settings.values,

@@ -42,9 +42,13 @@ export async function hasPin(): Promise<boolean> {
   }
 }
 
+/** Lets React paint the loading state before the (CPU-heavy) hash starts. */
+const nextFrame = () => new Promise<void>((r) => setTimeout(r, 32));
+
 export async function setPin(pin: string): Promise<void> {
   if (!isValidPin(pin)) throw new Error('PIN must be 4–6 digits');
   const salt = Crypto.getRandomBytes(16);
+  await nextFrame();
   const hash = await hashPin(pin, salt);
   await SecureStore.setItemAsync(K.salt, toHex(salt));
   await SecureStore.setItemAsync(K.iter, String(PBKDF2_ITERATIONS));
@@ -69,9 +73,14 @@ export async function verifyPin(pin: string, now = Date.now()): Promise<VerifyRe
     SecureStore.getItemAsync(K.iter),
   ]);
   if (!hash || !salt) return { ok: false, waitMs: 0 };
-  const ok = sameDigest(await hashPin(pin, fromHex(salt), Number(iter) || PBKDF2_ITERATIONS), hash);
+  await nextFrame();
+  const rounds = Number(iter) || PBKDF2_ITERATIONS;
+  const ok = sameDigest(await hashPin(pin, fromHex(salt), rounds), hash);
   if (ok) {
     await SecureStore.deleteItemAsync(K.attempts);
+    // A PIN saved with the old, slower round count: re-hash it in the background so the
+    // next unlock is fast.
+    if (rounds > PBKDF2_ITERATIONS) void setPin(pin).catch(() => {});
     return { ok: true };
   }
   const a = await readAttempts();

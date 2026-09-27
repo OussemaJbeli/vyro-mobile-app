@@ -7,6 +7,7 @@ import { setPin } from '@/services/security/lock';
 import { makeStyles } from '@/theme';
 import { logger } from '@/utils/logger';
 
+import { PinBusy } from './PinBusy';
 import { PinPad } from './PinPad';
 
 /** Choose + confirm a PIN, then store its salted hash (never the PIN). */
@@ -53,6 +54,7 @@ export function PinSetup({ onDone }: { onDone: () => void }) {
         onSubmit={(v) => void submit(v)}
         disabled={busy}
       />
+      {busy ? <PinBusy label={t('lock.saving')} /> : null}
     </View>
   );
 }

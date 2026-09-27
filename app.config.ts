@@ -9,7 +9,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: 'VYRO',
   slug: 'vyro',
   owner: 'devopst34',
-  version: '1.0.0',
+  version: '1.1.0',
   scheme: 'vyro',
   // Portrait everywhere (locked at startup); the running screen unlocks rotation (step 19).
   orientation: 'default',
@@ -63,7 +63,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-image-picker',
       {
         photosPermission: 'VYRO lets you import a photo; a private copy stays on this device.',
-        cameraPermission: false,
+        // Don't set cameraPermission: false here: it strips CAMERA from the whole app
+        // (1.0.0 shipped without it, so "Take photo" could never ask).
+        cameraPermission:
+          'VYRO uses the camera to take private progress photos that stay on this device.',
         microphonePermission: false,
       },
     ],

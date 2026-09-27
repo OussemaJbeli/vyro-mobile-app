@@ -9,7 +9,7 @@ import { type Database, type Db } from './client';
 import { tables } from './mappers';
 import { insertModel, nowIso } from './repositories/base';
 import { profileRepo } from './repositories/profile';
-import { routineTemplates, routineWeek } from './seed/data/routine';
+import { GYM_REPS, GYM_SETS, routineTemplates, routineWeek } from './seed/data/routine';
 import { seedId } from './seed/ids';
 
 /**
@@ -28,6 +28,13 @@ async function activeRules(db: Db): Promise<number> {
   return row?.n ?? 0;
 }
 
+async function optedOut(db: Db): Promise<boolean> {
+  const row = await db.get<{ value: string }>(
+    "SELECT value FROM app_settings WHERE key = 'routine_opt_out'",
+  );
+  return row ? JSON.parse(row.value) === true : false;
+}
+
 async function routineVersion(db: Db): Promise<number> {
   const row = await db.get<{ value: string }>(
     "SELECT value FROM app_settings WHERE key = 'routine_version'",
@@ -39,6 +46,8 @@ export async function applyRoutine(
   db: Database,
   { today, force = false }: { today: string; force?: boolean },
 ): Promise<boolean> {
+  // The user chose their own plan (or none) in onboarding: never overwrite it.
+  if (!force && (await optedOut(db))) return false;
   // Self-healing: an up-to-date routine with no active rule (plan emptied) is re-applied.
   if (!force && (await routineVersion(db)) >= ROUTINE_VERSION && (await activeRules(db)) > 0) {
     return false;
@@ -107,6 +116,56 @@ export async function applyRoutine(
       "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_version', ?, ?) " +
         'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',
       [JSON.stringify(ROUTINE_VERSION), at],
+    );
+    await tx.run(
+      "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_opt_out', 'false', ?) " +
+        'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',
+      [at],
+    );
+  });
+  return true;
+}
+
+/**
+ * Seeded sample workouts that are not part of the routine (Upper Body, Leg Day, Push…):
+ * removed on every start, so a fresh install or a re-seed never brings them back. Your
+ * own workouts, and seeded ones a plan still uses (custom days), are kept.
+ */
+export async function pruneSampleWorkouts(db: Database): Promise<number> {
+  const keep = routineTemplates.map((t) => seedId.template(t.key));
+  const at = nowIso();
+  const r = await db.run(
+    'UPDATE workout_templates SET deleted_at = ?, updated_at = ? ' +
+      'WHERE is_seed = 1 AND deleted_at IS NULL AND id NOT IN (' +
+      keep.map(() => '?').join(', ') +
+      ') AND id NOT IN (SELECT template_id FROM schedule_rules WHERE deleted_at IS NULL AND active = 1 AND template_id IS NOT NULL)',
+    [at, at, ...keep],
+  );
+  return r.changes;
+}
+
+/**
+ * One-time (1.1.0): gym routine workouts already saved on the phone move to 3 × 15, the
+ * new seed values. Later edits by the user are kept (guarded by `gym_reps_v1`).
+ */
+export async function applyGymRepsStandard(db: Database): Promise<boolean> {
+  const done = await db.get<{ value: string }>(
+    "SELECT value FROM app_settings WHERE key = 'gym_reps_v1'",
+  );
+  if (done) return false;
+  const gym = routineTemplates.filter((t) => t.type === 'gym').map((t) => seedId.template(t.key));
+  const at = nowIso();
+  await db.tx(async (tx) => {
+    await tx.run(
+      'UPDATE workout_template_exercises SET sets = ?, target_reps = ?, updated_at = ? ' +
+        'WHERE template_id IN (' +
+        gym.map(() => '?').join(', ') +
+        ') AND target_reps IS NOT NULL',
+      [GYM_SETS, GYM_REPS, at, ...gym],
+    );
+    await tx.run(
+      "INSERT INTO app_settings (key, value, updated_at) VALUES ('gym_reps_v1', 'true', ?)",
+      [at],
     );
   });
   return true;

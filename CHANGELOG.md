@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.1.0 — 2026-09-27
+
+### Onboarding
+- New welcome screen: glowing summit art, "Train smarter. Live stronger.", feature row, Get Started.
+- Goals: pick several (e.g. lose weight + build muscle); each becomes its own goal.
+- Weekly plan: the VYRO week (six-pack, run, gym at set times, Thursday rest) is the default;
+  "Custom days" keeps the old day picker. Choosing custom or no plan is never overwritten.
+
+### Security
+- PIN setup and unlock take well under a second (was up to minutes on mid-range phones), with a
+  visible "Securing your PIN… / Checking…" spinner. Existing PINs are upgraded on first unlock.
+
+### Home
+- Taller mountain hero with more room above the name, a bigger name on a soft translucent panel.
+- Today card, Quick Actions and This Week restyled after docs/template/ui.png (wide covers,
+  duration + intensity, "Next" / "Pending" pills, date pill, subtitles and arrows).
+
+### Training
+- Gym lifts default to 3 × 15. Each set pre-fills last session's weight and shows the change
+  (e.g. "+2 kg · +20 % vs last time").
+- Sample workouts that aren't in the routine (Upper Body, Leg Day, Push, Pull…) are removed.
+
+### Fixes
+- Camera permission was missing from 1.0.0 (Take photo couldn't ask); it's back.
+- Text fields in bottom sheets (search, names, notes) stay above the keyboard.
+
+### Workouts
+- Exercise demo videos loop during sets and rest, and resume after the screen is locked.
+
 ## 1.0.0 — 2026-09-27
 
 First release. Everything stays on the device: no account, no tracking, works offline.

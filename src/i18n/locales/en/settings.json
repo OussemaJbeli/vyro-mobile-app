@@ -192,7 +192,9 @@
     "mismatch": "PINs don't match. Try again.",
     "done": "Done",
     "set": "App lock is on",
-    "shield": "VYRO is private"
+    "shield": "VYRO is private",
+    "saving": "Securing your PIN…",
+    "checking": "Checking…"
   },
   "appLock": {
     "enable": "App lock",

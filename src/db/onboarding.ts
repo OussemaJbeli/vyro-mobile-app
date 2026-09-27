@@ -30,7 +30,14 @@ export const planFromDraft = (draft: OnboardingDraft): StarterPlan =>
 export async function commitOnboarding(
   db: Database,
   draft: OnboardingDraft,
-  { today, goalTitle }: { today: string; goalTitle: string },
+  {
+    today,
+    goalTitle,
+  }: {
+    today: string;
+    /** Title of a goal kind (a string = the same title for every goal, as before). */
+    goalTitle: string | ((kind: string) => string);
+  },
 ): Promise<OnboardingResult> {
   return db.tx(async (tx) => {
     const at = nowIso();
@@ -59,8 +66,9 @@ export async function commitOnboarding(
       });
     }
 
-    if (draft.goal) {
-      const g = draft.goal;
+    // Several goals can be picked (1.1.0); older drafts only have `goal`.
+    const goals = draft.goals.length ? draft.goals : draft.goal ? [draft.goal] : [];
+    for (const g of goals) {
       const weightGoal = g.kind === 'lose_weight' && g.targetWeightKg !== null;
       await insertModel(tx, tables.goals, {
         type:
@@ -73,7 +81,9 @@ export async function commitOnboarding(
                 : g.kind === 'consistency'
                   ? 'frequency'
                   : 'custom',
-        title: g.customTitle?.trim() || goalTitle,
+        title:
+          g.customTitle?.trim() ||
+          (typeof goalTitle === 'function' ? goalTitle(g.kind) : goalTitle),
         targetValue: weightGoal
           ? g.targetWeightKg
           : g.kind === 'consistency'
@@ -94,7 +104,15 @@ export async function commitOnboarding(
 
     let rules = 0;
     let plan: StarterPlan | null = null;
-    if (draft.acceptPlan && draft.trainingDays.length > 0) {
+    // The VYRO week (docs/plan/weak.md) is applied right after this transaction
+    // (applyRoutine). A custom plan, or no plan, opts out so it is never overwritten.
+    const vyroWeek = draft.plan === 'vyro' && draft.acceptPlan;
+    await tx.run(
+      "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_opt_out', ?, ?) " +
+        'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',
+      [JSON.stringify(!vyroWeek), at],
+    );
+    if (!vyroWeek && draft.acceptPlan && draft.trainingDays.length > 0) {
       plan = planFromDraft(draft);
       if (draft.mode === 'redo') {
         // Replace the current weekly plan (the user confirmed on the days step).

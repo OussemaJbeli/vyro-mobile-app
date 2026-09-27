@@ -14,6 +14,7 @@ export { buildSnapshot } from './snapshot';
 export {
   plannedVsActual,
   prefill,
+  weightDelta,
   roundOf,
   runSummary,
   summarize,

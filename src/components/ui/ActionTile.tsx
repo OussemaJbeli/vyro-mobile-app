@@ -6,15 +6,20 @@ import { makeStyles, useTheme } from '@/theme';
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
 
-/** Template quick action: outlined rounded square with an accent icon, one label below. */
+/**
+ * Template quick action (docs/template/ui.png): bordered card with an accent icon, title,
+ * short subtitle and a round arrow.
+ */
 export function ActionTile({
   icon,
   label,
+  subtitle,
   onPress,
   testID,
 }: {
   icon: IconName;
   label: string;
+  subtitle?: string;
   onPress: () => void;
   testID?: string;
 }) {
@@ -24,22 +29,30 @@ export function ActionTile({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={label}
-      style={({ pressed }) => [styles.wrap, pressed && styles.pressed]}
+      accessibilityLabel={subtitle ? `${label}, ${subtitle}` : label}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
       {...(testID ? { testID } : {})}
     >
-      <View style={styles.tile}>
-        <LinearGradient
-          colors={[t.colors.primarySoft, 'transparent']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Icon name={icon} size={26} color={t.colors.primaryInk} />
+      <LinearGradient
+        colors={[t.colors.primarySoft, 'transparent']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <Icon name={icon} size={30} color={t.colors.primary} />
+      <View style={styles.cardText}>
+        <Text variant="bodyStrong" numberOfLines={1}>
+          {label}
+        </Text>
+        {subtitle ? (
+          <Text variant="caption" tone="muted" numberOfLines={2}>
+            {subtitle}
+          </Text>
+        ) : null}
       </View>
-      <Text variant="caption" numberOfLines={1}>
-        {label}
-      </Text>
+      <View style={styles.arrow}>
+        <Icon name="forward" size={16} color={t.colors.primary} />
+      </View>
     </Pressable>
   );
 }
@@ -74,6 +87,28 @@ export function MiniStat({
 }
 
 const useStyles = makeStyles((t) => ({
+  card: {
+    flex: 1,
+    minWidth: 0,
+    gap: t.spacing.sm,
+    padding: t.spacing.md,
+    borderRadius: t.radius.lg,
+    borderWidth: 1,
+    borderColor: t.colors.borderAccent,
+    backgroundColor: t.colors.surface,
+    overflow: 'hidden',
+  },
+  cardText: { gap: 2, minHeight: 44 },
+  arrow: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: t.colors.borderAccent,
+    backgroundColor: t.colors.primarySoft,
+  },
   wrap: { flex: 1, alignItems: 'center', gap: t.spacing.xs },
   tile: {
     width: 58,

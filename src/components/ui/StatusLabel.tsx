@@ -28,7 +28,16 @@ const ICON: Record<StatusKind, IconName> = {
 };
 
 /** Template status text: "✓ Completed" / "◉ Next" (accent), "○ Pending" (muted). Icon + text, never colour alone. */
-export function StatusLabel({ status, label }: { status: StatusKind; label?: string }) {
+export function StatusLabel({
+  status,
+  label,
+  pill = false,
+}: {
+  status: StatusKind;
+  label?: string;
+  /** Template Today card: bordered pill ("✓ Next" accent, "○ Pending" muted). */
+  pill?: boolean;
+}) {
   const t = useTheme();
   const { t: tr } = useTranslation('status');
   const accent =
@@ -50,12 +59,33 @@ export function StatusLabel({ status, label }: { status: StatusKind; label?: str
         : tr(status as 'planned', { defaultValue: status }));
   return (
     <View
-      style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+      style={[
+        { flexDirection: 'row', alignItems: 'center', gap: 4 },
+        pill && {
+          gap: 6,
+          paddingHorizontal: 12,
+          paddingVertical: 6,
+          borderRadius: 999,
+          borderWidth: 1.5,
+          borderColor: accent ? t.colors.primaryInk : t.colors.border,
+          backgroundColor: accent ? t.colors.primarySoft : t.colors.surfaceRaised,
+        },
+      ]}
       accessible
       accessibilityLabel={text}
     >
-      <Icon name={ICON[status]} size={14} color={color} />
-      <Text variant="caption" style={{ color }}>
+      <Icon
+        name={
+          pill && status === 'next'
+            ? 'check'
+            : pill && status === 'pending'
+              ? 'radio_off'
+              : ICON[status]
+        }
+        size={pill ? 16 : 14}
+        color={color}
+      />
+      <Text variant={pill ? 'bodyStrong' : 'caption'} style={{ color }}>
         {text}
       </Text>
     </View>

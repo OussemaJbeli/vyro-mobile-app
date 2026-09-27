@@ -192,7 +192,9 @@
     "mismatch": "Les codes ne correspondent pas. Réessayez.",
     "done": "Terminé",
     "set": "Verrouillage activé",
-    "shield": "VYRO est privé"
+    "shield": "VYRO est privé",
+    "saving": "Sécurisation du code…",
+    "checking": "Vérification…"
   },
   "appLock": {
     "enable": "Verrouillage de l'app",

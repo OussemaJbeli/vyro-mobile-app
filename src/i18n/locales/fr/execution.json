@@ -245,5 +245,6 @@
     "failed": "Impossible d'enregistrer",
     "change": "Changer"
   },
-  "setsUnit": "séries"
+  "setsUnit": "séries",
+  "weightDelta": "{{kg}} · {{pct}} % par rapport à la dernière fois"
 }

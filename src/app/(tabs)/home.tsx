@@ -20,6 +20,7 @@ import { WeeklyInsightCard } from '@/components/ai/WeeklyInsightCard';
 import { useAvatar } from '@/hooks/useAvatar';
 import { currentLanguage } from '@/i18n';
 import { makeStyles } from '@/theme';
+import { withAlpha } from '@/theme/color';
 import { now } from '@/utils/clock';
 import { greetingKey } from '@/utils/dates';
 
@@ -49,12 +50,18 @@ export default function HomeScreen() {
     <ScreenContainer onRefresh={refresh} refreshing={refreshing}>
       <View style={styles.header}>
         <MountainBackdrop variant="header" />
-        <View style={styles.flex}>
-          <Text variant="heading" accessibilityRole="header">
-            {name ? t('greetingNamed', { greeting, name }) : greeting} 👋
+        <View style={styles.greetingPanel}>
+          <Text tone="muted">{greeting} 👋</Text>
+          {name ? (
+            <Text accessibilityRole="header" style={styles.name} numberOfLines={1}>
+              {name}
+            </Text>
+          ) : null}
+          <Text variant="caption" tone="muted">
+            {date}
           </Text>
-          <Text tone="muted">{date}</Text>
         </View>
+        <View style={styles.flex} />
         <IconButton
           icon="search"
           accessibilityLabel={t('common:search')}
@@ -90,14 +97,31 @@ const useStyles = makeStyles((t) => ({
     marginHorizontal: -t.spacing.lg,
     marginTop: -t.spacing.lg,
     paddingHorizontal: t.spacing.lg,
-    paddingTop: t.spacing.xl,
-    // Room for the mountain band under the greeting (template screen 1).
-    paddingBottom: 56,
-    marginBottom: -32,
+    paddingTop: t.spacing.xxxl + t.spacing.lg,
+    // A tall mountain band under the greeting before the Today card (1.1.0: longer hero).
+    paddingBottom: 150,
+    marginBottom: -40,
     alignItems: 'flex-start',
     overflow: 'hidden',
   },
   flex: { flex: 1 },
+  // Soft translucent panel so the greeting reads over the mountains.
+  greetingPanel: {
+    alignSelf: 'flex-start',
+    flexGrow: 0,
+    flexShrink: 1,
+    gap: 2,
+    paddingHorizontal: t.spacing.md,
+    paddingVertical: t.spacing.sm,
+    borderRadius: t.radius.lg,
+    backgroundColor: withAlpha(t.colors.bg, 0.45),
+  },
+  name: {
+    fontFamily: t.typography.title.fontFamily,
+    fontSize: 30,
+    lineHeight: 36,
+    color: t.colors.text,
+  },
   dev: { gap: t.spacing.sm },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing.sm },
 }));

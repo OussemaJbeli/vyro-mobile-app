@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { makeStyles, useTheme } from '@/theme';
 
+import { Icon, type IconName } from './Icon';
 import { IconButton } from './IconButton';
 import { Text } from './Text';
 
@@ -116,21 +117,33 @@ export type SectionHeaderProps = {
   title: string;
   actionLabel?: string;
   onAction?: () => void;
+  /** Accent icon before the title (template: ⚡ Quick Actions, 📊 This Week). */
+  icon?: IconName;
 };
 
 /** "Quick Actions", "This Week", "Upcoming" … with an optional "See all". */
-export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderProps) {
+export function SectionHeader({ title, actionLabel, onAction, icon }: SectionHeaderProps) {
   const styles = useStyles();
+  const t = useTheme();
   return (
     <View style={styles.section}>
-      <Text variant="heading" accessibilityRole="header">
-        {title}
-      </Text>
+      <View style={styles.sectionTitle}>
+        {icon ? <Icon name={icon} size={24} color={t.colors.primary} /> : null}
+        <Text variant="heading" accessibilityRole="header">
+          {title}
+        </Text>
+      </View>
       {actionLabel && onAction ? (
-        <Pressable accessibilityRole="button" onPress={onAction} hitSlop={12}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onAction}
+          hitSlop={12}
+          style={styles.sectionAction}
+        >
           <Text variant="caption" tone="primary">
             {actionLabel}
           </Text>
+          <Icon name="forward" size={16} color={t.colors.primaryInk} />
         </Pressable>
       ) : null}
     </View>
@@ -170,5 +183,8 @@ const useStyles = makeStyles((t) => ({
     justifyContent: 'space-between',
     marginTop: t.spacing.sm,
   },
+  sectionTitle: { flexDirection: 'row', alignItems: 'center', gap: t.spacing.sm },
+  sectionAction: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+
   divider: { height: 1, backgroundColor: t.colors.border },
 }));

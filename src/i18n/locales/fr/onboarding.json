@@ -3,7 +3,16 @@
     "tagline": "Entraînez-vous mieux. Vivez plus fort.",
     "subtitle": "Votre système d'entraînement privé. Tout reste sur cet appareil.",
     "getStarted": "Commencer",
-    "resume": "Reprendre la configuration"
+    "resume": "Reprendre la configuration",
+    "headline1": "Entraînez-vous mieux.",
+    "headline2": "Vivez plus fort.",
+    "body": "Votre système d'entraînement personnel.\nTout reste sur cet appareil.",
+    "features": {
+      "track": "Suivre\nses progrès",
+      "custom": "Séances\nsur mesure",
+      "healthy": "Rester\nen forme",
+      "control": "Vos données,\nvotre contrôle"
+    }
   },
   "nav": {
     "continue": "Continuer",
@@ -60,7 +69,8 @@
     },
     "targetWeight": "Poids cible",
     "sessionsPerWeek": "Séances par semaine",
-    "customTitle": "Décrivez votre objectif"
+    "customTitle": "Décrivez votre objectif",
+    "subtitleMulti": "Choisissez-en un ou plusieurs. Modifiable plus tard."
   },
   "equipment": {
     "title": "Quel équipement avez-vous ?",
@@ -93,7 +103,12 @@
       "6": "Sam",
       "7": "Dim"
     },
-    "replaceWarning": "Utiliser ce plan remplace votre plan hebdomadaire actuel."
+    "replaceWarning": "Utiliser ce plan remplace votre plan hebdomadaire actuel.",
+    "vyroSubtitle": "Votre semaine, la même chaque semaine. Modifiable dans Planning.",
+    "vyroWeek": "Semaine VYRO",
+    "customWeek": "Jours au choix",
+    "vyroTitle": "Abdos · Course · Salle",
+    "vyroHint": "Le jeudi est le jour de repos. Touchez une séance dans Planning pour changer l'heure ou la retirer."
   },
   "notifications": {
     "title": "Restez sur la bonne voie",

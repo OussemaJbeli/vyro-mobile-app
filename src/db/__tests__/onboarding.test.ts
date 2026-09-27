@@ -17,11 +17,14 @@ const base: OnboardingDraft = {
   heightCm: 180,
   weightKg: 74.6,
   goal: { kind: 'lose_weight', targetWeightKg: 70, sessionsPerWeek: null, customTitle: null },
+  goals: [],
   equipmentPreset: 'full_gym',
   equipmentIds: null,
   trainingDays: [1, 3, 5],
   trainingTime: '18:00',
   acceptPlan: true,
+  // The starter-plan tests pick their own days; the VYRO week has its own test below.
+  plan: 'custom',
   notifications: true,
   appLock: false,
 };
@@ -130,5 +133,29 @@ describe('commitOnboarding', () => {
     });
     expect(await r.profile.get()).toBeNull();
     expect(await r.schedule.rules.list()).toEqual([]);
+  });
+
+  it('saves every selected goal, and the VYRO week opts in (custom opts out)', async () => {
+    await commitOnboarding(
+      db,
+      {
+        ...base,
+        plan: 'vyro',
+        goals: [
+          { kind: 'lose_weight', targetWeightKg: 70, sessionsPerWeek: null, customTitle: null },
+          { kind: 'build_muscle', targetWeightKg: null, sessionsPerWeek: null, customTitle: null },
+        ],
+      },
+      { today: '2026-09-24', goalTitle: (k) => `T:${k}` },
+    );
+    const goals = await db.all<{ title: string }>('SELECT title FROM goals ORDER BY title');
+    expect(goals.map((g) => g.title)).toEqual(['T:build_muscle', 'T:lose_weight']);
+    // VYRO week: no starter rules here (applyRoutine adds the week right after).
+    const rules = await db.get<{ n: number }>('SELECT COUNT(*) AS n FROM schedule_rules');
+    expect(rules?.n).toBe(0);
+    const opt = await db.get<{ value: string }>(
+      "SELECT value FROM app_settings WHERE key = 'routine_opt_out'",
+    );
+    expect(opt?.value).toBe('false');
   });
 });

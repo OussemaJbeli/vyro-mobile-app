@@ -19,11 +19,13 @@ export function newDraft(): OnboardingDraft {
     heightCm: null,
     weightKg: null,
     goal: null,
+    goals: [],
     equipmentPreset: 'full_gym',
     equipmentIds: null,
     trainingDays: [...DEFAULT_TRAINING_DAYS],
     trainingTime: DEFAULT_TRAINING_TIME,
     acceptPlan: true,
+    plan: 'vyro',
     notifications: false,
     appLock: false,
   };

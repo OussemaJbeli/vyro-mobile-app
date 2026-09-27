@@ -36,6 +36,20 @@ export function prefill(
   };
 }
 
+/**
+ * Weight change vs the last session (1.1.0): "+2 kg · +20 %". Null when there is nothing
+ * to compare (no previous weight, or the same weight).
+ */
+export function weightDelta(
+  currentKg: number,
+  lastKg: number | null | undefined,
+): { kg: number; pct: number } | null {
+  if (!lastKg || lastKg <= 0 || currentKg <= 0) return null;
+  const kg = Math.round((currentKg - lastKg) * 100) / 100;
+  if (kg === 0) return null;
+  return { kg, pct: Math.round((kg / lastKg) * 100) };
+}
+
 export type Summary = {
   doneSets: number;
   plannedSets: number;

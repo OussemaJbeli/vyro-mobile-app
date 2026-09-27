@@ -3,7 +3,16 @@
     "tagline": "Train smarter. Live stronger.",
     "subtitle": "Your private training system. Everything stays on this device.",
     "getStarted": "Get Started",
-    "resume": "Continue setup"
+    "resume": "Continue setup",
+    "headline1": "Train smarter.",
+    "headline2": "Live stronger.",
+    "body": "Your personal training system.\nEverything stays on this device.",
+    "features": {
+      "track": "Track\nProgress",
+      "custom": "Custom\nWorkouts",
+      "healthy": "Stay\nHealthy",
+      "control": "Your Data,\nYour Control"
+    }
   },
   "nav": {
     "continue": "Continue",
@@ -60,7 +69,8 @@
     },
     "targetWeight": "Target weight",
     "sessionsPerWeek": "Sessions per week",
-    "customTitle": "Describe your goal"
+    "customTitle": "Describe your goal",
+    "subtitleMulti": "Pick one or more. You can change them later."
   },
   "equipment": {
     "title": "What equipment do you have?",
@@ -93,7 +103,12 @@
       "6": "Sat",
       "7": "Sun"
     },
-    "replaceWarning": "Using this plan replaces your current weekly plan."
+    "replaceWarning": "Using this plan replaces your current weekly plan.",
+    "vyroSubtitle": "Your week, the same every week. Change any day later in Plan.",
+    "vyroWeek": "VYRO week",
+    "customWeek": "Custom days",
+    "vyroTitle": "Six-pack · Run · Gym",
+    "vyroHint": "Thursday is the rest day. Tap any session in Plan to change its time or remove it."
   },
   "notifications": {
     "title": "Stay on track",

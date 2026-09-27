@@ -16,6 +16,7 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { makeStyles, useTheme } from '@/theme';
 import { haptics } from '@/utils/haptics';
 
+import { PinBusy } from './PinBusy';
 import { PinPad } from './PinPad';
 
 const fmtWait = (ms: number) =>
@@ -92,6 +93,7 @@ export function LockScreen({ onUnlocked }: { onUnlocked?: () => void }) {
         onSubmit={(v) => void submit(v)}
         disabled={busy}
       />
+      {busy ? <PinBusy label={t('lock.checking')} /> : null}
       {bio ? (
         <Button
           size="lg"

@@ -191,7 +191,7 @@ const C = 150;
 const I = 90;
 const range = (r: string) => `${r} reps · stop 1–3 reps before failure`;
 
-export const routineTemplates: SeedTemplate[] = [
+const baseTemplates: SeedTemplate[] = [
   // Gym: Day 1 → Day 2 → Day 3 → rest.
   {
     key: 'gym_chest_lats',
@@ -457,6 +457,24 @@ export const routineTemplates: SeedTemplate[] = [
     intervals: [seg('warmup', 5, 4.25, 1), seg('run', 30, 5.75, 2.5), seg('cooldown', 5, 4, 1)],
   },
 ];
+
+/** The owner's gym standard (1.1.0): 3 sets of 15 on every lift; weights carry over. */
+export const GYM_SETS = 3;
+export const GYM_REPS = 15;
+
+export const routineTemplates: SeedTemplate[] = baseTemplates.map((tpl) =>
+  tpl.type === 'gym'
+    ? {
+        ...tpl,
+        exercises: (tpl.exercises ?? []).map((e) => ({
+          ...e,
+          sets: GYM_SETS,
+          targetReps: GYM_REPS,
+          notes: 'Same weight as last time, or add a little when all 15 reps feel clean',
+        })),
+      }
+    : tpl,
+);
 
 type Day = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 

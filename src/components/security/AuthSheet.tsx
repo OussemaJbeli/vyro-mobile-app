@@ -6,6 +6,7 @@ import { BottomSheet, Button, Text } from '@/components/ui';
 import { authenticateBiometric, biometricsAvailable, verifyPin } from '@/services/security/lock';
 import { makeStyles } from '@/theme';
 
+import { PinBusy } from './PinBusy';
 import { PinPad } from './PinPad';
 
 /** "Confirm it's you" before sensitive lock changes (disable, change PIN). */
@@ -21,6 +22,7 @@ export function AuthSheet({
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const [pin, setPin] = useState('');
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bio, setBio] = useState<boolean | null>(null);
   useEffect(() => {
@@ -42,14 +44,18 @@ export function AuthSheet({
         <PinPad
           value={pin}
           onChange={setPin}
-          onSubmit={(v) =>
+          disabled={busy}
+          onSubmit={(v) => {
+            setBusy(true);
             void verifyPin(v).then((r) => {
+              setBusy(false);
               setPin('');
               if (r.ok) ok();
               else setError(t('lock.wrong'));
-            })
-          }
+            });
+          }}
         />
+        {busy ? <PinBusy label={t('lock.checking')} /> : null}
         {bio ? (
           <Button
             size="md"

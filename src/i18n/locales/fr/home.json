@@ -35,7 +35,11 @@
     "logRun": "Enregistrer une course",
     "measureTitle": "Mesurer",
     "logWeight": "Enregistrer le poids",
-    "logMeasurements": "Enregistrer des mensurations"
+    "logMeasurements": "Enregistrer des mensurations",
+    "workoutSub": "Démarrer une séance",
+    "runningSub": "Cardio et endurance",
+    "measureSub": "Suivre ses progrès",
+    "photoSub": "Noter ses progrès"
   },
   "week": "Cette semaine",
   "weekGym": "Salle",
@@ -59,5 +63,14 @@
   "minutes": "{{count}} min",
   "intervals": "Intervalles",
   "completedShort": "{{done}}/{{total}} terminées",
-  "training": "Entraînement"
+  "training": "Entraînement",
+  "seeAll": "Tout voir",
+  "viewPlan": "Voir le planning",
+  "intensity": {
+    "strength": "Force",
+    "endurance": "Endurance",
+    "moderate": "Modéré",
+    "easy": "Facile",
+    "hard": "Difficile"
+  }
 }

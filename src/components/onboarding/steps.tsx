@@ -24,7 +24,8 @@ import { useCompleteOnboarding } from '@/hooks/useCompleteOnboarding';
 import { PinSetup } from '@/components/security/PinSetup';
 import { requestNotificationPermission } from '@/services/notifications/permissions';
 import { makeStyles, useTheme } from '@/theme';
-import { type OnboardingDraft } from '@/types/onboarding';
+import { vyroWeek } from '@/hooks/useVyroWeek';
+import { type OnboardingDraft, type OnboardingGoal } from '@/types/onboarding';
 import {
   formatQuantity,
   fromCanonical,
@@ -220,28 +221,46 @@ const GOALS: { kind: StarterGoal; icon: IconName }[] = [
 export function GoalStep() {
   const { t } = useTranslation('onboarding');
   const { draft, next, back, index, total } = useStepNav('goal');
-  const [goal, setGoal] = useState<OnboardingDraft['goal']>(draft.goal);
+  // Several goals can be picked (e.g. lose weight + build muscle); the first one picked
+  // sets the plan style.
+  const [goals, setGoals] = useState<OnboardingGoal[]>(
+    draft.goals.length ? draft.goals : draft.goal ? [draft.goal] : [],
+  );
   const lb = draft.units.weight === 'lb';
-  const target = goal?.targetWeightKg ?? Math.max(25, (draft.weightKg ?? 75) - 5);
+  const defaultTarget = Math.max(25, (draft.weightKg ?? 75) - 5);
+  const get = (kind: StarterGoal) => goals.find((g) => g.kind === kind);
+  const patch = (kind: StarterGoal, p: Partial<OnboardingGoal>) =>
+    setGoals((list) => list.map((g) => (g.kind === kind ? { ...g, ...p } : g)));
 
-  const pick = (kind: StarterGoal) =>
-    setGoal({
-      kind,
-      targetWeightKg: kind === 'lose_weight' ? target : null,
-      sessionsPerWeek: kind === 'consistency' ? Math.max(1, draft.trainingDays.length) : null,
-      customTitle: kind === 'custom' ? (goal?.customTitle ?? '') : null,
-    });
+  const toggle = (kind: StarterGoal) =>
+    setGoals((list) =>
+      list.some((g) => g.kind === kind)
+        ? list.filter((g) => g.kind !== kind)
+        : [
+            ...list,
+            {
+              kind,
+              targetWeightKg: kind === 'lose_weight' ? defaultTarget : null,
+              sessionsPerWeek:
+                kind === 'consistency' ? Math.max(1, draft.trainingDays.length) : null,
+              customTitle: kind === 'custom' ? '' : null,
+            },
+          ],
+    );
 
+  const lose = get('lose_weight');
+  const consistency = get('consistency');
+  const custom = get('custom');
   return (
     <OnboardingLayout
       title={t('goal.title')}
-      subtitle={t('goal.subtitle')}
+      subtitle={t('goal.subtitleMulti')}
       index={index}
       total={total}
       onBack={back}
-      onSkip={() => next({ goal: null })}
-      onContinue={() => next({ goal })}
-      continueDisabled={!goal || (goal.kind === 'custom' && !goal.customTitle?.trim())}
+      onSkip={() => next({ goal: null, goals: [] })}
+      onContinue={() => next({ goals, goal: goals[0] ?? null })}
+      continueDisabled={goals.length === 0 || (!!custom && !custom.customTitle?.trim())}
     >
       {GOALS.map((g) => (
         <OptionCard
@@ -249,31 +268,35 @@ export function GoalStep() {
           icon={g.icon}
           title={t(`goal.options.${g.kind}`)}
           description={t(`goal.descriptions.${g.kind}`)}
-          selected={goal?.kind === g.kind}
-          onPress={() => pick(g.kind)}
+          selected={!!get(g.kind)}
+          onPress={() => toggle(g.kind)}
           testID={`goal-${g.kind}`}
         />
       ))}
-      {goal?.kind === 'lose_weight' ? (
+      {lose ? (
         <Card>
           <Text variant="caption" tone="muted">
             {t('goal.targetWeight')}
           </Text>
           <WeightRuler
             label={t('goal.targetWeight')}
-            kg={lb ? Math.round(fromCanonical(target, 'lb')) : roundToStep(target, 0.5)}
+            kg={
+              lb
+                ? Math.round(fromCanonical(lose.targetWeightKg ?? defaultTarget, 'lb'))
+                : roundToStep(lose.targetWeightKg ?? defaultTarget, 0.5)
+            }
             lb={lb}
-            onChange={(kg) => setGoal({ ...goal, targetWeightKg: kg })}
+            onChange={(kg) => patch('lose_weight', { targetWeightKg: kg })}
             draft={draft}
           />
         </Card>
       ) : null}
-      {goal?.kind === 'consistency' ? (
+      {consistency ? (
         <Card>
           <NumberStepper
             label={t('goal.sessionsPerWeek')}
-            value={goal.sessionsPerWeek ?? 3}
-            onChange={(v) => setGoal({ ...goal, sessionsPerWeek: v })}
+            value={consistency.sessionsPerWeek ?? 3}
+            onChange={(v) => patch('consistency', { sessionsPerWeek: v })}
             min={1}
             max={14}
           />
@@ -282,11 +305,11 @@ export function GoalStep() {
           </Text>
         </Card>
       ) : null}
-      {goal?.kind === 'custom' ? (
+      {custom ? (
         <Input
           label={t('goal.customTitle')}
-          value={goal.customTitle ?? ''}
-          onChangeText={(v) => setGoal({ ...goal, customTitle: v })}
+          value={custom.customTitle ?? ''}
+          onChangeText={(v) => patch('custom', { customTitle: v })}
           maxLength={80}
         />
       ) : null}
@@ -363,11 +386,11 @@ export function EquipmentStep() {
 const WEEKDAYS: IsoWeekday[] = [1, 2, 3, 4, 5, 6, 7];
 const TIMES = ['06:00', '07:00', '12:00', '17:00', '18:00', '19:00', '20:00'];
 
-export function DaysStep() {
+function CustomDays({ onChoose }: { onChoose: (patch: Partial<OnboardingDraft>) => void }) {
   const { t } = useTranslation(['onboarding', 'seed']);
   const styles = useStyles();
   const theme = useTheme();
-  const { draft, next, back, index, total } = useStepNav('days');
+  const { draft } = useStepNav('days');
   const [days, setDays] = useState(draft.trainingDays.map(String));
   const [time, setTime] = useState(draft.trainingTime);
   const plan = planStarter({
@@ -376,26 +399,20 @@ export function DaysStep() {
     equipment: draft.equipmentPreset,
   });
   const byDay = new Map(plan.days.map((d) => [d.weekday, d.template]));
-  const commit = (acceptPlan: boolean) =>
-    next({ trainingDays: days.map(Number).sort(), trainingTime: time, acceptPlan });
+  // Report the choice up on every change; the step's Continue commits it.
+  const report = (d: string[], tm: string) =>
+    onChoose({ trainingDays: d.map(Number).sort(), trainingTime: tm });
 
   return (
-    <OnboardingLayout
-      title={t('days.title')}
-      subtitle={t('days.subtitle')}
-      index={index}
-      total={total}
-      onBack={back}
-      continueLabel={t('days.accept')}
-      continueDisabled={days.length === 0}
-      onContinue={() => commit(true)}
-      secondary={{ label: t('days.skipPlan'), onPress: () => commit(false) }}
-    >
+    <>
       <ChipGroup
         multiple
         options={WEEKDAYS.map((d) => ({ value: String(d), label: t(`days.weekdays.${d}`) }))}
         value={days}
-        onChange={setDays}
+        onChange={(d) => {
+          setDays(d);
+          report(d, time);
+        }}
       />
       <Text variant="caption" tone="muted">
         {t('days.time')}
@@ -404,7 +421,10 @@ export function DaysStep() {
         scrollable
         options={TIMES.map((v) => ({ value: v, label: v }))}
         value={time}
-        onChange={setTime}
+        onChange={(tm) => {
+          setTime(tm);
+          report(days, tm);
+        }}
       />
 
       <Card variant="accent">
@@ -439,6 +459,90 @@ export function DaysStep() {
           );
         })}
       </Card>
+    </>
+  );
+}
+
+export function DaysStep() {
+  const { t } = useTranslation(['onboarding', 'seed']);
+  const styles = useStyles();
+  const theme = useTheme();
+  const { draft, next, back, index, total } = useStepNav('days');
+  const [plan, setPlan] = useState<'vyro' | 'custom'>(draft.plan);
+  const [custom, setCustom] = useState<Partial<OnboardingDraft>>({
+    trainingDays: draft.trainingDays,
+    trainingTime: draft.trainingTime,
+  });
+  const week = vyroWeek();
+  const commit = (acceptPlan: boolean) =>
+    next(plan === 'vyro' ? { plan, acceptPlan } : { plan, acceptPlan, ...custom });
+
+  return (
+    <OnboardingLayout
+      title={t('days.title')}
+      subtitle={plan === 'vyro' ? t('days.vyroSubtitle') : t('days.subtitle')}
+      index={index}
+      total={total}
+      onBack={back}
+      continueLabel={t('days.accept')}
+      continueDisabled={plan === 'custom' && !(custom.trainingDays ?? []).length}
+      onContinue={() => commit(true)}
+      secondary={{ label: t('days.skipPlan'), onPress: () => commit(false) }}
+    >
+      <SegmentedControl
+        segments={[
+          { value: 'vyro', label: t('days.vyroWeek') },
+          { value: 'custom', label: t('days.customWeek') },
+        ]}
+        value={plan}
+        onChange={setPlan}
+        testID="days-plan"
+      />
+      {plan === 'vyro' ? (
+        <Card variant="accent">
+          <Text variant="heading">{t('days.vyroTitle')}</Text>
+          <Text variant="caption" tone="muted">
+            {t('days.vyroHint')}
+          </Text>
+          {draft.mode === 'redo' ? (
+            <Text variant="caption" tone="danger">
+              {t('days.replaceWarning')}
+            </Text>
+          ) : null}
+          {WEEKDAYS.map((d, i) => {
+            const items = week[d] ?? [];
+            const rest = items.every((x) => x.type === 'rest');
+            return (
+              <View key={d}>
+                {i > 0 ? <Divider /> : null}
+                <View style={styles.weekRow}>
+                  <Text variant="bodyStrong" style={styles.day}>
+                    {t(`days.weekdays.${d}`)}
+                  </Text>
+                  <View style={styles.flex}>
+                    {rest ? (
+                      <Text style={{ color: theme.colors.textMuted }}>{t('days.rest')}</Text>
+                    ) : (
+                      items.map((x) => (
+                        <View key={x.key + x.time} style={styles.planRow}>
+                          <Text variant="caption" tone="muted" style={styles.time}>
+                            {x.time}
+                          </Text>
+                          <Text style={styles.flex} numberOfLines={1}>
+                            {t(`seed:template.${x.key}` as 'seed:template.abs')}
+                          </Text>
+                        </View>
+                      ))
+                    )}
+                  </View>
+                </View>
+              </View>
+            );
+          })}
+        </Card>
+      ) : (
+        <CustomDays onChoose={(p) => setCustom((c) => ({ ...c, ...p }))} />
+      )}
     </OnboardingLayout>
   );
 }
@@ -531,7 +635,9 @@ export function DoneStep() {
     ],
     [
       t('done.goal'),
-      draft.goal ? draft.goal.customTitle || t(`goal.options.${draft.goal.kind}`) : notSet,
+      (draft.goals.length ? draft.goals : draft.goal ? [draft.goal] : [])
+        .map((g) => g.customTitle || t(`goal.options.${g.kind}`))
+        .join(', ') || notSet,
     ],
     [t('done.equipment'), t(`equipment.presets.${draft.equipmentPreset}`)],
     [t('done.plan'), planDays ? t('done.planValue', { count: planDays }) : t('done.noPlan')],
@@ -562,4 +668,7 @@ export function DoneStep() {
 const useStyles = makeStyles((t) => ({
   planRow: { flexDirection: 'row', alignItems: 'center', gap: t.spacing.md, minHeight: 40 },
   day: { width: 44 },
+  weekRow: { flexDirection: 'row', gap: t.spacing.md, paddingVertical: t.spacing.sm },
+  time: { width: 44 },
+  flex: { flex: 1 },
 }));

@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { executionRoute, useStartWorkout } from '@/components/execution/useStartWorkout';
-import { sessionSubtitle, statusKind } from '@/components/planner/activity';
+import { statusKind } from '@/components/planner/activity';
 import { formatDay } from '@/components/planner/plannerUtils';
 import { SessionVisual } from '@/components/planner/SessionVisual';
 import { QuickWeightSheet } from '@/components/body/QuickWeightSheet';
@@ -48,6 +48,7 @@ import { formatQuantity } from '@/utils/units';
 export const TodayStatusCard = memo(function TodayStatusCard() {
   const { t } = useTranslation(['home', 'execution']);
   const styles = useStyles();
+  const theme = useTheme();
   const { day, sessions, state } = useStartState();
   const done = useCompletedBetween(day, day);
   const starter = useStartWorkout();
@@ -88,41 +89,83 @@ export const TodayStatusCard = memo(function TodayStatusCard() {
   }
 
   const pct = total ? Math.round((state.done / total) * 100) : 0;
+  // Template (docs/template/ui.png): intensity word under each activity.
+  const intensity = (type: string, difficulty: string | null | undefined) =>
+    type === 'gym'
+      ? t('intensity.strength')
+      : type === 'running'
+        ? t('intensity.endurance')
+        : difficulty === 'advanced'
+          ? t('intensity.hard')
+          : difficulty === 'beginner'
+            ? t('intensity.easy')
+            : t('intensity.moderate');
   return (
     <Card variant="accent" style={styles.today} testID="home-today">
-      <View>
-        <Text variant="title">{complete ? t('allDone') : t('today')}</Text>
-        <Text tone="muted">{t('activities', { count: total })}</Text>
+      <View style={styles.todayHead}>
+        <Icon name="plan" size={32} color={theme.colors.primary} />
+        <View style={styles.flex}>
+          <Text variant="title">{complete ? t('allDone') : t('today')}</Text>
+          <Text tone="muted">{t('activities', { count: total })}</Text>
+        </View>
+        <Pressable
+          onPress={() => router.push(routes.plan)}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.datePill, pressed && styles.pressed]}
+        >
+          <Text tone="muted">
+            {formatDay(day, { weekday: 'short', month: 'short', day: 'numeric' })}
+          </Text>
+          <Icon name="forward" size={16} color={theme.colors.textMuted} />
+        </Pressable>
       </View>
       <View>
-        {state.activities.map((s, i) => (
-          <Pressable
-            key={s.id}
-            onPress={() => router.push(routes.session(s.id))}
-            accessibilityRole="button"
-            style={({ pressed }) => [
-              styles.activity,
-              i > 0 && styles.divider,
-              pressed && styles.pressed,
-            ]}
-            testID={`home-today-${s.id}`}
-          >
-            <SessionVisual
-              type={s.type}
-              coverKey={s.templateId ? tplById.get(s.templateId)?.coverKey : null}
-              size={48}
-            />
-            <View style={styles.flex}>
-              <Text variant="bodyStrong" numberOfLines={1}>
-                {s.title}
-              </Text>
-              <Text variant="caption" tone="muted" numberOfLines={1}>
-                {sessionSubtitle(s as never, s.templateId ? tplById.get(s.templateId) : undefined)}
-              </Text>
-            </View>
-            <StatusLabel status={statusKind(s.status, s.id === nextId)} />
-          </Pressable>
-        ))}
+        {state.activities.map((s, i) => {
+          const tpl = s.templateId ? tplById.get(s.templateId) : undefined;
+          const next = s.id === nextId;
+          return (
+            <Pressable
+              key={s.id}
+              onPress={() => router.push(routes.session(s.id))}
+              accessibilityRole="button"
+              style={({ pressed }) => [
+                styles.activity,
+                i > 0 && styles.divider,
+                pressed && styles.pressed,
+              ]}
+              testID={`home-today-${s.id}`}
+            >
+              {next ? (
+                <View style={[styles.nextBar, { backgroundColor: theme.colors.primary }]} />
+              ) : null}
+              <SessionVisual type={s.type} coverKey={tpl?.coverKey} size={64} width={96} />
+              <View style={styles.flex}>
+                <Text variant="bodyStrong" numberOfLines={1}>
+                  {s.title}
+                </Text>
+                <View style={styles.meta}>
+                  {tpl?.durationMinutes ? (
+                    <View style={styles.metaItem}>
+                      <Icon name="clock" size={16} color={theme.colors.textMuted} />
+                      <Text variant="caption" tone="muted">
+                        {`${tpl.durationMinutes} min`}
+                      </Text>
+                    </View>
+                  ) : null}
+                  {s.type !== 'rest' ? (
+                    <View style={styles.metaItem}>
+                      <Icon name="progress" size={16} color={theme.colors.textMuted} />
+                      <Text variant="caption" tone="muted" numberOfLines={1}>
+                        {intensity(s.type, tpl?.difficulty)}
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+              </View>
+              <StatusLabel status={statusKind(s.status, next)} pill />
+            </Pressable>
+          );
+        })}
       </View>
       <View style={styles.progress}>
         <Text variant="caption" tone="muted">
@@ -197,17 +240,24 @@ export const QuickActions = memo(function QuickActions() {
   };
   return (
     <>
-      <SectionHeader title={t('quickActions')} />
+      <SectionHeader
+        icon="streak"
+        title={t('quickActions')}
+        actionLabel={t('seeAll')}
+        onAction={() => router.push(routes.train)}
+      />
       <View style={styles.actions}>
         <ActionTile
-          icon="add"
+          icon="act_dumbbell"
           label={t('qa.workout')}
+          subtitle={t('qa.workoutSub')}
           onPress={() => setSheet('workout')}
           testID="qa-workout"
         />
         <ActionTile
           icon="running"
           label={t('qa.running')}
+          subtitle={t('qa.runningSub')}
           onPress={() => setSheet('running')}
           testID="qa-running"
         />
@@ -215,6 +265,7 @@ export const QuickActions = memo(function QuickActions() {
           <ActionTile
             icon="measure"
             label={t('qa.measure')}
+            subtitle={t('qa.measureSub')}
             onPress={() => setSheet('measure')}
             testID="qa-measure"
           />
@@ -223,6 +274,7 @@ export const QuickActions = memo(function QuickActions() {
           <ActionTile
             icon="photo"
             label={t('qa.photo')}
+            subtitle={t('qa.photoSub')}
             onPress={() => router.push(routes.photoCapture)}
             testID="qa-photo"
           />
@@ -301,7 +353,12 @@ export const WeeklySummary = memo(function WeeklySummary() {
   );
   return (
     <>
-      <SectionHeader title={t('week')} />
+      <SectionHeader
+        icon="progress"
+        title={t('week')}
+        actionLabel={t('viewPlan')}
+        onAction={() => router.push(routes.plan)}
+      />
       <Pressable
         onPress={() => router.push(routes.progress)}
         accessibilityRole="button"
@@ -439,6 +496,21 @@ const useStyles = makeStyles((t) => ({
     borderWidth: 1,
   },
   today: { gap: t.spacing.md },
+  todayHead: { flexDirection: 'row', alignItems: 'center', gap: t.spacing.md },
+  datePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: t.spacing.xs,
+    paddingHorizontal: t.spacing.md,
+    paddingVertical: t.spacing.sm,
+    borderRadius: t.radius.pill,
+    borderWidth: 1,
+    borderColor: t.colors.border,
+    backgroundColor: t.colors.surfaceRaised,
+  },
+  nextBar: { position: 'absolute', left: -12, top: 12, bottom: 12, width: 4, borderRadius: 2 },
+  meta: { flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing.md, marginTop: 4 },
+  metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   activity: {
     flexDirection: 'row',
     alignItems: 'center',

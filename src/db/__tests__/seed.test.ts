@@ -6,7 +6,7 @@ import { runMigrations } from '../migrations/runner';
 import { seedData } from '../seed/data/content';
 import { seedId, seedKey } from '../seed/ids';
 import { getSeedVersion, seedDatabase } from '../seed/seed';
-import { applyRoutine } from '../routine';
+import { applyGymRepsStandard, applyRoutine, pruneSampleWorkouts } from '../routine';
 import { scheduleRepo } from '../repositories/schedule';
 import { openNodeDriver } from '../testing/nodeDriver';
 
@@ -211,5 +211,20 @@ describe('seed content integrity', () => {
       'Speed Intervals',
       'Day 1 · Chest + Lats',
     ]);
+  });
+
+  it('removes sample workouts on start and moves gym lifts to 3 × 15 once', async () => {
+    await seedDatabase(db);
+    expect(await pruneSampleWorkouts(db)).toBeGreaterThan(0);
+    const left = await db.all<{ id: string }>(
+      'SELECT id FROM workout_templates WHERE deleted_at IS NULL',
+    );
+    expect(left).toHaveLength(12);
+    expect(await applyGymRepsStandard(db)).toBe(true);
+    expect(await applyGymRepsStandard(db)).toBe(false);
+    const sets = await db.all<{ sets: number; target_reps: number }>(
+      "SELECT sets, target_reps FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_arms'",
+    );
+    expect(sets.every((s) => s.sets === 3 && s.target_reps === 15)).toBe(true);
   });
 });

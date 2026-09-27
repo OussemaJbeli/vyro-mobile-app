@@ -24,6 +24,8 @@ const MOUNTAINS = {
 
 /** Owner images are 1891×831 (bundled at 1600×703); the layout reserves that ratio. */
 const RATIO = 1600 / 703;
+/** How far the header mountains extend below the header (hidden by its clipping). */
+const HEADER_SINK = -5;
 
 /**
  * Accent-tinted mountain backdrop (template header, Welcome, Home "Today" card).
@@ -109,7 +111,7 @@ export function MountainBackdrop({ variant = 'full' }: { variant?: 'full' | 'car
           {variant === 'header' ? (
             <LinearGradient
               colors={['transparent', fade]}
-              locations={[0.6, 1]}
+              locations={[0.88, 1]}
               style={StyleSheet.absoluteFill}
             />
           ) : null}
@@ -152,7 +154,8 @@ const styles = StyleSheet.create({
   // Welcome: peaks centred under the logo, above the tagline (template).
   fullMountains: { left: '-35%', right: '-35%', top: '24%' },
   cardMountains: { right: '-15%', bottom: 0, height: '100%' },
-  // Home header: edge to edge across the full width, peaks along the bottom.
-  headerMountains: { left: 0, right: 0, top: 0, bottom: 0, aspectRatio: undefined },
+  // Home header: full width at the image's own ratio, sunk below the header so only the
+  // peaks show, rising ~100 dp above the Today card (which overlaps the header's last 40 dp).
+  headerMountains: { left: 0, right: 0, bottom: -HEADER_SINK },
   layer: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 },
 });

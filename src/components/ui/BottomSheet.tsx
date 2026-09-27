@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, Pressable, View } from 'react-native';
+import { Keyboard, Modal, Platform, Pressable, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -63,6 +63,25 @@ export function BottomSheet({ visible, onClose, title, children, testID }: Botto
       else y.set(withTiming(0, { duration: 150 }));
     });
 
+  // Android doesn't resize a Modal's window for the keyboard: lift the sheet by the
+  // keyboard height so a focused field (search, names, notes) stays visible.
+  const [keyboard, setKeyboard] = useState(0);
+  useEffect(() => {
+    if (!mounted) return;
+    const show = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => setKeyboard(e.endCoordinates.height),
+    );
+    const hide = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setKeyboard(0),
+    );
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, [mounted]);
+
   const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() }] }));
 
   return (
@@ -82,7 +101,14 @@ export function BottomSheet({ visible, onClose, title, children, testID }: Botto
         />
         <Animated.View
           accessibilityViewIsModal
-          style={[styles.sheet, { paddingBottom: insets.bottom + t.spacing.lg }, sheetStyle]}
+          style={[
+            styles.sheet,
+            {
+              paddingBottom: (keyboard ? 0 : insets.bottom) + t.spacing.lg,
+              marginBottom: keyboard,
+            },
+            sheetStyle,
+          ]}
           {...(testID ? { testID } : {})}
         >
           <GestureDetector gesture={pan}>

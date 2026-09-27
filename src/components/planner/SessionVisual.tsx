@@ -12,17 +12,27 @@ export function SessionVisual({
   type,
   coverKey,
   size,
+  width,
   done = false,
 }: {
   type: string;
   coverKey: string | null | undefined;
   size: number;
+  /** Wide cover (template Today rows); the icon fallback stays square. */
+  width?: number;
   done?: boolean;
 }) {
   const hasCover =
     !!coverKey && (!!coverPhotoUri(coverKey) || !!bundledImage('workouts', coverKey));
   if (hasCover) {
-    return <CoverArt type={activityType(type)} coverKey={coverKey} size={size} />;
+    return (
+      <CoverArt
+        type={activityType(type)}
+        coverKey={coverKey}
+        size={size}
+        {...(width ? { style: { width, height: size } } : {})}
+      />
+    );
   }
   return <ActivityIcon type={activityType(type)} size={size} state={done ? 'done' : 'default'} />;
 }

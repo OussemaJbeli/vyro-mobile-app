@@ -21,6 +21,7 @@ import { routes } from '@/constants/routes';
 import {
   activeMs,
   prefill,
+  weightDelta,
   restRemainingMs,
   roundOf,
   workElapsedMs,
@@ -48,7 +49,7 @@ import {
 import { useSettingsStore } from '@/store/settingsStore';
 import { toast } from '@/store/uiStore';
 import { mediaUri } from '@/services/media/exerciseMedia';
-import { makeStyles } from '@/theme';
+import { makeStyles, useTheme } from '@/theme';
 import { newId } from '@/utils/id';
 
 import { bundledImage, bundledVideo } from '@/constants/bundledImages';
@@ -91,6 +92,7 @@ function nextExerciseIndex(s: ExecState, from: number): number | null {
 export function StrengthExecution({ executionId }: { executionId: string }) {
   const { t, i18n } = useTranslation(['execution', 'common', 'errors', 'exercises']);
   const styles = useStyles();
+  const theme = useTheme();
   const state = useExecutionStore((s) => s.state);
   const catalog = useExerciseCatalog();
   const prefs = useUnitPrefs();
@@ -189,6 +191,11 @@ export function StrengthExecution({ executionId }: { executionId: string }) {
         })
       : null;
   const values = base && set ? { ...base, ...overrides[set.id] } : null;
+  // Weight vs last session, for the value being entered now ("+2 kg · +20 %").
+  const delta =
+    ex?.tracking === 'weight_reps' && values
+      ? weightDelta(values.weightKg, lastTime?.weightKg)
+      : null;
   const override = (patch: Partial<Prefill>) =>
     set && setOverrides((o) => ({ ...o, [set.id]: { ...o[set.id], ...patch } }));
   const timed = ex?.tracking === 'duration' || ex?.tracking === 'distance_duration';
@@ -368,6 +375,18 @@ export function StrengthExecution({ executionId }: { executionId: string }) {
               {lastTime ? (
                 <Text variant="caption" tone="muted">
                   {t('lastTime', { value: setDetail(ex.tracking, lastTime, prefs, locale) })}
+                </Text>
+              ) : null}
+              {delta ? (
+                <Text
+                  variant="caption"
+                  style={{ color: delta.kg > 0 ? theme.colors.primaryInk : theme.colors.warning }}
+                  testID="execution-weight-delta"
+                >
+                  {t('weightDelta', {
+                    kg: `${delta.kg > 0 ? '+' : '−'}${weight.toDisplay(Math.abs(delta.kg))} ${weight.unit}`,
+                    pct: `${delta.pct > 0 ? '+' : '−'}${Math.abs(delta.pct)}`,
+                  })}
                 </Text>
               ) : null}
             </View>

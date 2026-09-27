@@ -245,5 +245,6 @@
     "failed": "Couldn't save the log",
     "change": "Change"
   },
-  "setsUnit": "sets"
+  "setsUnit": "sets",
+  "weightDelta": "{{kg}} · {{pct}} % vs last time"
 }
