@@ -19,7 +19,8 @@
     "doctor": "expo-doctor",
     "check": "pnpm typecheck && pnpm lint && pnpm test",
     "brand:assets": "node scripts/brand/generate-assets.mjs",
-    "db:lock": "UPDATE_MIGRATION_LOCK=1 jest src/db/__tests__/lock.test.ts"
+    "db:lock": "UPDATE_MIGRATION_LOCK=1 jest src/db/__tests__/lock.test.ts",
+    "eas-build-pre-install": "bash scripts/eas/pre-install.sh"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
