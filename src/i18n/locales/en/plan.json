@@ -1,0 +1,161 @@
+{
+  "title": "Plan",
+  "views": {
+    "day": "Day",
+    "week": "Week",
+    "month": "Month"
+  },
+  "today": "Today",
+  "upcoming": "Upcoming",
+  "addActivity": "Add Activity",
+  "nothing": "Nothing planned",
+  "nothingBody": "Add an activity, or enjoy a free day.",
+  "restDay": "Rest day",
+  "rest": "Rest",
+  "missed": "Missed",
+  "prev": "Previous",
+  "next": "Next",
+  "goToday": "Today",
+  "markers": {
+    "planned_one": "{{count}} planned",
+    "planned_other": "{{count}} planned",
+    "done": "done",
+    "rest": "rest day",
+    "missed": "missed"
+  },
+  "types": {
+    "gym": "Gym",
+    "running": "Running",
+    "home": "Home",
+    "abs": "Six Pack",
+    "recovery": "Recovery",
+    "rest": "Rest",
+    "other": "Other"
+  },
+  "actions": {
+    "title": "Session",
+    "start": "Start",
+    "move": "Move",
+    "tomorrow": "Tomorrow",
+    "nextFree": "Next free day",
+    "pickDate": "Pick date",
+    "duplicate": "Duplicate",
+    "skip": "Skip",
+    "complete": "Mark complete",
+    "edit": "Details",
+    "cancel": "Cancel session",
+    "delete": "Delete",
+    "restore": "Restore",
+    "stopRule": "Stop repeating from here"
+  },
+  "move": {
+    "title": "Move session",
+    "duplicateTitle": "Duplicate to…",
+    "date": "Date",
+    "time": "Time",
+    "anyTime": "Any time",
+    "conflicts": "Heads up",
+    "time_overlap": "Overlaps {{title}} at {{time}}.",
+    "same_type_same_day": "This day already has {{title}}.",
+    "rest_day": "This is a planned rest day.",
+    "heavy_day": "That makes {{sessions}} sessions ({{minutes}} min) that day.",
+    "confirm": "Move",
+    "confirmAnyway": "Move anyway",
+    "confirmDuplicate": "Duplicate"
+  },
+  "toast": {
+    "moved": "Moved to {{date}}.",
+    "skipped": "Session skipped.",
+    "cancelled": "Session cancelled.",
+    "duplicated": "Duplicated to {{date}}.",
+    "deleted": "Session deleted.",
+    "restored": "Session restored.",
+    "saved": "Scheduled.",
+    "noFreeDay": "No free day in the next two weeks.",
+    "ruleStopped": "This repeating plan stops from {{date}}."
+  },
+  "confirmDelete": "Delete this session?",
+  "confirmStop": "Stop this repeating plan from {{date}}? Past sessions stay in your history.",
+  "form": {
+    "title": "Schedule activity",
+    "what": "What?",
+    "template": "Workout",
+    "noTemplates": "No saved workouts of this type yet.",
+    "customTitle": "Title",
+    "when": "When?",
+    "date": "Date",
+    "time": "Time",
+    "anyTime": "Any time",
+    "duration": "Duration (min)",
+    "repeat": "Repeat?",
+    "repeatOptions": {
+      "never": "Never",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "custom": "Custom"
+    },
+    "every": "Every",
+    "everyDays_one": "day",
+    "everyDays_other": "{{count}} days",
+    "everyWeeks_one": "week",
+    "everyWeeks_other": "{{count}} weeks",
+    "days": "Days",
+    "ends": "Ends",
+    "endOptions": {
+      "never": "Never",
+      "onDate": "On a date",
+      "afterCount": "After a number of times"
+    },
+    "endDate": "End date",
+    "occurrences": "Times",
+    "remind": "Reminder",
+    "remindOptions": {
+      "none": "None",
+      "5": "5 min before",
+      "15": "15 min before",
+      "30": "30 min before",
+      "60": "1 h before"
+    },
+    "remindHint": "Reminders are delivered from step 25.",
+    "save": "Schedule",
+    "errors": {
+      "title": "Pick a workout or enter a title.",
+      "days": "Pick at least one day.",
+      "endBefore": "The end date must be after the start date."
+    }
+  },
+  "detail": {
+    "title": "Session",
+    "planned": "Planned",
+    "originally": "Originally {{date}}",
+    "moved_one": "Rescheduled {{count}} time",
+    "moved_other": "Rescheduled {{count}} times",
+    "repeating": "Part of a repeating plan",
+    "workout": "Workout",
+    "openWorkout": "View workout",
+    "notes": "Notes",
+    "skipReason": "Reason: {{reason}}",
+    "historySoon": "The full workout record arrives with history (step 24)."
+  },
+  "picker": {
+    "title": "Pick a date",
+    "done": "Done"
+  },
+  "rating": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "bad": "Bad"
+  },
+  "score": {
+    "planned_one": "{{count}} activity planned",
+    "planned_other": "{{count}} activities planned",
+    "none": "Not started yet",
+    "rest": "Rest",
+    "sessions": "{{done}} of {{total}} activities completed",
+    "week": "This week",
+    "month": "{{month}} status"
+  },
+  "progressPct": "{{pct}} %",
+  "notDone": "Not done"
+}

@@ -1,0 +1,161 @@
+{
+  "title": "Plan",
+  "views": {
+    "day": "Jour",
+    "week": "Semaine",
+    "month": "Mois"
+  },
+  "today": "Aujourd'hui",
+  "upcoming": "À venir",
+  "addActivity": "Ajouter une activité",
+  "nothing": "Rien de prévu",
+  "nothingBody": "Ajoutez une activité, ou profitez d'une journée libre.",
+  "restDay": "Jour de repos",
+  "rest": "Repos",
+  "missed": "Manqué",
+  "prev": "Précédent",
+  "next": "Suivant",
+  "goToday": "Aujourd'hui",
+  "markers": {
+    "planned_one": "{{count}} prévue",
+    "planned_other": "{{count}} prévues",
+    "done": "fait",
+    "rest": "jour de repos",
+    "missed": "manqué"
+  },
+  "types": {
+    "gym": "Salle",
+    "running": "Course",
+    "home": "Maison",
+    "abs": "Abdos",
+    "recovery": "Récupération",
+    "rest": "Repos",
+    "other": "Autre"
+  },
+  "actions": {
+    "title": "Séance",
+    "start": "Démarrer",
+    "move": "Déplacer",
+    "tomorrow": "Demain",
+    "nextFree": "Prochain jour libre",
+    "pickDate": "Choisir une date",
+    "duplicate": "Dupliquer",
+    "skip": "Sauter",
+    "complete": "Marquer terminé",
+    "edit": "Détails",
+    "cancel": "Annuler la séance",
+    "delete": "Supprimer",
+    "restore": "Restaurer",
+    "stopRule": "Arrêter la répétition ici"
+  },
+  "move": {
+    "title": "Déplacer la séance",
+    "duplicateTitle": "Dupliquer vers…",
+    "date": "Date",
+    "time": "Heure",
+    "anyTime": "Sans heure",
+    "conflicts": "Attention",
+    "time_overlap": "Chevauche {{title}} à {{time}}.",
+    "same_type_same_day": "Ce jour contient déjà {{title}}.",
+    "rest_day": "C'est un jour de repos prévu.",
+    "heavy_day": "Cela fait {{sessions}} séances ({{minutes}} min) ce jour-là.",
+    "confirm": "Déplacer",
+    "confirmAnyway": "Déplacer quand même",
+    "confirmDuplicate": "Dupliquer"
+  },
+  "toast": {
+    "moved": "Déplacée au {{date}}.",
+    "skipped": "Séance sautée.",
+    "cancelled": "Séance annulée.",
+    "duplicated": "Dupliquée au {{date}}.",
+    "deleted": "Séance supprimée.",
+    "restored": "Séance restaurée.",
+    "saved": "Planifié.",
+    "noFreeDay": "Aucun jour libre dans les deux prochaines semaines.",
+    "ruleStopped": "Ce plan récurrent s'arrête à partir du {{date}}."
+  },
+  "confirmDelete": "Supprimer cette séance ?",
+  "confirmStop": "Arrêter ce plan récurrent à partir du {{date}} ? Les séances passées restent dans votre historique.",
+  "form": {
+    "title": "Planifier une activité",
+    "what": "Quoi ?",
+    "template": "Séance",
+    "noTemplates": "Aucune séance enregistrée de ce type.",
+    "customTitle": "Titre",
+    "when": "Quand ?",
+    "date": "Date",
+    "time": "Heure",
+    "anyTime": "Sans heure",
+    "duration": "Durée (min)",
+    "repeat": "Répéter ?",
+    "repeatOptions": {
+      "never": "Jamais",
+      "daily": "Chaque jour",
+      "weekly": "Chaque semaine",
+      "monthly": "Chaque mois",
+      "custom": "Personnalisé"
+    },
+    "every": "Tous les",
+    "everyDays_one": "jours",
+    "everyDays_other": "{{count}} jours",
+    "everyWeeks_one": "semaines",
+    "everyWeeks_other": "{{count}} semaines",
+    "days": "Jours",
+    "ends": "Fin",
+    "endOptions": {
+      "never": "Jamais",
+      "onDate": "À une date",
+      "afterCount": "Après un nombre de fois"
+    },
+    "endDate": "Date de fin",
+    "occurrences": "Fois",
+    "remind": "Rappel",
+    "remindOptions": {
+      "none": "Aucun",
+      "5": "5 min avant",
+      "15": "15 min avant",
+      "30": "30 min avant",
+      "60": "1 h avant"
+    },
+    "remindHint": "Les rappels sont envoyés à partir de l'étape 25.",
+    "save": "Planifier",
+    "errors": {
+      "title": "Choisissez une séance ou saisissez un titre.",
+      "days": "Choisissez au moins un jour.",
+      "endBefore": "La date de fin doit être après la date de début."
+    }
+  },
+  "detail": {
+    "title": "Séance",
+    "planned": "Prévu",
+    "originally": "Initialement le {{date}}",
+    "moved_one": "Reportée {{count}} fois",
+    "moved_other": "Reportée {{count}} fois",
+    "repeating": "Fait partie d'un plan récurrent",
+    "workout": "Séance",
+    "openWorkout": "Voir la séance",
+    "notes": "Notes",
+    "skipReason": "Motif : {{reason}}",
+    "historySoon": "L'historique complet de la séance arrive avec l'historique (étape 24)."
+  },
+  "picker": {
+    "title": "Choisir une date",
+    "done": "Terminé"
+  },
+  "rating": {
+    "excellent": "Excellent",
+    "good": "Bien",
+    "bad": "Faible"
+  },
+  "score": {
+    "planned_one": "{{count}} activité prévue",
+    "planned_other": "{{count}} activités prévues",
+    "none": "Pas encore commencé",
+    "rest": "Repos",
+    "sessions": "{{done}} sur {{total}} activités terminées",
+    "week": "Cette semaine",
+    "month": "Bilan de {{month}}"
+  },
+  "progressPct": "{{pct}} %",
+  "notDone": "Pas fait"
+}

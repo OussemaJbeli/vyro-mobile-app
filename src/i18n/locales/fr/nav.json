@@ -1,0 +1,13 @@
+{
+  "home": "Accueil",
+  "train": "Entraîner",
+  "start": "Démarrer",
+  "progress": "Progrès",
+  "plan": "Plan",
+  "fab": {
+    "start": "Démarrer",
+    "continue": "Continuer",
+    "done": "Journée terminée",
+    "rest": "Jour de repos"
+  }
+}

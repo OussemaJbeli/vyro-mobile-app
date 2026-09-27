@@ -1,0 +1,21 @@
+{
+  "back": "Retour",
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "continue": "Continuer",
+  "save": "Enregistrer",
+  "retry": "Réessayer",
+  "search": "Rechercher",
+  "loading": "Chargement",
+  "exit": "Quitter",
+  "resume": "Reprendre",
+  "saveAndExit": "Enregistrer et quitter",
+  "tapToDismiss": "Touchez pour fermer",
+  "profileAndSettings": "Profil et réglages",
+  "increase": "Augmenter {{label}}",
+  "decrease": "Diminuer {{label}}",
+  "tapToType": "{{label}} : {{value}}. Touchez pour saisir",
+  "streakDays_one": "{{count}} jour",
+  "streakDays_other": "{{count}} jours",
+  "streakLabel": "Série : {{text}}"
+}

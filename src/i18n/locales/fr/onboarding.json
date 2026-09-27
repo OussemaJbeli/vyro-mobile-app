@@ -1,0 +1,128 @@
+{
+  "welcome": {
+    "tagline": "Entraînez-vous mieux. Vivez plus fort.",
+    "subtitle": "Votre système d'entraînement privé. Tout reste sur cet appareil.",
+    "getStarted": "Commencer",
+    "resume": "Reprendre la configuration"
+  },
+  "nav": {
+    "continue": "Continuer",
+    "back": "Retour",
+    "skip": "Passer",
+    "stepOf": "Étape {{current}} sur {{total}}",
+    "skipAll": "Passer la configuration"
+  },
+  "name": {
+    "title": "Comment doit-on vous appeler ?",
+    "subtitle": "Facultatif. Utilisé seulement pour vous saluer.",
+    "placeholder": "Votre prénom"
+  },
+  "units": {
+    "title": "Vos unités",
+    "subtitle": "Modifiables à tout moment dans les réglages.",
+    "weight": "Poids",
+    "length": "Taille et mensurations",
+    "distance": "Distance",
+    "speed": "Vitesse",
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "in": "po",
+    "km": "km",
+    "mi": "mi",
+    "kmh": "km/h",
+    "mph": "mph"
+  },
+  "height": {
+    "title": "Quelle est votre taille ?",
+    "subtitle": "Sert à calculer l'IMC. Facultatif."
+  },
+  "weight": {
+    "title": "Quel est votre poids actuel ?",
+    "subtitle": "Ce sera votre première pesée. Facultatif."
+  },
+  "goal": {
+    "title": "Quel est votre objectif principal ?",
+    "subtitle": "Il guide votre plan de départ. Vous pourrez en ajouter d'autres.",
+    "options": {
+      "lose_weight": "Perdre du poids",
+      "build_muscle": "Prendre du muscle",
+      "run_better": "Mieux courir",
+      "consistency": "Être régulier",
+      "custom": "Objectif personnalisé"
+    },
+    "descriptions": {
+      "lose_weight": "Force et fractionné",
+      "build_muscle": "Musculation par groupes",
+      "run_better": "Plans de course structurés",
+      "consistency": "S'entraîner chaque semaine",
+      "custom": "Définissez votre cible"
+    },
+    "targetWeight": "Poids cible",
+    "sessionsPerWeek": "Séances par semaine",
+    "customTitle": "Décrivez votre objectif"
+  },
+  "equipment": {
+    "title": "Quel équipement avez-vous ?",
+    "subtitle": "Nous proposerons des exercices réalisables.",
+    "presets": {
+      "full_gym": "Salle complète",
+      "home_dumbbells": "Maison, haltères",
+      "bodyweight": "Poids du corps"
+    },
+    "customize": "Ajuster",
+    "available_one": "{{count}} équipement disponible",
+    "available_other": "{{count}} équipements disponibles"
+  },
+  "days": {
+    "title": "Quand vous entraînez-vous ?",
+    "subtitle": "Choisissez vos jours habituels.",
+    "time": "Heure préférée",
+    "planTitle": "Votre semaine de départ",
+    "planSubtitle": "Selon votre objectif, vos jours et votre équipement.",
+    "accept": "Utiliser ce plan",
+    "skipPlan": "Pas de plan pour l'instant",
+    "rest": "Repos",
+    "noDays": "Choisissez au moins un jour pour obtenir un plan.",
+    "weekdays": {
+      "1": "Lun",
+      "2": "Mar",
+      "3": "Mer",
+      "4": "Jeu",
+      "5": "Ven",
+      "6": "Sam",
+      "7": "Dim"
+    },
+    "replaceWarning": "Utiliser ce plan remplace votre plan hebdomadaire actuel."
+  },
+  "notifications": {
+    "title": "Restez sur la bonne voie",
+    "subtitle": "Recevez un rappel avant vos séances. Les rappels sont créés uniquement sur cet appareil.",
+    "enable": "Activer les rappels",
+    "notNow": "Plus tard",
+    "denied": "Les rappels sont désactivés. Vous pourrez les activer dans les réglages.",
+    "granted": "Les rappels sont activés."
+  },
+  "lock": {
+    "title": "Gardez-le privé",
+    "subtitle": "Verrouillez VYRO avec votre empreinte, votre visage ou un code. Vous terminerez la configuration dans les réglages.",
+    "enable": "Verrouiller VYRO",
+    "notNow": "Plus tard"
+  },
+  "done": {
+    "title": "C'est prêt",
+    "subtitle": "Voici ce que nous avons enregistré. Tout reste modifiable.",
+    "name": "Prénom",
+    "units": "Unités",
+    "height": "Taille",
+    "weight": "Poids",
+    "goal": "Objectif",
+    "equipment": "Équipement",
+    "plan": "Plan",
+    "planValue_one": "{{count}} séance par semaine",
+    "planValue_other": "{{count}} séances par semaine",
+    "noPlan": "Pas encore de plan",
+    "notSet": "Non renseigné",
+    "finish": "Aller à l'accueil"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "title": "Goals",
+  "add": "New goal",
+  "empty": {
+    "title": "No goals yet",
+    "body": "Set a target to track your progress over time.",
+    "action": "Add a goal"
+  },
+  "sections": {
+    "active": "Active",
+    "other": "History"
+  },
+  "types": {
+    "weight": "Weight",
+    "measurement": "Measurement",
+    "consistency": "Consistency",
+    "running": "Running",
+    "frequency": "Workout frequency",
+    "muscle": "Build muscle",
+    "custom": "Custom"
+  },
+  "status": {
+    "active": "Active",
+    "paused": "Paused",
+    "achieved": "Achieved",
+    "abandoned": "Abandoned"
+  },
+  "form": {
+    "newTitle": "New goal",
+    "editTitle": "Edit goal",
+    "type": "Goal type",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Reach 70 kg",
+    "target": "Target",
+    "start": "Starting value",
+    "startHint": "Prefilled from your latest entry",
+    "measurement": "Measurement",
+    "unit": "Unit",
+    "startDate": "Start date",
+    "targetDate": "Target date",
+    "targetDateHint": "Optional · YYYY-MM-DD",
+    "notes": "Notes",
+    "sessionsPerWeek": "Sessions per week",
+    "completionPercent": "Completion target (%)",
+    "runningPerWeek": "Kilometres per week",
+    "required": "Required",
+    "invalidDate": "Use the format YYYY-MM-DD.",
+    "targetAfterStart": "The target date must be after the start date."
+  },
+  "actions": {
+    "pause": "Pause",
+    "resume": "Resume",
+    "achieve": "Mark achieved",
+    "abandon": "Abandon",
+    "delete": "Delete"
+  },
+  "confirm": {
+    "achieve": "Mark this goal as achieved?",
+    "abandon": "Abandon this goal? It stays in your history.",
+    "pause": "Pause this goal?",
+    "resume": "Resume this goal?",
+    "delete": "Delete this goal? This can't be undone.",
+    "body": "You can review it any time in Goals."
+  },
+  "progressSoon": "Progress tracking arrives with analytics (step 24)."
+}

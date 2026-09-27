@@ -1,0 +1,11 @@
+{
+  "planned": "En attente",
+  "in_progress": "Suivant",
+  "completed": "Terminé",
+  "modified": "Modifié",
+  "skipped": "Sauté",
+  "cancelled": "Annulé",
+  "missed": "Manqué",
+  "next": "Suivant",
+  "pending": "En attente"
+}

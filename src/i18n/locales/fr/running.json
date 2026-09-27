@@ -1,0 +1,82 @@
+{
+  "kinds": {
+    "warmup": "Échauffement",
+    "run": "Course",
+    "walk": "Marche",
+    "sprint": "Sprint",
+    "recovery": "Récupération",
+    "cooldown": "Retour au calme"
+  },
+  "total": "Total",
+  "distance": "Distance estimée",
+  "avgSpeed": "Vitesse moyenne",
+  "timeline": "Profil",
+  "timelineA11y": "Profil de vitesse, {{count}} intervalles, {{total}} au total",
+  "intervals": "Intervalles",
+  "addInterval": "Intervalle",
+  "addRepeat": "Bloc répété",
+  "presets": "Modèles",
+  "presetNames": {
+    "easy30": "Facile 30",
+    "intervals35": "Fractionné 35",
+    "pyramid": "Pyramide",
+    "hiit20": "HIIT 20 (1:1)",
+    "prep5k": "Préparation 5 km"
+  },
+  "presetConfirm": {
+    "title": "Appliquer « {{name}} » ?",
+    "body": "Remplacer vos intervalles actuels, ou ajouter le modèle à la suite.",
+    "replace": "Remplacer",
+    "append": "Ajouter à la suite"
+  },
+  "editor": {
+    "title": "Intervalle",
+    "kind": "Type",
+    "minutes": "Minutes",
+    "seconds": "Secondes",
+    "speed": "Vitesse ({{unit}})",
+    "incline": "Inclinaison (%)",
+    "label": "Libellé",
+    "labelPlaceholder": "Facultatif",
+    "done": "Terminé"
+  },
+  "repeat": {
+    "title": "Bloc répété",
+    "times": "Répéter",
+    "work": "Effort",
+    "recover": "Récupération",
+    "add_one": "Ajouter {{count}} intervalle",
+    "add_other": "Ajouter {{count}} intervalles"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "duplicate": "Dupliquer",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "delete": "Supprimer",
+    "menu": "Options de l'intervalle"
+  },
+  "builder": {
+    "newTitle": "Nouveau plan de course",
+    "editTitle": "Modifier le plan de course",
+    "name": "Nom",
+    "namePlaceholder": "ex. Fractionné",
+    "target": "Distance cible ({{unit}}, facultatif)",
+    "save": "Enregistrer le plan",
+    "empty": "Aucun intervalle. Ajoutez-en un ou partez d'un modèle.",
+    "errors": {
+      "name": "Donnez un nom au plan.",
+      "intervals": "Ajoutez au moins un intervalle.",
+      "invalid": "Vérifiez les intervalles signalés : durée positive et vitesse d'au plus {{max}}."
+    }
+  },
+  "detail": {
+    "start": "Démarrer la course",
+    "schedule": "Planifier",
+    "edit": "Modifier",
+    "duplicate": "Dupliquer",
+    "delete": "Supprimer",
+    "historySoon": "Vos courses avec ce plan apparaîtront après la première séance (étape 24).",
+    "target": "Objectif {{distance}}"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "DB_WRITE_FAILED": "Enregistrement impossible. Vos données existantes n'ont pas été modifiées.",
+  "DB_READ_FAILED": "Impossible de charger vos données. Réessayez.",
+  "VALIDATION": "Certaines valeurs semblent incorrectes. Vérifiez et réessayez.",
+  "NOT_FOUND": "Élément introuvable. Il a peut-être été supprimé.",
+  "PERMISSION_DENIED": "VYRO a besoin d'une autorisation. Vous pouvez l'accorder dans les réglages du système.",
+  "FILE_IO": "Impossible de lire ou d'écrire le fichier sur cet appareil.",
+  "IMPORT_INVALID": "Cette sauvegarde ne peut pas être importée. Vos données n'ont pas été modifiées.",
+  "NOTIFICATION_FAILED": "Impossible de programmer le rappel.",
+  "UNKNOWN": "Une erreur s'est produite. Vos données sont en sécurité.",
+  "boundaryTitle": "Une erreur s'est produite",
+  "boundaryBody": "Vos données sont en sécurité sur cet appareil. Réessayez.",
+  "MIGRATION_FAILED": "VYRO n'a pas pu mettre à jour sa base de données. Vos données n'ont pas été modifiées. Exportez le diagnostic et contactez le support.",
+  "exportDiagnostics": "Exporter le diagnostic",
+  "dbErrorTitle": "Problème de base de données",
+  "EXECUTION_ACTIVE": "Une autre séance est déjà en cours. Terminez-la ou abandonnez-la d'abord."
+}

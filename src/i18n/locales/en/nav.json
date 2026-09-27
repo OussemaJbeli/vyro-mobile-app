@@ -1,0 +1,13 @@
+{
+  "home": "Home",
+  "train": "Train",
+  "start": "Start",
+  "progress": "Progress",
+  "plan": "Plan",
+  "fab": {
+    "start": "Start",
+    "continue": "Continue",
+    "done": "Today complete",
+    "rest": "Rest day"
+  }
+}

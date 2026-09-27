@@ -1,0 +1,10 @@
+appId: ca.evoxai.vyro
+name: Export then import a backup (JSON)
+# The share sheet and file picker are system UI: this flow stops at them. Finish the
+# round trip by hand (save to Files, then Import → pick the file → Merge).
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- openLink: vyro://settings/backup
+- tapOn:
+    id: backup-export
+- assertVisible: .*Share.*|.*Save.*

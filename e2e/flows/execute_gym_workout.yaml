@@ -1,0 +1,36 @@
+appId: ca.evoxai.vyro
+name: Execute a gym workout (sets, swap, finish, history)
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-train
+- tapOn: Day 1 · Chest + Lats
+- tapOn:
+    id: workout-start
+- tapOn:
+    id: prestart-start
+- assertVisible:
+    id: execution-exercise
+- tapOn:
+    id: complete-set
+- assertVisible:
+    id: rest-overlay
+- tapOn:
+    id: rest-skip
+- tapOn:
+    id: execution-swap
+- tapOn:
+    index: 0
+    id: 'swap-.*'
+- tapOn:
+    id: complete-set
+- tapOn:
+    id: execution-exit
+- tapOn:
+    id: exit-finish
+- tapOn:
+    id: complete-save
+- tapOn:
+    id: tab-progress
+- tapOn: History
+- assertVisible: Day 1 · Chest + Lats

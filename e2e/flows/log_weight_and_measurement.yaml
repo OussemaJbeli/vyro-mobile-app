@@ -1,0 +1,21 @@
+appId: ca.evoxai.vyro
+name: Log a weight and a measurement
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-progress
+- tapOn:
+    id: weight-log
+- tapOn:
+    id: weight-save
+- assertVisible:
+    id: weight-card
+- tapOn: Body
+- tapOn:
+    id: qa-measure
+- tapOn:
+    id: measure-waist
+- inputText: '82'
+- tapOn:
+    id: measure-save
+- assertVisible: Waist

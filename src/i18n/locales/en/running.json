@@ -1,0 +1,82 @@
+{
+  "kinds": {
+    "warmup": "Warmup",
+    "run": "Run",
+    "walk": "Walk",
+    "sprint": "Sprint",
+    "recovery": "Recovery",
+    "cooldown": "Cooldown"
+  },
+  "total": "Total",
+  "distance": "Est. distance",
+  "avgSpeed": "Avg speed",
+  "timeline": "Timeline",
+  "timelineA11y": "Speed timeline with {{count}} intervals, {{total}} total",
+  "intervals": "Intervals",
+  "addInterval": "Interval",
+  "addRepeat": "Repeat block",
+  "presets": "Presets",
+  "presetNames": {
+    "easy30": "Easy 30",
+    "intervals35": "Intervals 35",
+    "pyramid": "Pyramid",
+    "hiit20": "HIIT 20 (1:1)",
+    "prep5k": "5K prep"
+  },
+  "presetConfirm": {
+    "title": "Apply “{{name}}”?",
+    "body": "Replace your current intervals, or add the preset after them.",
+    "replace": "Replace",
+    "append": "Add after"
+  },
+  "editor": {
+    "title": "Interval",
+    "kind": "Type",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "speed": "Speed ({{unit}})",
+    "incline": "Incline (%)",
+    "label": "Label",
+    "labelPlaceholder": "Optional",
+    "done": "Done"
+  },
+  "repeat": {
+    "title": "Repeat block",
+    "times": "Repeat",
+    "work": "Work",
+    "recover": "Recovery",
+    "add_one": "Add {{count}} interval",
+    "add_other": "Add {{count}} intervals"
+  },
+  "actions": {
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "delete": "Delete",
+    "menu": "Interval options"
+  },
+  "builder": {
+    "newTitle": "New running plan",
+    "editTitle": "Edit running plan",
+    "name": "Name",
+    "namePlaceholder": "e.g. Interval Run",
+    "target": "Target distance ({{unit}}, optional)",
+    "save": "Save plan",
+    "empty": "No intervals yet. Add one or start from a preset.",
+    "errors": {
+      "name": "Give the plan a name.",
+      "intervals": "Add at least one interval.",
+      "invalid": "Check the highlighted intervals: time must be positive and speed at most {{max}}."
+    }
+  },
+  "detail": {
+    "start": "Start Run",
+    "schedule": "Schedule",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "historySoon": "Your runs with this plan appear after your first session (step 24).",
+    "target": "Target {{distance}}"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "title": "Équipement",
+  "subtitle": "Désactivez ce que vous n'avez pas. Les séances signaleront les exercices impossibles.",
+  "categories": {
+    "free_weights": "Poids libres",
+    "machines": "Machines",
+    "cardio": "Cardio",
+    "bodyweight": "Poids du corps",
+    "accessories": "Accessoires",
+    "other": "Autre"
+  },
+  "presets": {
+    "title": "Préréglages",
+    "full_gym": "Salle complète",
+    "home_dumbbells": "Haltères à la maison",
+    "bodyweight": "Poids du corps",
+    "travel": "Voyage"
+  },
+  "presetConfirm": {
+    "title": "Appliquer « {{name}} » ?",
+    "on": "Activer : {{items}}",
+    "off": "Désactiver : {{items}}",
+    "none": "Aucun changement",
+    "apply": "Appliquer"
+  },
+  "impact_one": "{{count}} exercice de vos séances en a besoin",
+  "impact_other": "{{count}} exercices de vos séances en ont besoin",
+  "available": "Disponible",
+  "unavailable": "Indisponible",
+  "add": "Ajouter un équipement",
+  "addTitle": "Nouvel équipement",
+  "name": "Nom",
+  "category": "Catégorie",
+  "custom": "Personnalisé",
+  "delete": "Supprimer",
+  "deleteConfirm": "Supprimer « {{name}} » ?",
+  "edit": "Modifier",
+  "editor": {
+    "picture": "Image",
+    "pick": "Choisir une image",
+    "removePicture": "Retirer l'image",
+    "webHint": "Les images s'ajoutent dans l'application mobile.",
+    "icon": "Icône",
+    "reset": "Réinitialiser",
+    "done": "Terminé"
+  }
+}

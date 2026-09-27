@@ -1,0 +1,15 @@
+<!-- VYRO V mark (master vector, Lime accent). Traced from docs/template/min_logo.png.
+     The recolourable React version lives in src/components/brand/VyroMark.tsx and uses the same paths. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 510" width="760" height="510">
+  <defs>
+    <linearGradient id="bodyLeft" x1="0.1" y1="0.1" x2="0.7" y2="1"><stop offset="0" stop-color="#2F7F00"/><stop offset="0.55" stop-color="#4FB400"/><stop offset="1" stop-color="#7EFF00"/></linearGradient>
+    <linearGradient id="bodyRight" x1="0.8" y1="0.1" x2="0.3" y2="1"><stop offset="0" stop-color="#2F7F00"/><stop offset="0.5" stop-color="#5CCB00"/><stop offset="1" stop-color="#8CFF10"/></linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0" stop-color="#9DFF18"/><stop offset="1" stop-color="#B8FF2E"/></linearGradient>
+  </defs>
+  <path fill="url(#bodyLeft)" d="M0 4 L168 4 C196 4 214 14 228 36 L350 214 C364 236 368 260 362 276 L286 394 C278 408 262 412 254 398 Z"/>
+  <path fill="url(#face)" d="M0 4 L168 4 C196 4 214 14 228 36 L350 214 C362 234 366 258 362 276 C310 150 210 72 36 58 Z"/>
+  <path fill="none" stroke="#E4FF6A" stroke-opacity="0.85" stroke-width="3" d="M362 276 C310 150 210 72 36 58"/>
+  <path fill="url(#bodyRight)" d="M756 4 L620 4 C580 4 548 22 530 46 L304 404 C290 426 288 452 302 468 C322 494 366 504 404 498 C420 496 432 490 440 482 Z"/>
+  <path fill="url(#face)" d="M756 4 L620 4 C580 4 548 22 530 46 L368 300 C450 170 580 100 720 60 Z"/>
+  <path fill="none" stroke="#E4FF6A" stroke-opacity="0.85" stroke-width="3" d="M368 300 C450 170 580 100 720 60"/>
+</svg>

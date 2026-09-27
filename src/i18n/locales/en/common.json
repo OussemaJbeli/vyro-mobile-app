@@ -1,0 +1,21 @@
+{
+  "back": "Back",
+  "close": "Close",
+  "cancel": "Cancel",
+  "continue": "Continue",
+  "save": "Save",
+  "retry": "Try again",
+  "search": "Search",
+  "loading": "Loading",
+  "exit": "Exit",
+  "resume": "Resume",
+  "saveAndExit": "Save & exit",
+  "tapToDismiss": "Tap to dismiss",
+  "profileAndSettings": "Profile and settings",
+  "increase": "Increase {{label}}",
+  "decrease": "Decrease {{label}}",
+  "tapToType": "{{label}}: {{value}}. Tap to type",
+  "streakDays_one": "{{count}} day",
+  "streakDays_other": "{{count}} days",
+  "streakLabel": "Streak: {{text}}"
+}

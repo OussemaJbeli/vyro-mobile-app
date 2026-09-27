@@ -1,0 +1,47 @@
+{
+  "title": "Equipment",
+  "subtitle": "Turn off what you don't have. Workouts will flag exercises you can't do.",
+  "categories": {
+    "free_weights": "Free weights",
+    "machines": "Machines",
+    "cardio": "Cardio",
+    "bodyweight": "Bodyweight",
+    "accessories": "Accessories",
+    "other": "Other"
+  },
+  "presets": {
+    "title": "Presets",
+    "full_gym": "Full gym",
+    "home_dumbbells": "Home dumbbells",
+    "bodyweight": "Bodyweight only",
+    "travel": "Travel"
+  },
+  "presetConfirm": {
+    "title": "Apply “{{name}}”?",
+    "on": "Turn on: {{items}}",
+    "off": "Turn off: {{items}}",
+    "none": "No changes",
+    "apply": "Apply"
+  },
+  "impact_one": "{{count}} exercise in your workouts needs this",
+  "impact_other": "{{count}} exercises in your workouts need this",
+  "available": "Available",
+  "unavailable": "Unavailable",
+  "add": "Add equipment",
+  "addTitle": "New equipment",
+  "name": "Name",
+  "category": "Category",
+  "custom": "Custom",
+  "delete": "Delete",
+  "deleteConfirm": "Delete “{{name}}”?",
+  "edit": "Edit",
+  "editor": {
+    "picture": "Picture",
+    "pick": "Choose image",
+    "removePicture": "Remove picture",
+    "webHint": "Pictures can be added in the phone app.",
+    "icon": "Icon",
+    "reset": "Reset",
+    "done": "Done"
+  }
+}

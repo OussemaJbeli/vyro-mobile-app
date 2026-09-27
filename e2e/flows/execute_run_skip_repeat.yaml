@@ -1,0 +1,28 @@
+appId: ca.evoxai.vyro
+name: Execute a run with skip and repeat
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-train
+- tapOn: Speed Intervals
+- tapOn:
+    id: workout-start
+- tapOn:
+    id: run-start-now
+- assertVisible:
+    id: run-remaining
+- tapOn:
+    id: run-plus30
+- tapOn:
+    id: run-skip
+- assertVisible:
+    id: run-interval
+    text: .*2 / .*
+- tapOn:
+    id: run-repeat
+- tapOn:
+    id: execution-exit
+- tapOn:
+    id: exit-finish
+- tapOn:
+    id: complete-save

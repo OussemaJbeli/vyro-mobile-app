@@ -1,0 +1,23 @@
+appId: ca.evoxai.vyro
+name: Schedule an activity and move it onto a busy day (conflict warning)
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-plan
+- tapOn:
+    id: plan-add
+- tapOn:
+    id: form-title
+- inputText: E2E Session
+- tapOn:
+    id: form-save
+- tapOn: E2E Session
+- tapOn:
+    id: action-move
+- tapOn:
+    id: move-date
+- tapOn:
+    id: move-confirm
+# The routine fills every day, so any target day already has sessions.
+- assertVisible:
+    id: move-conflicts

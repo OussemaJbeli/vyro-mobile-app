@@ -1,0 +1,33 @@
+appId: ca.evoxai.vyro
+name: Create a gym workout, reorder and duplicate
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-train
+- tapOn:
+    id: train-create
+- tapOn:
+    id: create-gym
+- tapOn:
+    id: builder-name
+- inputText: E2E Push
+- tapOn:
+    id: builder-add
+- tapOn:
+    id: picker-search
+- inputText: Bench
+- tapOn: Bench Press
+- tapOn:
+    id: picker-search
+- eraseText
+- inputText: Pushdown
+- tapOn: Tricep Pushdown
+- tapOn:
+    id: picker-add
+- tapOn:
+    id: builder-save
+- assertVisible: E2E Push
+- longPressOn: E2E Push
+- tapOn:
+    text: Duplicate
+- assertVisible: E2E Push (copy)

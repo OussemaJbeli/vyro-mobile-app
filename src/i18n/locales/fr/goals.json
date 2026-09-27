@@ -1,0 +1,66 @@
+{
+  "title": "Objectifs",
+  "add": "Nouvel objectif",
+  "empty": {
+    "title": "Aucun objectif",
+    "body": "Fixez une cible pour suivre vos progrès dans le temps.",
+    "action": "Ajouter un objectif"
+  },
+  "sections": {
+    "active": "Actifs",
+    "other": "Historique"
+  },
+  "types": {
+    "weight": "Poids",
+    "measurement": "Mensuration",
+    "consistency": "Régularité",
+    "running": "Course",
+    "frequency": "Fréquence d'entraînement",
+    "muscle": "Prise de muscle",
+    "custom": "Personnalisé"
+  },
+  "status": {
+    "active": "Actif",
+    "paused": "En pause",
+    "achieved": "Atteint",
+    "abandoned": "Abandonné"
+  },
+  "form": {
+    "newTitle": "Nouvel objectif",
+    "editTitle": "Modifier l'objectif",
+    "type": "Type d'objectif",
+    "title": "Titre",
+    "titlePlaceholder": "ex. Atteindre 70 kg",
+    "target": "Cible",
+    "start": "Valeur de départ",
+    "startHint": "Prérempli avec votre dernière mesure",
+    "measurement": "Mensuration",
+    "unit": "Unité",
+    "startDate": "Date de début",
+    "targetDate": "Date cible",
+    "targetDateHint": "Facultatif · AAAA-MM-JJ",
+    "notes": "Notes",
+    "sessionsPerWeek": "Séances par semaine",
+    "completionPercent": "Taux de réalisation visé (%)",
+    "runningPerWeek": "Kilomètres par semaine",
+    "required": "Obligatoire",
+    "invalidDate": "Utilisez le format AAAA-MM-JJ.",
+    "targetAfterStart": "La date cible doit être après la date de début."
+  },
+  "actions": {
+    "pause": "Mettre en pause",
+    "resume": "Reprendre",
+    "achieve": "Marquer atteint",
+    "abandon": "Abandonner",
+    "delete": "Supprimer"
+  },
+  "confirm": {
+    "achieve": "Marquer cet objectif comme atteint ?",
+    "abandon": "Abandonner cet objectif ? Il reste dans votre historique.",
+    "pause": "Mettre cet objectif en pause ?",
+    "resume": "Reprendre cet objectif ?",
+    "delete": "Supprimer cet objectif ? Action irréversible.",
+    "body": "Vous pouvez le consulter à tout moment dans Objectifs."
+  },
+  "progressSoon": "Le suivi de progression arrive avec les statistiques (étape 24)."
+}

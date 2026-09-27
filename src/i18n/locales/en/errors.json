@@ -1,0 +1,17 @@
+{
+  "DB_WRITE_FAILED": "We couldn't save this. Your existing data was not changed.",
+  "DB_READ_FAILED": "We couldn't load your data. Please try again.",
+  "VALIDATION": "Some values don't look right. Please check and try again.",
+  "NOT_FOUND": "We couldn't find that item. It may have been deleted.",
+  "PERMISSION_DENIED": "VYRO needs permission to do that. You can allow it in system settings.",
+  "FILE_IO": "We couldn't read or write the file on this device.",
+  "IMPORT_INVALID": "This backup file can't be imported. Your data was not changed.",
+  "NOTIFICATION_FAILED": "We couldn't schedule the reminder.",
+  "UNKNOWN": "Something went wrong. Your data is safe.",
+  "boundaryTitle": "Something went wrong",
+  "boundaryBody": "Your data is safe on this device. Try again.",
+  "MIGRATION_FAILED": "VYRO couldn't update its database. Your data was not changed. Export diagnostics and contact support.",
+  "exportDiagnostics": "Export diagnostics",
+  "dbErrorTitle": "Database problem",
+  "EXECUTION_ACTIVE": "Another workout is already in progress. Finish or discard it first."
+}

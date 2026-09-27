@@ -1,0 +1,38 @@
+appId: ca.evoxai.vyro
+name: Onboarding, every step answered
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: welcome-start
+- tapOn:
+    id: onboarding-name
+- inputText: Alex
+- tapOn:
+    id: onboarding-continue
+- repeat:
+    while:
+      notVisible:
+        id: onboarding-height
+    times: 4
+    commands:
+      - tapOn:
+          id: onboarding-continue
+- tapOn:
+    id: onboarding-height
+- inputText: '180'
+- tapOn:
+    id: onboarding-weight
+- inputText: '82'
+- repeat:
+    while:
+      visible:
+        id: onboarding-continue
+    commands:
+      - tapOn:
+          id: onboarding-continue
+- extendedWaitUntil:
+    visible:
+      id: home-today
+    timeout: 15000
+- assertVisible: Alex

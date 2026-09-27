@@ -1,0 +1,128 @@
+{
+  "welcome": {
+    "tagline": "Train smarter. Live stronger.",
+    "subtitle": "Your private training system. Everything stays on this device.",
+    "getStarted": "Get Started",
+    "resume": "Continue setup"
+  },
+  "nav": {
+    "continue": "Continue",
+    "back": "Back",
+    "skip": "Skip",
+    "stepOf": "Step {{current}} of {{total}}",
+    "skipAll": "Skip setup for now"
+  },
+  "name": {
+    "title": "What should we call you?",
+    "subtitle": "Optional. It's only used to greet you.",
+    "placeholder": "Your name"
+  },
+  "units": {
+    "title": "Your units",
+    "subtitle": "You can change these any time in Settings.",
+    "weight": "Weight",
+    "length": "Height & body",
+    "distance": "Distance",
+    "speed": "Speed",
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "in": "in",
+    "km": "km",
+    "mi": "mi",
+    "kmh": "km/h",
+    "mph": "mph"
+  },
+  "height": {
+    "title": "How tall are you?",
+    "subtitle": "Used to calculate BMI. Optional."
+  },
+  "weight": {
+    "title": "What's your current weight?",
+    "subtitle": "This becomes your first weigh-in. Optional."
+  },
+  "goal": {
+    "title": "What's your main goal?",
+    "subtitle": "It shapes your starter plan. You can add more goals later.",
+    "options": {
+      "lose_weight": "Lose weight",
+      "build_muscle": "Build muscle",
+      "run_better": "Run better",
+      "consistency": "Be consistent",
+      "custom": "Custom goal"
+    },
+    "descriptions": {
+      "lose_weight": "Mix strength and intervals",
+      "build_muscle": "Split strength training",
+      "run_better": "Structured running plans",
+      "consistency": "Show up every week",
+      "custom": "Define your own target"
+    },
+    "targetWeight": "Target weight",
+    "sessionsPerWeek": "Sessions per week",
+    "customTitle": "Describe your goal"
+  },
+  "equipment": {
+    "title": "What equipment do you have?",
+    "subtitle": "We'll suggest exercises you can actually do.",
+    "presets": {
+      "full_gym": "Full gym",
+      "home_dumbbells": "Home, dumbbells",
+      "bodyweight": "Bodyweight only"
+    },
+    "customize": "Fine-tune",
+    "available_one": "{{count}} item available",
+    "available_other": "{{count}} items available"
+  },
+  "days": {
+    "title": "When do you train?",
+    "subtitle": "Pick your usual training days.",
+    "time": "Preferred time",
+    "planTitle": "Your starter week",
+    "planSubtitle": "Built from your goal, days and equipment.",
+    "accept": "Use this plan",
+    "skipPlan": "No plan for now",
+    "rest": "Rest",
+    "noDays": "Pick at least one day to get a plan.",
+    "weekdays": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
+    "replaceWarning": "Using this plan replaces your current weekly plan."
+  },
+  "notifications": {
+    "title": "Stay on track",
+    "subtitle": "Get a reminder before planned workouts. Reminders are created on this device only.",
+    "enable": "Enable reminders",
+    "notNow": "Not now",
+    "denied": "Reminders are off. You can turn them on later in Settings.",
+    "granted": "Reminders are on."
+  },
+  "lock": {
+    "title": "Keep it private",
+    "subtitle": "Lock VYRO with your fingerprint, face or a PIN. You'll finish setting it up in Settings.",
+    "enable": "Lock VYRO",
+    "notNow": "Not now"
+  },
+  "done": {
+    "title": "You're set",
+    "subtitle": "Here's what we saved. You can change everything later.",
+    "name": "Name",
+    "units": "Units",
+    "height": "Height",
+    "weight": "Weight",
+    "goal": "Goal",
+    "equipment": "Equipment",
+    "plan": "Plan",
+    "planValue_one": "{{count}} workout per week",
+    "planValue_other": "{{count}} workouts per week",
+    "noPlan": "No plan yet",
+    "notSet": "Not set",
+    "finish": "Go to Home"
+  }
+}

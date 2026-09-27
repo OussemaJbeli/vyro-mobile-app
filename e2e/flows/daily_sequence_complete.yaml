@@ -1,0 +1,20 @@
+appId: ca.evoxai.vyro
+name: Log today's three activities → Today complete
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-start
+- repeat:
+    while:
+      visible:
+        id: today-cta
+    times: 3
+    commands:
+      - tapOn:
+          id: today-cta
+      - tapOn:
+          id: qa-log-past
+      - tapOn:
+          id: log-save
+- assertVisible:
+    id: today-complete-done

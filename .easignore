@@ -1,0 +1,57 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+
+# VYRO
+coverage/
+*.keystore
+.env*
+!.env.example
+
+# Personal-use exercise media imported from lyfta.app (Gymvisual, licensed to Lyfta): never commit
+scripts/lyfta/cache/pages/
+
+# EAS upload only (see .gitignore). The personal exercise media above are kept IN the
+# build; the scraper cache and the plain-text AI key note stay out.
+scripts/lyfta/cache/
+docs/roadmap/AI-rovider.md

@@ -1,0 +1,23 @@
+appId: ca.evoxai.vyro
+name: Create the FS §19 running plan (total 35:00)
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- tapOn:
+    id: tab-train
+- tapOn:
+    id: train-create
+- tapOn:
+    id: create-running
+- tapOn:
+    id: run-name
+- inputText: E2E Intervals
+- tapOn:
+    id: run-presets
+- tapOn:
+    id: preset-intervals35
+- assertVisible:
+    id: run-total
+    text: .*35:00.*
+- tapOn:
+    id: run-save
+- assertVisible: E2E Intervals

@@ -1,0 +1,6 @@
+appId: ca.evoxai.vyro
+name: Onboarding, everything skipped
+---
+- runFlow: ../subflows/fresh_install_skip.yaml
+- assertVisible:
+    id: home-today
