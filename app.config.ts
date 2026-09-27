@@ -24,7 +24,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // Privacy (step 26): no Android cloud auto-backup of local data and photos.
     allowBackup: false,
     package: 'ca.evoxai.vyro',
-    versionCode: 1,
     adaptiveIcon: {
       backgroundColor: BRAND_BACKGROUND,
       foregroundImage: './assets/brand/adaptive-foreground.png',
