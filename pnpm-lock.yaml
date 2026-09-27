@@ -8,6 +8,9 @@ dependencies:
   '@expo-google-fonts/inter':
     specifier: ^0.4.2
     version: 0.4.2
+  '@expo/metro-runtime':
+    specifier: ~57.0.16
+    version: 57.0.16(@expo/log-box@57.0.4)(expo@57.0.25)(react-dom@19.2.3)(react-native@0.86.3)(react@19.2.3)
   '@expo/vector-icons':
     specifier: ^15.0.2
     version: 15.1.1(expo-font@57.0.4)(react-native@0.86.3)(react@19.2.3)
