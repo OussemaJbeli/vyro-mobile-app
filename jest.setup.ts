@@ -41,6 +41,7 @@ jest.mock('expo-video', () => ({
   useVideoPlayer: () => ({
     play: jest.fn(),
     pause: jest.fn(),
+    replaceAsync: () => Promise.resolve(),
     status: 'idle',
     addListener: () => ({ remove: jest.fn() }),
   }),

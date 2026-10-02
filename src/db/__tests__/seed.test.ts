@@ -6,7 +6,7 @@ import { runMigrations } from '../migrations/runner';
 import { seedData } from '../seed/data/content';
 import { seedId, seedKey } from '../seed/ids';
 import { getSeedVersion, seedDatabase } from '../seed/seed';
-import { applyGymRepsStandard, applyRoutine, pruneSampleWorkouts } from '../routine';
+import { applyRoutine, pruneSampleWorkouts } from '../routine';
 import { scheduleRepo } from '../repositories/schedule';
 import { openNodeDriver } from '../testing/nodeDriver';
 
@@ -47,7 +47,7 @@ describe('seed', () => {
     expect(c.workout_templates).toBe(seedData.templates.length);
     expect(c.measurement_types).toBe(10);
     expect(c.photo_categories).toBe(13);
-    expect(await getSeedVersion(db)).toBe(3);
+    expect(await getSeedVersion(db)).toBe(5);
     expect(await db.all('PRAGMA foreign_key_check')).toEqual([]);
   });
 
@@ -63,7 +63,7 @@ describe('seed', () => {
     await seedDatabase(db);
     await db.run("UPDATE exercises SET name = 'My Bench' WHERE slug = 'bench_press'");
     await db.run("UPDATE equipment SET available = 0 WHERE slug = 'cable_machine'");
-    const report = await seedDatabase(db, { version: 4 });
+    const report = await seedDatabase(db, { version: 6 });
     expect(report).toMatchObject({ ran: true, inserted: 0 });
     expect(await db.get("SELECT name FROM exercises WHERE slug = 'bench_press'")).toEqual({
       name: 'My Bench',
@@ -124,7 +124,7 @@ describe('seed content integrity', () => {
 
   it('matches each running plan total to its template duration', () => {
     const runs = seedData.templates.filter((t) => t.type === 'running');
-    expect(runs.length).toBeGreaterThanOrEqual(8);
+    expect(runs.length).toBeGreaterThanOrEqual(5);
     for (const t of runs) {
       const total = (t.intervals ?? []).reduce((s, i) => s + i.durationSeconds, 0);
       expect({ key: t.key, total }).toEqual({ key: t.key, total: t.durationMinutes * 60 });
@@ -162,7 +162,7 @@ describe('seed content integrity', () => {
     expect(await applyRoutine(db, { today: '2026-09-26' })).toBe(true);
     expect(await applyRoutine(db, { today: '2026-09-26' })).toBe(false);
     const visible = await db.all('SELECT id FROM workout_templates WHERE deleted_at IS NULL');
-    expect(visible).toHaveLength(12);
+    expect(visible).toHaveLength(6);
     await scheduleRepo(db).materialize('2026-09-26', '2026-10-11');
     const day = async (d: string) =>
       (
@@ -171,19 +171,19 @@ describe('seed content integrity', () => {
           [d],
         )
       ).map((s) => (s.start_time ? `${s.type}@${s.start_time}` : s.type));
-    // Monday, Thursday (rest), Sunday (14:00 start), and the next Monday repeats.
-    expect(await day('2026-09-28')).toEqual(['abs@12:10', 'running@16:30', 'gym@17:00']);
-    // Wednesday (docs/plan/weak.md): run 14:30, gym right after, six-pack 16:10; by time.
-    expect(await day('2026-09-30')).toEqual(['running@14:30', 'gym@15:10', 'abs@16:10']);
+    // Push / Pull / Legs (1.2.0): the run first (warm-up), the gym right after; Thu rest.
+    expect(await day('2026-09-28')).toEqual(['running@16:30', 'gym@17:00']);
+    expect(await day('2026-09-30')).toEqual(['running@14:30', 'gym@14:55']);
     expect(await day('2026-10-01')).toEqual(['rest']);
-    expect(await day('2026-10-04')).toEqual(['abs@12:10', 'running@14:30', 'gym@15:15']);
+    expect(await day('2026-10-02')).toEqual(['running@14:30', 'gym@15:00']);
+    expect(await day('2026-10-04')).toEqual(['running@14:30', 'gym@14:55']);
     expect(await day('2026-10-05')).toEqual(await day('2026-09-28'));
-    expect(await day('2026-09-26')).toEqual(['abs@12:10', 'running@16:30', 'gym@17:05']);
+    expect(await day('2026-09-26')).toEqual(['running@16:30', 'gym@17:00']);
     const profile = await db.get<{ speed_unit: string }>('SELECT speed_unit FROM user_profile');
     expect(profile?.speed_unit).toBe('mph');
     // The whole current week is filled from its Monday (startup materializes from there).
     await scheduleRepo(db).materialize('2026-09-21', '2026-09-27');
-    expect(await day('2026-09-21')).toEqual(['abs@12:10', 'running@16:30', 'gym@17:00']);
+    expect(await day('2026-09-21')).toEqual(['running@16:30', 'gym@17:00']);
     // Self-healing: an emptied plan brings the routine back on the next start.
     await db.run('UPDATE schedule_rules SET deleted_at = ?', ['2026-09-27T00:00:00.000Z']);
     expect(await applyRoutine(db, { today: '2026-09-27' })).toBe(true);
@@ -207,24 +207,47 @@ describe('seed content integrity', () => {
       "SELECT title FROM scheduled_sessions WHERE scheduled_date = '2026-09-28' AND deleted_at IS NULL ORDER BY order_in_day",
     );
     expect(monday.map((s) => s.title)).toEqual([
-      'Abs A · Crunch',
-      'Speed Intervals',
-      'Day 1 · Chest + Lats',
+      'Real Speed',
+      'Push · Chest + Shoulders + Triceps',
     ]);
   });
 
-  it('removes sample workouts on start and moves gym lifts to 3 × 15 once', async () => {
+  it('removes sample workouts on start; Push keeps its starting weights', async () => {
     await seedDatabase(db);
     expect(await pruneSampleWorkouts(db)).toBeGreaterThan(0);
     const left = await db.all<{ id: string }>(
       'SELECT id FROM workout_templates WHERE deleted_at IS NULL',
     );
-    expect(left).toHaveLength(12);
-    expect(await applyGymRepsStandard(db)).toBe(true);
-    expect(await applyGymRepsStandard(db)).toBe(false);
-    const sets = await db.all<{ sets: number; target_reps: number }>(
-      "SELECT sets, target_reps FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_arms'",
+    expect(left).toHaveLength(6);
+    const push = await db.all<{ sets: number; target_reps: number; target_weight_kg: number }>(
+      "SELECT sets, target_reps, target_weight_kg FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_push' ORDER BY order_index",
     );
-    expect(sets.every((s) => s.sets === 3 && s.target_reps === 15)).toBe(true);
+    expect(push[0]).toEqual({ sets: 3, target_reps: 6, target_weight_kg: 35 });
+    expect(push.reduce((n, x) => n + x.sets, 0)).toBe(23);
+  });
+
+  it('re-syncs the routine workouts on an existing install (exercise swaps reach the phone)', async () => {
+    await seedDatabase(db);
+    await applyRoutine(db, { today: '2026-10-02' });
+    // An older install: Push still starts with the old chest press, routine v6.
+    await db.run(
+      "UPDATE workout_template_exercises SET exercise_id = 'seed-ex-chest_press_machine' WHERE id = 'seed-te-gym_push-0'",
+    );
+    await db.run("UPDATE app_settings SET value = '6' WHERE key = 'routine_version'");
+    expect(await applyRoutine(db, { today: '2026-10-02' })).toBe(true);
+    const push = await db.all<{ exercise_id: string }>(
+      "SELECT exercise_id FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_push' ORDER BY order_index",
+    );
+    expect(push.map((x) => x.exercise_id.replace('seed-ex-', ''))).toEqual([
+      'lever_lying_chest_press',
+      'incline_bench_press',
+      'decline_bench_press',
+      'pec_deck',
+      'dumbbell_shoulder_press',
+      'lateral_raise',
+      'cable_leaning_lateral_raise',
+      'tricep_pushdown',
+      'overhead_cable_extension',
+    ]);
   });
 });

@@ -28,8 +28,34 @@ export function ExerciseVideo({
     });
     // Start as soon as the file is loaded (the setup call can run before that), and
     // restart if anything stops it mid-workout.
+    // Self-healing load (1.2.0): a demo sometimes failed to load and stayed blank until the
+    // exercise was reopened. Reload the same file on error, or if it isn't ready in time.
+    let tries = 0;
+    let watchdog: ReturnType<typeof setTimeout> | null = null;
+    const reload = () => {
+      if (tries >= 3) return;
+      tries += 1;
+      void player.replaceAsync(source).then(() => {
+        player.loop = true;
+        player.muted = true;
+        player.play();
+      });
+      arm();
+    };
+    const arm = () => {
+      if (watchdog) clearTimeout(watchdog);
+      watchdog = setTimeout(() => {
+        if (player.status !== 'readyToPlay') reload();
+      }, 2500);
+    };
+    arm();
     const ready = player.addListener('statusChange', ({ status }) => {
-      if (status === 'readyToPlay') player.play();
+      if (status === 'readyToPlay') {
+        if (watchdog) clearTimeout(watchdog);
+        player.play();
+      } else if (status === 'error') {
+        setTimeout(reload, 300);
+      }
     });
     const playing = player.addListener('playingChange', ({ isPlaying }) => {
       if (!isPlaying && AppState.currentState === 'active' && player.status === 'readyToPlay') {
@@ -37,11 +63,12 @@ export function ExerciseVideo({
       }
     });
     return () => {
+      if (watchdog) clearTimeout(watchdog);
       sub.remove();
       ready.remove();
       playing.remove();
     };
-  }, [player]);
+  }, [player, source]);
   return (
     <VideoView
       player={player}

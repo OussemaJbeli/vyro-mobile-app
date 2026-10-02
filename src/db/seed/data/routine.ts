@@ -1,7 +1,8 @@
 /**
- * The owner's training routine (docs/default programs): a 3-on / 1-off cycle shared by
- * running (16:30), gym (after the run) and six-pack (12:10). Seed v2 adds the rows; the
- * schedule itself is created once by `applyRoutine` (src/db/routine.ts).
+ * The owner's training routine (docs/after_1_week_using/new_program.md, 1.2.0): Push / Pull /
+ * Legs, each with its treadmill session first (run = warm-up), then the gym. Fixed week:
+ * Mon Push · Tue Pull · Wed Legs · Thu Rest · Fri Push · Sat Pull · Sun Legs. The schedule is
+ * created by `applyRoutine` (src/db/routine.ts).
  */
 import {
   type SeedEquipment,
@@ -11,6 +12,8 @@ import {
 } from '../types';
 
 export const routineEquipment: SeedEquipment[] = [
+  { slug: 'incline_press_machine', name: 'Incline press machine', category: 'machines' },
+  { slug: 'biceps_curl_machine', name: 'Biceps curl machine', category: 'machines' },
   { slug: 'squat_rack', name: 'Squat rack', category: 'free_weights' },
   { slug: 'preacher_bench', name: 'Preacher bench', category: 'accessories' },
   { slug: 'calf_raise_machine', name: 'Calf raise machine', category: 'machines' },
@@ -38,6 +41,108 @@ const lift = (
 });
 
 export const routineExercises: SeedExercise[] = [
+  lift({
+    slug: 'lever_lying_chest_press',
+    name: 'Lever Lying Chest Press',
+    category: 'chest',
+    primaryMuscle: 'chest',
+    secondaryMuscles: ['front_delts', 'triceps'],
+    equipment: ['chest_press_machine'],
+    defaultReps: 8,
+    instructions: [
+      'Lie on the machine bench, handles in line with the middle of your chest.',
+      'Press up without locking the elbows.',
+      'Lower slowly until the handles are just above your chest.',
+    ],
+  }),
+  lift({
+    slug: 'incline_bench_press',
+    name: 'Incline Bench Press',
+    category: 'chest',
+    primaryMuscle: 'upper_chest',
+    secondaryMuscles: ['front_delts', 'triceps'],
+    equipment: ['barbell', 'adjustable_bench'],
+    defaultReps: 8,
+    instructions: [
+      'Bench at 30–45°, grip a little wider than your shoulders.',
+      'Lower the bar to your upper chest with control.',
+      'Press up and slightly back over your shoulders.',
+    ],
+  }),
+  lift({
+    slug: 'lever_preacher_curl',
+    name: 'Lever Preacher Curl',
+    category: 'arms',
+    primaryMuscle: 'biceps',
+    secondaryMuscles: ['forearms'],
+    equipment: ['biceps_curl_machine'],
+    defaultReps: 10,
+    defaultRestSeconds: 75,
+    difficulty: 'beginner',
+    instructions: [
+      'Upper arms flat on the pad, elbows in line with the machine axis.',
+      'Curl up and squeeze for a second.',
+      'Lower all the way with control: no bouncing at the bottom.',
+    ],
+  }),
+  lift({
+    slug: 'cable_leaning_lateral_raise',
+    name: 'Cable Leaning Lateral Raise',
+    category: 'shoulders',
+    primaryMuscle: 'side_delts',
+    equipment: ['cable_machine'],
+    defaultReps: 12,
+    defaultRestSeconds: 75,
+    instructions: [
+      'Hold the low pulley with the far hand, the other hand on the post, leaning away.',
+      'Raise the arm out to the side up to shoulder height.',
+      'Lower slowly; do all reps, then switch sides.',
+    ],
+  }),
+  lift({
+    slug: 'incline_chest_press_machine',
+    name: 'Incline Press Machine',
+    category: 'chest',
+    primaryMuscle: 'upper_chest',
+    secondaryMuscles: ['front_delts', 'triceps'],
+    equipment: ['incline_press_machine'],
+    defaultReps: 8,
+    instructions: [
+      'Set the seat so the handles start level with your upper chest.',
+      'Press up and forward without locking the elbows.',
+      'Lower slowly until you feel a stretch across the chest.',
+    ],
+  }),
+  lift({
+    slug: 'close_grip_pulldown',
+    name: 'Close-Grip Front Pulldown',
+    category: 'back',
+    primaryMuscle: 'lats',
+    secondaryMuscles: ['biceps', 'mid_back'],
+    equipment: ['lat_pulldown_machine'],
+    defaultReps: 8,
+    instructions: [
+      'Hold the close-grip handle, chest up, thighs under the pads.',
+      'Pull the handle to your upper chest, elbows driving down.',
+      'Let the weight up slowly to a full stretch.',
+    ],
+  }),
+  lift({
+    slug: 'machine_bicep_curl',
+    name: 'Biceps Curl Machine',
+    category: 'arms',
+    primaryMuscle: 'biceps',
+    secondaryMuscles: ['forearms'],
+    equipment: ['biceps_curl_machine'],
+    defaultReps: 10,
+    defaultRestSeconds: 75,
+    difficulty: 'beginner',
+    instructions: [
+      'Rest your upper arms on the pad, elbows in line with the machine axis.',
+      'Curl the handles up and squeeze for a second.',
+      'Lower all the way down with control.',
+    ],
+  }),
   lift({
     slug: 'incline_dumbbell_fly',
     name: 'Incline Dumbbell Fly',
@@ -158,6 +263,13 @@ export const routineExercises: SeedExercise[] = [
 
 /** exercise → alternatives (machines need a dumbbell-or-bodyweight option). */
 export const routineAlternatives: Record<string, string[]> = {
+  lever_lying_chest_press: ['dumbbell_bench_press', 'push_up'],
+  incline_bench_press: ['incline_dumbbell_press', 'push_up'],
+  lever_preacher_curl: ['bicep_curl', 'ez_bar_curl'],
+  cable_leaning_lateral_raise: ['lateral_raise'],
+  incline_chest_press_machine: ['incline_dumbbell_press', 'push_up'],
+  close_grip_pulldown: ['lat_pulldown', 'dumbbell_row'],
+  machine_bicep_curl: ['bicep_curl', 'ez_bar_curl'],
   incline_dumbbell_fly: ['dumbbell_fly', 'cable_fly'],
   machine_chest_dip: ['dips', 'push_up'],
   chest_supported_row: ['dumbbell_row', 'seated_row'],
@@ -186,316 +298,272 @@ const seg = (
 const rounds = (n: number, a: SeedInterval, b: SeedInterval) =>
   Array.from({ length: n }, () => [a, b]).flat();
 
-// Compounds rest 2–3 min, isolation 60–120 s. Target = bottom of the range (notes hold it).
+// Compounds rest 2–3 min, isolation 60–120 s. Target reps = bottom of the range; the note holds
+// the range and the progression rule (double progression, 1–2 reps in reserve).
 const C = 150;
 const I = 90;
-const range = (r: string) => `${r} reps · stop 1–3 reps before failure`;
+const range = (r: string) =>
+  `${r} reps · 1–2 reps in reserve · all sets at the top of the range → add weight`;
+const each = (r: string) => `${range(r)} · weight per dumbbell`;
 
-const baseTemplates: SeedTemplate[] = [
-  // Gym: Day 1 → Day 2 → Day 3 → rest.
+export const routineTemplates: SeedTemplate[] = [
+  // Day 1 — Push (chest, shoulders, triceps): 23 working sets.
   {
-    key: 'gym_chest_lats',
-    name: 'Day 1 · Chest + Lats',
-    type: 'gym',
-    durationMinutes: 70,
-    difficulty: 'intermediate',
-    coverKey: 'gym_chest_lats',
-    description: 'Chest then lats/back. Warm up 5–10 min plus lighter sets before the bench.',
-    exercises: [
-      { exercise: 'bench_press', sets: 3, targetReps: 6, restSeconds: 180, notes: range('6–8') },
-      {
-        exercise: 'incline_dumbbell_press',
-        sets: 3,
-        targetReps: 8,
-        restSeconds: C,
-        notes: range('8–10'),
-      },
-      {
-        exercise: 'incline_dumbbell_fly',
-        sets: 2,
-        targetReps: 10,
-        restSeconds: I,
-        notes: range('10–15'),
-      },
-      {
-        exercise: 'machine_chest_dip',
-        sets: 2,
-        targetReps: 10,
-        restSeconds: I,
-        notes: range('10–15'),
-      },
-      { exercise: 'lat_pulldown', sets: 3, targetReps: 8, restSeconds: 120, notes: range('8–12') },
-      { exercise: 'seated_row', sets: 3, targetReps: 8, restSeconds: 120, notes: range('8–12') },
-      {
-        exercise: 'chest_supported_row',
-        sets: 2,
-        targetReps: 10,
-        restSeconds: I,
-        notes: range('10–12'),
-      },
-    ],
-  },
-  {
-    key: 'gym_shoulders_legs',
-    name: 'Day 2 · Shoulders + Legs',
+    key: 'gym_push',
+    name: 'Push · Chest + Shoulders + Triceps',
     type: 'gym',
     durationMinutes: 75,
     difficulty: 'intermediate',
-    coverKey: 'gym_shoulders_legs',
-    description: 'Shoulders then legs. Lighter warm-up sets before the press and the squat.',
+    coverKey: 'gym_push',
+    description:
+      'After the Real Speed run. Start at the listed weights; progress by reps, then weight.',
     exercises: [
+      {
+        exercise: 'lever_lying_chest_press',
+        sets: 3,
+        targetReps: 6,
+        targetWeightKg: 35,
+        restSeconds: C,
+        notes: range('6–10'),
+      },
+      {
+        exercise: 'incline_bench_press',
+        sets: 3,
+        targetReps: 8,
+        targetWeightKg: 25,
+        restSeconds: C,
+        notes: `Barbell, total weight · ${range('8–12')}`,
+      },
+      {
+        exercise: 'decline_bench_press',
+        sets: 2,
+        targetReps: 8,
+        targetWeightKg: 20,
+        restSeconds: C,
+        notes: `Barbell, total weight · ${range('8–12')}`,
+      },
+      {
+        exercise: 'pec_deck',
+        sets: 2,
+        targetReps: 10,
+        targetWeightKg: 30,
+        restSeconds: I,
+        notes: range('10–15'),
+      },
       {
         exercise: 'dumbbell_shoulder_press',
         sets: 3,
         targetReps: 6,
+        targetWeightKg: 10,
         restSeconds: C,
-        notes: range('6–10'),
+        notes: each('6–10'),
       },
       {
         exercise: 'lateral_raise',
         sets: 3,
-        targetReps: 12,
-        restSeconds: 75,
-        notes: range('12–15'),
+        targetReps: 10,
+        targetWeightKg: 10,
+        restSeconds: I,
+        notes: each('10–15'),
       },
       {
-        exercise: 'cable_lateral_raise',
+        exercise: 'cable_leaning_lateral_raise',
         sets: 2,
         targetReps: 12,
-        restSeconds: 75,
-        notes: range('12–15'),
+        targetWeightKg: 15,
+        restSeconds: I,
+        notes: `Per side · ${range('12–15')}`,
       },
       {
-        exercise: 'reverse_pec_deck',
+        exercise: 'tricep_pushdown',
         sets: 3,
-        targetReps: 12,
-        restSeconds: 75,
-        notes: range('12–15'),
+        targetReps: 8,
+        targetWeightKg: 40,
+        restSeconds: I,
+        notes: range('8–12'),
       },
-      { exercise: 'squat', sets: 3, targetReps: 6, restSeconds: 180, notes: range('6–10') },
-      { exercise: 'leg_extension', sets: 2, targetReps: 10, restSeconds: I, notes: range('10–15') },
-      { exercise: 'leg_curl', sets: 3, targetReps: 10, restSeconds: I, notes: range('10–15') },
+      {
+        exercise: 'overhead_cable_extension',
+        sets: 2,
+        targetReps: 10,
+        targetWeightKg: 25,
+        restSeconds: I,
+        notes: range('10–15'),
+      },
+    ],
+  },
+  // Day 2 — Pull (back/lats, biceps, upper back): 15 working sets.
+  {
+    key: 'gym_pull',
+    name: 'Pull · Back + Biceps',
+    type: 'gym',
+    durationMinutes: 55,
+    difficulty: 'intermediate',
+    coverKey: 'gym_pull',
+    description: 'After the Speed Endurance run. Drop upright rows if they bother your shoulders.',
+    exercises: [
+      {
+        exercise: 'lat_pulldown',
+        sets: 3,
+        targetReps: 6,
+        targetWeightKg: 45,
+        restSeconds: C,
+        notes: `Wide grip · ${range('6–10')}`,
+      },
+      {
+        exercise: 'seated_row',
+        sets: 3,
+        targetReps: 8,
+        targetWeightKg: 40,
+        restSeconds: C,
+        notes: range('8–12'),
+      },
+      {
+        exercise: 'close_grip_pulldown',
+        sets: 2,
+        targetReps: 8,
+        targetWeightKg: 40,
+        restSeconds: C,
+        notes: range('8–12'),
+      },
+      {
+        exercise: 'ez_bar_curl',
+        sets: 3,
+        targetReps: 6,
+        targetWeightKg: 20,
+        restSeconds: I,
+        notes: range('6–10'),
+      },
+      {
+        exercise: 'lever_preacher_curl',
+        sets: 2,
+        targetReps: 10,
+        targetWeightKg: 15,
+        restSeconds: I,
+        notes: range('10–15'),
+      },
+      {
+        exercise: 'upright_row',
+        sets: 2,
+        targetReps: 10,
+        restSeconds: I,
+        notes: `Controlled weight · ${range('10–15')} · skip if the shoulders hurt`,
+      },
+    ],
+  },
+  // Day 3 — Legs (quads, hamstrings, calves, posterior chain): 14 working sets.
+  {
+    key: 'gym_legs',
+    name: 'Legs · Quads + Hamstrings + Calves',
+    type: 'gym',
+    durationMinutes: 55,
+    difficulty: 'intermediate',
+    coverKey: 'gym_legs',
+    description: 'After the easy run. Never trade depth or control for more weight.',
+    exercises: [
+      {
+        exercise: 'hack_squat',
+        sets: 3,
+        targetReps: 6,
+        targetWeightKg: 80,
+        restSeconds: 180,
+        notes: range('6–10'),
+      },
+      {
+        exercise: 'leg_press',
+        sets: 3,
+        targetReps: 8,
+        targetWeightKg: 100,
+        restSeconds: C,
+        notes: range('8–12'),
+      },
+      {
+        exercise: 'leg_curl',
+        sets: 3,
+        targetReps: 10,
+        targetWeightKg: 40,
+        restSeconds: I,
+        notes: `Prone · ${range('10–15')}`,
+      },
       {
         exercise: 'machine_calf_raise',
         sets: 3,
         targetReps: 10,
-        restSeconds: 75,
-        notes: range('10–15'),
-      },
-    ],
-  },
-  {
-    key: 'gym_arms',
-    name: 'Day 3 · Biceps + Triceps',
-    type: 'gym',
-    durationMinutes: 55,
-    difficulty: 'intermediate',
-    coverKey: 'gym_arms',
-    description: 'Biceps then triceps. Full, controlled range on every rep.',
-    exercises: [
-      { exercise: 'ez_bar_curl', sets: 3, targetReps: 6, restSeconds: 120, notes: range('6–10') },
-      { exercise: 'preacher_curl', sets: 3, targetReps: 8, restSeconds: I, notes: range('8–12') },
-      { exercise: 'hammer_curl', sets: 2, targetReps: 10, restSeconds: 75, notes: range('10–15') },
-      {
-        exercise: 'close_grip_bench_press',
-        sets: 3,
-        targetReps: 6,
-        restSeconds: C,
-        notes: range('6–10'),
-      },
-      {
-        exercise: 'tricep_extension',
-        sets: 3,
-        targetReps: 8,
+        targetWeightKg: 90,
         restSeconds: I,
-        notes: range('8–12') + ' · dumbbell or cable',
-      },
-      {
-        exercise: 'tricep_pushdown',
-        sets: 2,
-        targetReps: 10,
-        restSeconds: 75,
         notes: range('10–15'),
       },
+      {
+        exercise: 'back_extension',
+        sets: 2,
+        targetReps: 12,
+        restSeconds: I,
+        notes: `45° bench, bodyweight · ${range('12–15')}`,
+      },
     ],
   },
 
-  // Six-pack at 12:10, same 3-on / 1-off days.
+  // Running (mph, before the gym: it doubles as the warm-up).
   {
-    key: 'abs_a',
-    name: 'Abs A · Crunch',
-    type: 'abs',
-    durationMinutes: 12,
-    difficulty: 'intermediate',
-    coverKey: 'abs_a',
-    description: 'Flexion focus: upper and lower abs.',
-    exercises: [
-      { exercise: 'crunch', sets: 3, targetReps: 15, restSeconds: 45 },
-      {
-        exercise: 'hanging_leg_raise',
-        sets: 3,
-        targetReps: 10,
-        restSeconds: 45,
-        notes: '10–12 reps',
-      },
-      { exercise: 'plank', sets: 3, targetDurationSeconds: 45, restSeconds: 45 },
-    ],
-  },
-  {
-    key: 'abs_b',
-    name: 'Abs B · Stability',
-    type: 'abs',
-    durationMinutes: 12,
-    difficulty: 'beginner',
-    coverKey: 'abs_b',
-    description: 'Anti-rotation and obliques: easy on leg day.',
-    exercises: [
-      { exercise: 'dead_bug', sets: 3, targetReps: 10, restSeconds: 45, notes: 'Per side' },
-      {
-        exercise: 'side_plank',
-        sets: 3,
-        targetDurationSeconds: 30,
-        restSeconds: 30,
-        notes: 'Per side',
-      },
-      { exercise: 'russian_twist', sets: 3, targetReps: 20, restSeconds: 45 },
-    ],
-  },
-  {
-    key: 'abs_c',
-    name: 'Abs C · Power',
-    type: 'abs',
-    durationMinutes: 12,
-    difficulty: 'intermediate',
-    coverKey: 'abs_c',
-    description: 'Harder moves: rollouts, rotation, full range.',
-    exercises: [
-      { exercise: 'ab_wheel_rollout', sets: 3, targetReps: 8, restSeconds: 60, notes: '8–10 reps' },
-      { exercise: 'bicycle_crunch', sets: 3, targetReps: 20, restSeconds: 45 },
-      { exercise: 'v_up', sets: 3, targetReps: 12, restSeconds: 45 },
-    ],
-  },
-
-  // Running at 16:30. Two 3-day blocks (8-day cycle with the rest days).
-  {
-    key: 'run_speed_intervals',
-    name: 'Speed Intervals',
+    key: 'run_real_speed',
+    name: 'Real Speed',
     type: 'running',
-    durationMinutes: 25,
+    durationMinutes: 24,
     difficulty: 'advanced',
-    coverKey: 'run_speed_intervals',
-    description: '8 × (1 min fast + 1 min easy). Hard but controlled, not all-out.',
+    coverKey: 'run_real_speed',
+    description:
+      '6 × (1 min @ 11 mph + 2 min @ 6 mph). Keep 11 mph until the rounds feel controlled.',
     intervals: [
-      seg('warmup', 5, 4.5, 1),
-      ...rounds(8, seg('sprint', 1, 9, 1, 'Fast'), seg('recovery', 1, 6, 1, 'Easy')),
-      seg('cooldown', 4, 4.5, 1),
+      seg('warmup', 3, 5.5, 1),
+      ...rounds(6, seg('sprint', 1, 11, 1), seg('recovery', 2, 6, 1)),
+      seg('cooldown', 3, 5.5, 1),
     ],
   },
   {
-    key: 'run_incline_endurance',
-    name: 'Incline Endurance',
-    type: 'running',
-    durationMinutes: 30,
-    difficulty: 'intermediate',
-    coverKey: 'run_incline_endurance',
-    description: 'Steady incline run: aerobic endurance and calorie burn.',
-    intervals: [seg('warmup', 5, 4.25, 1), seg('run', 20, 6, 3), seg('cooldown', 5, 4.25, 1)],
-  },
-  {
-    key: 'run_incline_power',
-    name: 'Incline Power',
-    type: 'running',
-    durationMinutes: 35,
-    difficulty: 'advanced',
-    coverKey: 'run_incline_power',
-    description: '5 × (3 min steep + 2 min easy): leg strength and conditioning.',
-    intervals: [
-      seg('warmup', 5, 4.5, 1),
-      ...rounds(5, seg('run', 3, 5.25, 7, 'Hill'), seg('walk', 2, 4, 1, 'Easy')),
-      seg('cooldown', 5, 4, 1),
-    ],
-  },
-  {
-    key: 'run_speed_endurance',
+    key: 'run_tempo_endurance',
     name: 'Speed Endurance',
     type: 'running',
-    durationMinutes: 34,
+    durationMinutes: 22,
     difficulty: 'advanced',
-    coverKey: 'run_speed_endurance',
-    description: '4 × (4 min fast + 2 min easy): hold a fast pace for longer.',
+    coverKey: 'run_tempo_endurance',
+    description: '3 × 4 min @ 8.5–9 mph with 2 min @ 6 mph between: hold a fast pace for longer.',
     intervals: [
-      seg('warmup', 7 / 3, 4, 1, '4 mph'),
-      seg('warmup', 7 / 3, 5, 1, '5 mph'),
-      seg('warmup', 7 / 3, 6, 1, '6 mph'),
-      ...rounds(4, seg('run', 4, 7.25, 1, 'Fast'), seg('recovery', 2, 4.5, 1, 'Easy')),
-      seg('cooldown', 3, 4, 1),
+      seg('warmup', 3, 5.5, 1),
+      seg('run', 4, 8.75, 1, '8.5–9 mph'),
+      seg('recovery', 2, 6, 1),
+      seg('run', 4, 8.75, 1, '8.5–9 mph'),
+      seg('recovery', 2, 6, 1),
+      seg('run', 4, 8.75, 1, '8.5–9 mph'),
+      seg('cooldown', 3, 5.5, 1),
     ],
   },
   {
-    key: 'run_easy_strides',
-    name: 'Easy Run + Strides',
+    key: 'run_easy_16',
+    name: 'Easy Controlled Run',
     type: 'running',
-    durationMinutes: 30,
+    durationMinutes: 16,
     difficulty: 'beginner',
-    coverKey: 'run_easy_strides',
-    description: 'Easy aerobic run with short relaxed strides: fresh legs for squats.',
-    intervals: [
-      seg('warmup', 5, 4.5, 1),
-      seg('run', 14, 5.5, 1),
-      ...rounds(6, seg('sprint', 1 / 3, 7.5, 1, 'Stride'), seg('walk', 2 / 3, 4, 1, 'Walk')),
-      seg('cooldown', 5, 4, 1),
-    ],
-  },
-  {
-    key: 'run_long_aerobic',
-    name: 'Long Aerobic Run',
-    type: 'running',
-    durationMinutes: 40,
-    difficulty: 'intermediate',
-    coverKey: 'run_long_aerobic',
-    description: 'Aerobic base. Add 2–5 min to the middle part every few weeks (up to 35 min).',
-    intervals: [seg('warmup', 5, 4.25, 1), seg('run', 30, 5.75, 2.5), seg('cooldown', 5, 4, 1)],
+    coverKey: 'run_easy_16',
+    description: 'Intentionally easy: aerobic work and recovery before legs. Not another HIIT.',
+    intervals: [seg('warmup', 3, 5.5, 1), seg('run', 10, 6, 1), seg('cooldown', 3, 5.5, 1)],
   },
 ];
-
-/** The owner's gym standard (1.1.0): 3 sets of 15 on every lift; weights carry over. */
-export const GYM_SETS = 3;
-export const GYM_REPS = 15;
-
-export const routineTemplates: SeedTemplate[] = baseTemplates.map((tpl) =>
-  tpl.type === 'gym'
-    ? {
-        ...tpl,
-        exercises: (tpl.exercises ?? []).map((e) => ({
-          ...e,
-          sets: GYM_SETS,
-          targetReps: GYM_REPS,
-          notes: 'Same weight as last time, or add a little when all 15 reps feel clean',
-        })),
-      }
-    : tpl,
-);
 
 type Day = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 /**
- * The owner's week (docs/plan/weak.md), the same every week (ISO weekdays, 1 = Monday).
- * The gym starts when the run is done: run start + run length + 5 min, rounded up to 5.
+ * The same week every week (ISO weekdays, 1 = Monday). Run first (it's the warm-up), gym
+ * right after; per-day run times from docs/plan/weak.md.
  */
-const WEEK: { day: Day; abs?: string; run?: [key: string, time: string]; gym?: string }[] = [
-  { day: 1, abs: '12:10', run: ['run_speed_intervals', '16:30'], gym: 'gym_chest_lats' },
-  { day: 2, abs: '12:10', run: ['run_incline_endurance', '16:30'], gym: 'gym_shoulders_legs' },
-  { day: 3, abs: '16:10', run: ['run_incline_power', '14:30'], gym: 'gym_arms' },
+const WEEK: { day: Day; run?: [key: string, time: string]; gym?: string }[] = [
+  { day: 1, run: ['run_real_speed', '16:30'], gym: 'gym_push' },
+  { day: 2, run: ['run_tempo_endurance', '16:30'], gym: 'gym_pull' },
+  { day: 3, run: ['run_easy_16', '14:30'], gym: 'gym_legs' },
   { day: 4 },
-  { day: 5, abs: '16:10', run: ['run_speed_endurance', '14:30'], gym: 'gym_chest_lats' },
-  { day: 6, abs: '12:10', run: ['run_easy_strides', '16:30'], gym: 'gym_shoulders_legs' },
-  { day: 7, abs: '12:10', run: ['run_long_aerobic', '14:30'], gym: 'gym_arms' },
+  { day: 5, run: ['run_real_speed', '14:30'], gym: 'gym_push' },
+  { day: 6, run: ['run_tempo_endurance', '16:30'], gym: 'gym_pull' },
+  { day: 7, run: ['run_easy_16', '14:30'], gym: 'gym_legs' },
 ];
-const ABS_BY_GYM: Record<string, string> = {
-  gym_chest_lats: 'abs_a',
-  gym_shoulders_legs: 'abs_b',
-  gym_arms: 'abs_c',
-};
 
 const minutes = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
 const hhmm = (m: number) =>
@@ -509,11 +577,10 @@ export function afterRun(runKey: string, runTime: string): string {
 
 /** One rule per activity and weekday (times differ per day); null key = rest day. */
 type RuleSpec = { key: string | null; days: Day[]; time: string | null };
-export const routineWeek: RuleSpec[] = WEEK.flatMap(({ day, abs, run, gym }): RuleSpec[] =>
+export const routineWeek: RuleSpec[] = WEEK.flatMap(({ day, run, gym }): RuleSpec[] =>
   !run || !gym
     ? [{ key: null, days: [day], time: null }]
     : [
-        { key: ABS_BY_GYM[gym]!, days: [day], time: abs ?? '12:10' },
         { key: run[0], days: [day], time: run[1] },
         { key: gym, days: [day], time: afterRun(run[0], run[1]) },
       ],

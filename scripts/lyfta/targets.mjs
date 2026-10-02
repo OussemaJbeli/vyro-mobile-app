@@ -45,7 +45,8 @@ export const TARGETS = [
   // Shoulders
   { slug: 'shoulder_press', names: ['barbell-seated-overhead-press'] },
   { slug: 'dumbbell_shoulder_press', names: ['dumbbell-seated-shoulder-press'] },
-  { slug: 'lateral_raise', names: ['lateral-raise', 'dumbbell-lateral-raise'] },
+  // The dumbbell version (lateral-raise-77 is the cable one).
+  { slug: 'lateral_raise', pages: ['lateral-raise-96'] },
   { slug: 'cable_lateral_raise', names: ['cable-lateral-raise'] },
   { slug: 'rear_delt_fly', names: ['dumbbell-rear-delt-fly', 'dumbbell-rear-delt-raise'] },
   { slug: 'reverse_pec_deck', names: ['lever-seated-reverse-fly'] },
@@ -123,6 +124,26 @@ export const TARGETS = [
   { slug: 'thoracic_rotation', names: ['thoracic-bridge'], re: 'thoracic|spine-twist|t-spine' },
   { slug: 'hamstring_stretch', names: ['hamstring-stretch'] },
   { slug: 'foam_roll', names: [], re: '^foam-roll|roller-.*(quad|back|thoracic)' },
+
+  // 1.2.0 Push / Pull / Legs
+  { slug: 'lever_lying_chest_press', names: ['lever-lying-chest-press'] },
+  { slug: 'incline_bench_press', pages: ['incline-bench-press-p'] },
+  { slug: 'lever_preacher_curl', pages: ['lever-preacher-curl-16'] },
+  // No video on Lyfta: cover image only.
+  {
+    slug: 'cable_leaning_lateral_raise',
+    pages: ['cable-leaning-lateral-raise-8ct'],
+    imageOnly: true,
+  },
+  { slug: 'incline_chest_press_machine', names: ['lever-incline-chest-press'] },
+  {
+    slug: 'close_grip_pulldown',
+    names: ['close-grip-front-lat-pulldown', 'cable-close-grip-front-lat-pulldown'],
+  },
+  {
+    slug: 'machine_bicep_curl',
+    names: ['lever-bicep-curl', 'lever-biceps-curl', 'lever-preacher-curl'],
+  },
 
   // Extras for later (not in the library yet)
   {

@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.2.0 — 2026-10-02
+
+### New training program (docs/after_1_week_using/new_program.md)
+- Push / Pull / Legs replaces Chest + Lats / Shoulders + Legs / Biceps + Triceps.
+- Fixed week: Mon Push · Tue Pull · Wed Legs · Thu Rest · Fri Push · Sat Pull · Sun Legs.
+- Each day: the run first (your warm-up), then the gym 5 minutes after it ends.
+- New runs: Real Speed (24 min, 6 × 1 min @ 11 mph), Speed Endurance (22 min, 3 × 4 min @
+  8.5–9 mph), Easy Controlled Run (16 min @ 6 mph).
+- Starting weights, sets and rep ranges from the program; double progression in the notes.
+  After the first session each lift starts from what you actually lifted.
+- New exercises with demo videos: Incline Press Machine, Close-Grip Front Pulldown, Biceps Curl
+  Machine. Six-pack sessions removed from the plan.
+
+### Exercise changes (after the first sessions)
+- Push: Lever Lying Chest Press (replaces Chest Press Machine), Incline Bench Press (barbell,
+  replaces Incline Press Machine), new Decline Bench Press 2 × 8–12 @ 20 kg, new Cable Leaning
+  Lateral Raise 2 × 12–15 @ 15 kg. Push is now 23 working sets (~75 min).
+- Pull: Lever Preacher Curl replaces Biceps Curl Machine.
+- Lateral Raise now shows the dumbbell video (it showed the cable version).
+- Routine workouts are re-synced from the program when it changes, so swaps reach existing installs.
+
+### Fixes
+- Exercise videos that failed to load now retry on their own instead of staying blank.
+
 ## 1.1.0 — 2026-09-27
 
 ### Onboarding

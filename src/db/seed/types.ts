@@ -38,6 +38,8 @@ export type SeedTemplateExercise = {
   sets: number;
   targetReps?: number;
   targetDurationSeconds?: number;
+  /** Starting weight (kg); later sessions start from what was actually lifted. */
+  targetWeightKg?: number;
   /** Defaults to the exercise's rest. */
   restSeconds?: number;
   notes?: string;

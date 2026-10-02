@@ -58,7 +58,7 @@ describe('circuit mode', () => {
 describe('prefill', () => {
   const s = start(strengthRows([{ sets: 3, reps: 10, weight: 60 }, { sets: 2 }]));
 
-  it('uses the planned target first', () => {
+  it('uses the planned reps, but the weight lifted last time over the planned weight', () => {
     expect(
       prefill(
         s.exercises[0]!,
@@ -68,9 +68,13 @@ describe('prefill', () => {
       ),
     ).toEqual({
       reps: 10,
-      weightKg: 60,
+      weightKg: 70,
       durationSeconds: 30,
     });
+    // No session yet: the plan's starting weight.
+    expect(
+      prefill(s.exercises[0]!, 0, undefined, { reps: 12, durationSeconds: null }).weightKg,
+    ).toBe(60);
   });
 
   it('then the previous set of this session, then last time, then defaults', () => {

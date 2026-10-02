@@ -6,7 +6,7 @@ import { seedId } from './ids';
 import { type SeedData } from './types';
 
 /** Bump when seed content gains rows. Existing rows are never overwritten. */
-export const CURRENT_SEED_VERSION = 3;
+export const CURRENT_SEED_VERSION = 5;
 
 async function insertMissing(tx: Db, spec: TableSpec, model: object): Promise<number> {
   const row = toRow(spec, model);
@@ -141,7 +141,7 @@ export async function seedDatabase(
           sets: item.sets,
           targetReps: item.targetReps ?? null,
           targetDurationSeconds: item.targetDurationSeconds ?? null,
-          targetWeightKg: null,
+          targetWeightKg: item.targetWeightKg ?? null,
           restSeconds: item.restSeconds ?? exercises.get(item.exercise)?.defaultRestSeconds ?? null,
           supersetGroup: null,
           notes: item.notes ?? null,

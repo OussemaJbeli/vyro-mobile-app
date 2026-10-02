@@ -9,7 +9,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: 'VYRO',
   slug: 'vyro',
   owner: 'devopst34',
-  version: '1.1.0',
+  version: '1.2.0',
   scheme: 'vyro',
   // Portrait everywhere (locked at startup); the running screen unlocks rotation (step 19).
   orientation: 'default',

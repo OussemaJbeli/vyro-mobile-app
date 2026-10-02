@@ -78,7 +78,7 @@ describe('profile & settings', () => {
     expect(await r.settings.get('theme')).toBe('dark');
     await r.settings.set('accent', 'blue');
     expect(await r.settings.get('accent')).toBe('blue');
-    expect((await r.settings.getAll()).seed_version).toBe(3);
+    expect((await r.settings.getAll()).seed_version).toBe(5);
     await expect(r.settings.set('accent', 'pink' as never)).rejects.toMatchObject({
       code: 'VALIDATION',
     });
@@ -175,7 +175,7 @@ describe('goals, equipment, exercises', () => {
 describe('templates', () => {
   it('lists by type, duplicates with children and replaces children on update', async () => {
     const running = await r.templates.list({ type: 'running' });
-    expect(running).toHaveLength(8);
+    expect(running).toHaveLength(5);
     const copy = await r.templates.duplicate(seedId.template('upper_body'));
     const detail = await r.templates.get(copy.id);
     expect(detail.name).toBe('Upper Body (copy)');
@@ -677,14 +677,14 @@ describe('step 12: units and equipment impact', () => {
 
   it('counts exercises in active workouts that need each equipment item', async () => {
     const usage = await r.equipment.usage();
-    // Cable machine: tricep_pushdown (Upper Body, Push, Day 3), face_pull (Pull),
-    // cable_lateral_raise (Day 2).
-    expect(usage[seedId.equipment('cable_machine')]).toEqual({ exercises: 3, templates: 5 });
+    // Cable machine: tricep_pushdown (Upper Body, Push, gym_push), face_pull (Pull),
+    // overhead_cable_extension + cable_leaning_lateral_raise (gym_push).
+    expect(usage[seedId.equipment('cable_machine')]).toEqual({ exercises: 4, templates: 4 });
     expect(usage[seedId.equipment('treadmill')]).toBeUndefined(); // runs use intervals, not exercises
     await r.templates.archive(seedId.template('pull'));
     expect((await r.equipment.usage())[seedId.equipment('cable_machine')]).toEqual({
-      exercises: 2,
-      templates: 4,
+      exercises: 3,
+      templates: 3,
     });
   });
 });

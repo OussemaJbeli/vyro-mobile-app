@@ -75,11 +75,13 @@ const suffix = (u) => u.split('/').pop().slice(baseName(u).length);
 
 /** Candidate pages: exact names in priority order (canonical single-dash ids first), then the pattern. */
 function candidates(target, urls) {
+  // Exact pages (e.g. 'lateral-raise-96') when several variants share a name.
+  if (target.pages) return target.pages.map((p) => `https://www.lyfta.app/exercise/${p}`);
   const out = [];
   const rank = (a, b) =>
     (suffix(a).startsWith('--') ? 1 : 0) - (suffix(b).startsWith('--') ? 1 : 0) ||
     suffix(a).length - suffix(b).length;
-  for (const n of target.names) out.push(...urls.filter((u) => baseName(u) === n).sort(rank));
+  for (const n of target.names ?? []) out.push(...urls.filter((u) => baseName(u) === n).sort(rank));
   if (target.re) {
     const re = new RegExp(target.re);
     out.push(
@@ -126,7 +128,7 @@ async function main() {
     let picked = null;
     for (const u of list) {
       const d = await page(u);
-      if (d?.video_file && d?.image_name) {
+      if (d?.image_name && (d?.video_file || t.imageOnly)) {
         picked = { url: u, d };
         break;
       }
@@ -145,7 +147,7 @@ async function main() {
       const b = await get(d.image_name, 'buffer');
       if (b) writeFileSync(img, b);
     }
-    if (!existsSync(vid)) {
+    if (!existsSync(vid) && d.video_file) {
       const b = await get(d.video_file, 'buffer');
       if (b) writeFileSync(vid, b);
     }
@@ -163,7 +165,7 @@ async function main() {
       instructions: texts(d.ex_instructions),
       tips: texts(d.exercise_tips),
       image: `assets/images/exercises/${t.slug}.png`,
-      video: `assets/videos/exercises/${t.slug}.mp4`,
+      video: d.video_file ? `assets/videos/exercises/${t.slug}.mp4` : null,
     });
     console.log(`[${i + 1}/${TARGETS.length}] ${t.slug} ← ${d.name} (${url.split('/').pop()})`);
   }

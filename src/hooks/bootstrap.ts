@@ -4,7 +4,7 @@
  * migrations and seeding.
  */
 import { registerStartupTask } from '@/db/DatabaseProvider';
-import { applyGymRepsStandard, applyRoutine, pruneSampleWorkouts } from '@/db/routine';
+import { applyRoutine, pruneSampleWorkouts } from '@/db/routine';
 import { executionRepo } from '@/db/repositories/executions';
 import { photoRepo } from '@/db/repositories/photos';
 import { profileRepo } from '@/db/repositories/profile';
@@ -85,9 +85,6 @@ registerStartupTask(async (db) => {
     });
     if (applied) routineFrom = weekStart(today(), 1);
   }
-  await applyGymRepsStandard(db).catch((e: unknown) =>
-    logger.warn('Gym reps update failed', { error: e }),
-  );
   await pruneSampleWorkouts(db).catch((e: unknown) =>
     logger.warn('Sample workout cleanup failed', { error: e }),
   );

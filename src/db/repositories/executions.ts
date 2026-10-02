@@ -463,6 +463,9 @@ export function executionRepo(db: Database) {
           'JOIN session_exercises se ON se.id = s.session_exercise_id ' +
           'JOIN session_executions x ON x.id = se.execution_id ' +
           "WHERE s.status = 'done' AND x.status = 'completed' AND x.id <> ? " +
+          // Only sessions since the current program was applied: its starting weights
+          // apply first, then whatever you actually lift.
+          "AND x.started_at >= COALESCE((SELECT json_extract(value, '$') FROM app_settings WHERE key = 'routine_applied_at'), '') " +
           'AND s.deleted_at IS NULL AND se.deleted_at IS NULL AND x.deleted_at IS NULL ' +
           'AND se.exercise_id IN (' +
           exerciseIds.map(() => '?').join(', ') +

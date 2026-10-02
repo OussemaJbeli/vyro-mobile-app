@@ -36,7 +36,9 @@
     "back_extension_bench": "Banc à lombaires",
     "plyo_box": "Box de pliométrie",
     "elliptical": "Vélo elliptique",
-    "stair_climber": "Simulateur d'escaliers"
+    "stair_climber": "Simulateur d'escaliers",
+    "incline_press_machine": "Machine développé incliné",
+    "biceps_curl_machine": "Machine à biceps"
   },
   "exercise": {
     "bench_press": "Développé couché",
@@ -144,7 +146,14 @@
     "smith_squat": "Squat à la Smith",
     "incline_treadmill_walk": "Marche inclinée sur tapis",
     "elliptical": "Vélo elliptique",
-    "stair_climber": "Simulateur d'escaliers"
+    "stair_climber": "Simulateur d'escaliers",
+    "incline_chest_press_machine": "Développé incliné machine",
+    "close_grip_pulldown": "Tirage vertical prise serrée",
+    "machine_bicep_curl": "Curl biceps machine",
+    "lever_lying_chest_press": "Développé couché machine",
+    "incline_bench_press": "Développé incliné barre",
+    "lever_preacher_curl": "Curl pupitre machine",
+    "cable_leaning_lateral_raise": "Élévation latérale penchée à la poulie"
   },
   "measurement": {
     "chest": "Poitrine",
@@ -195,6 +204,12 @@
     "run_incline_power": "Puissance en pente",
     "run_speed_endurance": "Endurance de vitesse",
     "run_easy_strides": "Course facile + accélérations",
-    "run_long_aerobic": "Sortie longue aérobie"
+    "run_long_aerobic": "Sortie longue aérobie",
+    "gym_push": "Poussée · Pectoraux + Épaules + Triceps",
+    "gym_pull": "Tirage · Dos + Biceps",
+    "gym_legs": "Jambes · Quadriceps + Ischios + Mollets",
+    "run_real_speed": "Vitesse pure",
+    "run_tempo_endurance": "Endurance de vitesse",
+    "run_easy_16": "Course facile contrôlée"
   }
 }

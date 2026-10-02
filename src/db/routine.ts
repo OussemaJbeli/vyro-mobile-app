@@ -6,19 +6,23 @@
 import { weekStart } from '@/domain/scheduling/recurrence';
 
 import { type Database, type Db } from './client';
-import { tables } from './mappers';
+import { tables, toRow } from './mappers';
 import { insertModel, nowIso } from './repositories/base';
 import { profileRepo } from './repositories/profile';
-import { GYM_REPS, GYM_SETS, routineTemplates, routineWeek } from './seed/data/routine';
+import { routineExercises, routineTemplates, routineWeek } from './seed/data/routine';
+import { seedData } from './seed/data/content';
 import { seedId } from './seed/ids';
 
 /**
  * v2: fixed Monday–Sunday week, old workouts removed. v3: re-apply (v1/v2 could abort on
  * a started planned session). v4: rules start on this week's Monday, so the whole current
  * week is filled, not only the days from today. v5: the week from docs/plan/weak.md
- * (per-day times, gym right after the run).
+ * (per-day times, gym right after the run). v6 (1.2.0): Push / Pull / Legs with new runs
+ * (docs/after_1_week_using/new_program.md), no six-pack, run before the gym. v7: exercise
+ * swaps (lying chest press, incline/decline bench, preacher curl, leaning lateral raise); from
+ * v7 the routine workouts are re-synced from the program on every apply.
  */
-export const ROUTINE_VERSION = 5;
+export const ROUTINE_VERSION = 7;
 
 /** Active rules left: 0 means the plan is empty and the routine must come back. */
 async function activeRules(db: Db): Promise<number> {
@@ -91,6 +95,8 @@ export async function applyRoutine(
       [from],
     );
 
+    await syncRoutineTemplates(tx, at);
+
     for (const { key, days, time } of routineWeek) {
       const tpl = key ? byKey.get(key) : undefined;
       await insertModel(tx, tables.scheduleRules, {
@@ -116,6 +122,11 @@ export async function applyRoutine(
       "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_version', ?, ?) " +
         'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',
       [JSON.stringify(ROUTINE_VERSION), at],
+    );
+    await tx.run(
+      "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_applied_at', ?, ?) " +
+        'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',
+      [JSON.stringify(at), at],
     );
     await tx.run(
       "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_opt_out', 'false', ?) " +
@@ -145,28 +156,67 @@ export async function pruneSampleWorkouts(db: Database): Promise<number> {
 }
 
 /**
- * One-time (1.1.0): gym routine workouts already saved on the phone move to 3 × 15, the
- * new seed values. Later edits by the user are kept (guarded by `gym_reps_v1`).
+ * The routine workouts follow the program (seeding never overwrites rows): their header and
+ * exercises/intervals are rewritten from the seed. Past sessions keep their own snapshots.
  */
-export async function applyGymRepsStandard(db: Database): Promise<boolean> {
-  const done = await db.get<{ value: string }>(
-    "SELECT value FROM app_settings WHERE key = 'gym_reps_v1'",
+async function syncRoutineTemplates(tx: Db, at: string): Promise<void> {
+  const restOf = new Map(
+    [...seedData.exercises, ...routineExercises].map((e) => [e.slug, e.defaultRestSeconds]),
   );
-  if (done) return false;
-  const gym = routineTemplates.filter((t) => t.type === 'gym').map((t) => seedId.template(t.key));
-  const at = nowIso();
-  await db.tx(async (tx) => {
+  for (const tpl of routineTemplates) {
+    const templateId = seedId.template(tpl.key);
     await tx.run(
-      'UPDATE workout_template_exercises SET sets = ?, target_reps = ?, updated_at = ? ' +
-        'WHERE template_id IN (' +
-        gym.map(() => '?').join(', ') +
-        ') AND target_reps IS NOT NULL',
-      [GYM_SETS, GYM_REPS, at, ...gym],
+      'UPDATE workout_templates SET name = ?, description = ?, duration_minutes = ?, difficulty = ?, updated_at = ? WHERE id = ?',
+      [tpl.name, tpl.description, tpl.durationMinutes, tpl.difficulty, at, templateId],
     );
-    await tx.run(
-      "INSERT INTO app_settings (key, value, updated_at) VALUES ('gym_reps_v1', 'true', ?)",
-      [at],
-    );
-  });
-  return true;
+    await tx.run('DELETE FROM workout_template_exercises WHERE template_id = ?', [templateId]);
+    await tx.run('DELETE FROM template_running_intervals WHERE template_id = ?', [templateId]);
+    const base = (id: string) => ({ id, createdAt: at, updatedAt: at, deletedAt: null });
+    const insert = async (table: string, row: Record<string, unknown>) => {
+      const cols = Object.keys(row);
+      await tx.run(
+        'INSERT INTO ' +
+          table +
+          ' (' +
+          cols.join(', ') +
+          ') VALUES (' +
+          cols.map(() => '?').join(', ') +
+          ')',
+        Object.values(row) as never[],
+      );
+    };
+    for (const [i, item] of (tpl.exercises ?? []).entries()) {
+      await insert(
+        tables.templateExercises.table,
+        toRow(tables.templateExercises, {
+          ...base(seedId.templateExercise(tpl.key, i)),
+          templateId,
+          exerciseId: seedId.exercise(item.exercise),
+          orderIndex: i,
+          sets: item.sets,
+          targetReps: item.targetReps ?? null,
+          targetDurationSeconds: item.targetDurationSeconds ?? null,
+          targetWeightKg: item.targetWeightKg ?? null,
+          restSeconds: item.restSeconds ?? restOf.get(item.exercise) ?? null,
+          supersetGroup: null,
+          notes: item.notes ?? null,
+        }),
+      );
+    }
+    for (const [i, iv] of (tpl.intervals ?? []).entries()) {
+      await insert(
+        tables.templateIntervals.table,
+        toRow(tables.templateIntervals, {
+          ...base(seedId.templateInterval(tpl.key, i)),
+          templateId,
+          orderIndex: i,
+          kind: iv.kind,
+          durationSeconds: iv.durationSeconds,
+          speedKmh: iv.speedKmh,
+          inclinePercent: iv.inclinePercent,
+          label: iv.label,
+        }),
+      );
+    }
+  }
 }

@@ -26,7 +26,8 @@ export function prefill(
     .find((s) => s.status === 'done');
   return {
     reps: set?.plannedReps ?? prev?.actualReps ?? last?.reps ?? defaults.reps ?? 10,
-    weightKg: set?.plannedWeightKg ?? prev?.actualWeightKg ?? last?.weightKg ?? 0,
+    // What you actually lifted wins over the plan's starting weight (progression memory).
+    weightKg: prev?.actualWeightKg ?? last?.weightKg ?? set?.plannedWeightKg ?? 0,
     durationSeconds:
       set?.plannedDurationSeconds ??
       prev?.actualDurationSeconds ??

@@ -107,8 +107,8 @@
     "vyroSubtitle": "Votre semaine, la même chaque semaine. Modifiable dans Planning.",
     "vyroWeek": "Semaine VYRO",
     "customWeek": "Jours au choix",
-    "vyroTitle": "Abdos · Course · Salle",
-    "vyroHint": "Le jeudi est le jour de repos. Touchez une séance dans Planning pour changer l'heure ou la retirer."
+    "vyroTitle": "Course · Salle",
+    "vyroHint": "D'abord la course (votre échauffement), puis la salle. Le jeudi est le jour de repos. Touchez une séance dans Planning pour la modifier."
   },
   "notifications": {
     "title": "Restez sur la bonne voie",

@@ -1,5 +1,5 @@
 {
-  "importedAt": "2026-09-27T12:52:07.320Z",
+  "importedAt": "2026-10-02T22:10:34.620Z",
   "exercises": [
     {
       "slug": "bench_press",
@@ -551,24 +551,23 @@
       "slug": "lateral_raise",
       "extra": false,
       "name": "Lateral Raise",
-      "source": "https://www.lyfta.app/exercise/lateral-raise-77",
+      "source": "https://www.lyfta.app/exercise/lateral-raise-96",
       "exerciseType": "weight_reps",
       "bodyPartIds": ["Shoulders"],
-      "equipmentIds": ["Cable"],
+      "equipmentIds": ["Dumbbell"],
       "targetMuscleIds": ["9"],
       "synergistMuscleIds": ["8", "31"],
-      "overview": "The Lateral Raise is a strength-building exercise that primarily targets the shoulder muscles, specifically the deltoids, contributing to improved upper body strength and stability. It is suitable for individuals of all fitness levels, from beginners to advanced athletes, as it can be easily modified to match one's fitness capacity. Someone would want to do this exercise to enhance shoulder definition, improve posture, and support daily activities that require lifting or carrying.",
+      "overview": "The Lateral Raise is a strength training exercise that primarily targets the deltoids, helping to build shoulder width and definition. It's suitable for individuals at any fitness level, from beginners to advanced athletes, looking to improve upper body strength and posture. People may want to incorporate Lateral Raises into their routine to enhance shoulder stability, promote balanced muscle development, and improve daily functional movements.",
       "instructions": [
-        "Keeping your torso stationary, lift the dumbbells to your side with a slight bend on the elbow and your hands slightly tilted forward as if pouring water in a glass. Continue to go up until your arms are parallel to the floor.",
-        "Exhale as you execute this movement and pause for a second at the top.",
-        "Slowly lower the dumbbells back down to the starting position as you inhale.",
-        "Repeat this movement for the recommended amount of repetitions."
+        "Keeping your torso stationary, lift the dumbbells to your side with a slight bend on the elbow and the hands slightly tilted forward as if pouring water in a glass. Continue to lift them until they are at shoulder level.",
+        "Pause for a second at the top of the movement, then slowly lower the weights back down to the starting position.",
+        "Repeat this movement for the desired number of repetitions.",
+        "Remember to keep your spine neutral and your movements controlled throughout the exercise, avoiding any swinging or jerking."
       ],
       "tips": [
-        "Proper Grip: Hold the weights with your palms facing each other and elbows slightly bent. The weights should not be touching your body. Do not grip the weights too tightly as this can lead to wrist strain.",
-        "Controlled Movement: Raise the weights to the side until your arms are parallel to the floor. Make sure the movement is slow and controlled, avoid jerky movements. Your arms should lead the motion, not the weights.",
-        "Don't Overlift: Use a weight that is challenging but manageable. Lifting weights that are too heavy can lead to poor form and potential injury.",
-        "Avoid Using Momentum: A common mistake is to use momentum to lift the weights, which can lead to injury and reduce the effectiveness of the exercise."
+        "**Avoid Using Momentum**: Avoid using momentum to swing the weights up, as this can lead to injury and reduces the effectiveness of the exercise. Instead, lift and lower the weights in a controlled manner, focusing on the muscles you're trying to work.",
+        "**Choose the Right Weight**: Using too heavy weights can lead to poor form and potential injuries. Start with lighter weights and gradually increase as your strength improves. Remember, the goal is not to lift the heaviest weight, but to perform the exercise correctly and safely.",
+        "**Focus on the Shoulders**: The lateral raise primarily targets the shoulder muscles, specifically the"
       ],
       "image": "assets/images/exercises/lateral_raise.png",
       "video": "assets/videos/exercises/lateral_raise.mp4"
@@ -1874,6 +1873,179 @@
       ],
       "image": "assets/images/exercises/hamstring_stretch.png",
       "video": "assets/videos/exercises/hamstring_stretch.mp4"
+    },
+    {
+      "slug": "lever_lying_chest_press",
+      "extra": false,
+      "name": "Lever Lying Chest Press",
+      "source": "https://www.lyfta.app/exercise/lever-lying-chest-press-2d",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Chest"],
+      "equipmentIds": ["Leverage machine"],
+      "targetMuscleIds": ["25"],
+      "synergistMuscleIds": ["8", "24", "44"],
+      "overview": "The Lever Lying Chest Press is an effective strength training exercise that primarily targets the pectoral muscles, triceps, and shoulders, enhancing upper body strength and muscular definition. This exercise is suitable for both beginners and advanced fitness enthusiasts as it offers controlled movement, reducing the risk of injury while still providing a challenging workout. Individuals might opt for this exercise to improve their chest strength, boost muscle mass, and enhance overall upper body aesthetics.",
+      "instructions": [
+        "Reach up and grasp the handles of the lever machine with your hands, ensuring your palms are facing towards your feet and your hands are wider than shoulder-width apart.",
+        "Push the handles upwards until your arms are fully extended, but be careful not to lock your elbows, this will be your starting position.",
+        "Slowly lower the handles back towards your chest, keeping your elbows at a 90-degree angle.",
+        "Push the handles back up to the starting position, using your chest muscles to drive the movement, then repeat the exercise for the desired number of repetitions."
+      ],
+      "tips": [
+        "Proper Grip: Your grip should be slightly wider than shoulder-width apart. Do not grip too wide as this can stress your shoulders and limit the effectiveness of the exercise. Your wrists should also be straight, not bent, to avoid strain.",
+        "Controlled Movement: When lowering the lever, do so in a slow and controlled manner. This will engage your muscles more effectively and reduce the risk of injury. Avoid letting the weights drop quickly or using momentum to lift them.",
+        "Full Range of Motion: Make sure to lower the lever all the way down to your chest before pushing it back up. This ensures a full range of motion, which is key for muscle growth and strength.",
+        "Breathing: Breat"
+      ],
+      "image": "assets/images/exercises/lever_lying_chest_press.png",
+      "video": "assets/videos/exercises/lever_lying_chest_press.mp4"
+    },
+    {
+      "slug": "incline_bench_press",
+      "extra": false,
+      "name": "Incline Bench Press",
+      "source": "https://www.lyfta.app/exercise/incline-bench-press-p",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Chest"],
+      "equipmentIds": ["Barbell"],
+      "targetMuscleIds": ["24"],
+      "synergistMuscleIds": ["8", "44"],
+      "overview": "The Incline Bench Press is a strength-training exercise that primarily targets the upper portion of the chest muscles, while also engaging the shoulders and triceps. It's suitable for anyone looking to enhance upper body strength and improve muscle definition, particularly in the chest area. Individuals may opt for this exercise as it offers a well-rounded workout for the upper body, promotes better posture, and aids in performing daily activities more efficiently.",
+      "instructions": [
+        "Sit down on the bench with your feet flat on the ground and grasp the barbell with your hands slightly wider than shoulder-width apart, palms facing away from you.",
+        "Lift the barbell off the rack and hold it straight over your chest with your arms fully extended, this is your starting position.",
+        "Slowly lower the bar down to your chest in a controlled manner, making sure to keep your elbows at a 90-degree angle as the bar comes down.",
+        "Push the bar back up to the starting position, fully extending your arms but not locking your elbows, and repeat the movement for your desired number of repetitions."
+      ],
+      "tips": [
+        "Grip and Elbow Alignment: Grasp the barbell with your hands slightly wider than shoulder-width apart. Your wrists should be directly above your elbows when the bar is at chest level. Avoid flaring your elbows out to the sides, which can lead to shoulder injuries. Instead, keep your elbows at a 45-degree angle to your torso.",
+        "Controlled Movement: Lower the barbell to your chest in a slow, controlled manner, and then push it back up without locking your elbows at the top. Avoid bouncing the bar off your chest or using your hips to thrust the weight up, as these can lead to injury and reduce"
+      ],
+      "image": "assets/images/exercises/incline_bench_press.png",
+      "video": "assets/videos/exercises/incline_bench_press.mp4"
+    },
+    {
+      "slug": "lever_preacher_curl",
+      "extra": false,
+      "name": "Lever Preacher Curl",
+      "source": "https://www.lyfta.app/exercise/lever-preacher-curl-16",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Biceps", "Upper Arms"],
+      "equipmentIds": ["Leverage machine"],
+      "targetMuscleIds": ["5"],
+      "synergistMuscleIds": ["4", "6"],
+      "overview": "The Lever Preacher Curl is a strength-training exercise that focuses on isolating the biceps, providing a more targeted workout for muscle growth and toning. It's ideal for both beginners and advanced fitness enthusiasts who are looking to improve their upper body strength and definition. People would want to incorporate this exercise into their routine as it promotes better arm stability, enhances muscle symmetry, and contributes to overall upper body aesthetics.",
+      "instructions": [
+        "Grasp the lever handles with an underhand grip (palms facing up) and ensure your arms are fully extended.",
+        "Slowly curl the handles up towards your shoulders, while keeping your upper arms and elbows stationary on the pad. This will be your starting position.",
+        "Gradually lower the handles back to the initial position, feeling the stretch in your biceps.",
+        "Repeat this process for the desired number of repetitions, ensuring that you maintain a controlled movement and do not use your back or shoulders to lift the weight."
+      ],
+      "tips": [
+        "Proper Grip: When gripping the lever, your hands should be shoulder-width apart. The palms of your hands should be facing upwards. Make sure your grip is firm but not overly tight as this can strain your wrists.",
+        "Controlled Movements: Avoid the common mistake of using momentum to lift the weight. Instead, focus on slow, controlled movements. Lift the lever by curling your arms upwards and then slowly lower it back down. This will help to engage your biceps more effectively.",
+        "Full Range of Motion: Another common mistake is not using a full range of motion. Make sure to fully extend your arms at the bottom of the movement and fully contract"
+      ],
+      "image": "assets/images/exercises/lever_preacher_curl.png",
+      "video": "assets/videos/exercises/lever_preacher_curl.mp4"
+    },
+    {
+      "slug": "cable_leaning_lateral_raise",
+      "extra": false,
+      "name": "Cable Leaning Lateral Raise",
+      "source": "https://www.lyfta.app/exercise/cable-leaning-lateral-raise-8ct",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Shoulders"],
+      "equipmentIds": ["Cable"],
+      "targetMuscleIds": [],
+      "synergistMuscleIds": [],
+      "overview": "The Cable Leaning Lateral Raise is a highly effective exercise that primarily targets the deltoids, improving shoulder strength and stability. It's an excellent choice for athletes, fitness enthusiasts, or anyone seeking to enhance upper body strength and muscle definition. By incorporating this exercise into your routine, you can expect improved performance in daily activities and sports that require shoulder use, as well as a more toned and defined appearance.",
+      "instructions": [
+        "Lean away from the machine, keeping your body straight and your feet firmly planted on the ground, so that your arm holding the cable is fully extended and slightly behind your body.",
+        "Keeping your arm straight, slowly raise the cable out to your side until it's at shoulder level, while exhaling. Ensure your torso remains stationary and the movement is only happening at your shoulder joint.",
+        "Pause for a moment at the top of the movement, then slowly lower the cable back to the starting position while inhaling.",
+        "Repeat the exercise for the desired number of repetitions, then switch sides and perform the exercise with your other arm."
+      ],
+      "tips": [
+        "Controlled Movements: It's crucial to perform the exercise with slow and controlled movements. Avoid jerking or using momentum to lift the weight, as this can lead to injury and won't effectively target the desired muscles. Instead, focus on the muscle contraction and release.",
+        "Right Weight: Using too much weight can lead to improper form and potential injury. Start with a lower weight to ensure you can maintain proper form throughout the exercise. As your strength increases, you can gradually increase the weight.",
+        "Arm Position: When raising the cable, your arm should be slightly bent at the elbow and raised to shoulder height. Avoid lifting your arm above shoulder height as this"
+      ],
+      "image": "assets/images/exercises/cable_leaning_lateral_raise.png",
+      "video": null
+    },
+    {
+      "slug": "incline_chest_press_machine",
+      "extra": false,
+      "name": "Lever Incline Chest Press",
+      "source": "https://www.lyfta.app/exercise/lever-incline-chest-press-47",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Chest"],
+      "equipmentIds": ["Leverage machine"],
+      "targetMuscleIds": ["24"],
+      "synergistMuscleIds": ["8", "44"],
+      "overview": "The Lever Incline Chest Press is a strength training exercise that primarily targets the upper chest muscles, while also engaging the shoulders and triceps. It is suitable for individuals at all fitness levels, from beginners to advanced athletes, due to its adjustable resistance. People would want to perform this exercise to enhance their upper body strength, improve muscle definition, and support better performance in other sports and daily activities.",
+      "instructions": [
+        "Sit down on the machine with your back firmly against the pad and grasp the handles with a full grip (thumbs wrapped around the handles), palms facing down.",
+        "Push the handles forward by extending your arms, keeping your elbows slightly bent at all times, until they are straight out in front of you.",
+        "Hold this position for a moment to maximize the contraction in your chest muscles.",
+        "Gradually return the handles back to the starting position, ensuring to maintain control throughout the movement to prevent the weights from slamming down. This completes one repetition."
+      ],
+      "tips": [
+        "**Correct Form**: Grip the handles with your hands slightly wider than shoulder-width apart and your palms facing forward. Your elbows should be bent at a 90-degree angle. When you push the handles, avoid locking your elbows completely when your arms are fully extended. This can put undue stress on your elbow joints and potentially cause injury.",
+        "**Controlled Movement**: The Lever Incline Chest Press should be performed in a slow and controlled manner. Avoid the common mistake of using momentum to lift the weight. Instead, focus on using your chest muscles to push and pull the weight. This will ensure that you're getting the"
+      ],
+      "image": "assets/images/exercises/incline_chest_press_machine.png",
+      "video": "assets/videos/exercises/incline_chest_press_machine.mp4"
+    },
+    {
+      "slug": "close_grip_pulldown",
+      "extra": false,
+      "name": "Close-Grip Front Lat Pulldown",
+      "source": "https://www.lyfta.app/exercise/close-grip-front-lat-pulldown-38",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Back"],
+      "equipmentIds": ["Cable"],
+      "targetMuscleIds": ["20"],
+      "synergistMuscleIds": ["5", "6", "10", "25", "37", "41", "42"],
+      "overview": "The Close-Grip Front Lat Pulldown is a strength training exercise designed to target and develop the muscles in the back, particularly the latissimus dorsi. This exercise is beneficial for anyone looking to enhance their upper body strength, improve posture, or for athletes who require strong back muscles for their sport. Individuals may choose to incorporate this exercise in their routine to improve muscle definition, support spine health, and enhance overall body strength and stability.",
+      "instructions": [
+        "Grasp the bar with a close grip, hands facing towards you, and at a distance slightly narrower than shoulder width.",
+        "With your back straight and chest up, pull the bar down in front of you to your upper chest, while squeezing your shoulder blades together.",
+        "Hold this position for a moment, focusing on the contraction in your back muscles.",
+        "Slowly release the bar back to the starting position, maintaining control of the movement, and repeat the exercise for your desired number of reps."
+      ],
+      "tips": [
+        "Grip: Your grip should be just inside shoulder width. Holding the bar too wide or too close can stress your wrists, elbows, and shoulders, and will not target the lats effectively. Your palms should be facing towards you (a supinated grip) to engage the lats more.",
+        "Controlled Movement: Avoid the common mistake of using momentum to pull the bar down. The movement should be slow and controlled. Pull the bar down to your chest and slowly let it back up. This will ensure that your muscles are under tension for longer, leading to better results.",
+        "Engaging the Right Muscles: Make sure you are using your lats to pull the bar down"
+      ],
+      "image": "assets/images/exercises/close_grip_pulldown.png",
+      "video": "assets/videos/exercises/close_grip_pulldown.mp4"
+    },
+    {
+      "slug": "machine_bicep_curl",
+      "extra": false,
+      "name": "Lever Biceps Curl",
+      "source": "https://www.lyfta.app/exercise/lever-biceps-curl-94v",
+      "exerciseType": "weight_reps",
+      "bodyPartIds": ["Biceps", "Upper Arms"],
+      "equipmentIds": ["Leverage machine"],
+      "targetMuscleIds": [],
+      "synergistMuscleIds": [],
+      "overview": "The Lever Biceps Curl is a strength training exercise that primarily targets the biceps, providing enhanced arm muscle tone and definition. It's suitable for individuals at any fitness level, from beginners to advanced, as the resistance can be easily adjusted on the lever machine. People may choose to perform this exercise to improve upper body strength, enhance physical appearance, and support better performance in sports and daily activities that require arm strength.",
+      "instructions": [
+        "Grab the lever handle with your palm facing up (supinated grip) and stand straight, keeping your elbow close to your body.",
+        "Slowly curl the lever upwards, using only your biceps, until your biceps are fully contracted and the bar is at shoulder level. Hold the contracted position for a second as you squeeze your biceps.",
+        "Gradually lower the lever back to the starting position, keeping your muscles under control and not letting the weight drop suddenly.",
+        "Repeat the movement for the desired number of repetitions, making sure to maintain proper form throughout the exercise."
+      ],
+      "tips": [
+        "Controlled Movement: As you exhale, curl the handles towards your biceps while keeping your upper arms stationary. Make sure to use your biceps to lift the weights, not your back or shoulders. Inhale as you slowly lower the handles back to the starting position.\n\nCommon Mistake: Avoid using momentum or swinging the weights to lift them. This can lead to injury and won't target your biceps effectively. The movement should be slow and controlled.",
+        "Full Range of Motion: Make sure to fully extend your arms at the bottom of the movement and fully contract your"
+      ],
+      "image": "assets/images/exercises/machine_bicep_curl.png",
+      "video": "assets/videos/exercises/machine_bicep_curl.mp4"
     },
     {
       "slug": "incline_barbell_bench_press",
