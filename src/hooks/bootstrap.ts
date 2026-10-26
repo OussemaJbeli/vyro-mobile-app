@@ -4,6 +4,7 @@
  * migrations and seeding.
  */
 import { registerStartupTask } from '@/db/DatabaseProvider';
+import { reconcileCycle } from '@/db/cycle';
 import { applyRoutine, pruneSampleWorkouts } from '@/db/routine';
 import { executionRepo } from '@/db/repositories/executions';
 import { photoRepo } from '@/db/repositories/photos';
@@ -18,7 +19,6 @@ import { createPhotoStore } from '@/services/photos/storage';
 import { useAppStore } from '@/store/appStore';
 import { useExecutionStore } from '@/store/executionStore';
 import { bindSettingsPersistence, useSettingsStore } from '@/store/settingsStore';
-import { weekStart } from '@/domain/scheduling/recurrence';
 import { today } from '@/utils/dates';
 import { DEFAULT_UNITS } from '@/utils/units';
 import { logger } from '@/utils/logger';
@@ -75,22 +75,22 @@ registerStartupTask(async (db) => {
     .then(() => (__DEV__ && photosSupported ? photoStore.sweepOrphans() : null))
     .catch((e: unknown) => logger.warn('Photo maintenance failed', { error: e }));
 
-  // The owner's routine (docs/default programs): applied once, and again whenever the
-  // plan has no active rule. A fresh apply fills the whole current week (from Monday).
-  let routineFrom: string | null = null;
+  // The owner's routine (docs/plan/pro_plan.md): applied once per program version, then the
+  // cycle settles the days that passed (a missed day repeats) and rewrites the plan ahead.
   if (profile) {
-    const applied = await applyRoutine(db, { today: today() }).catch((e: unknown) => {
-      logger.error('Routine apply failed', { error: e });
-      return false;
-    });
-    if (applied) routineFrom = weekStart(today(), 1);
+    await applyRoutine(db, { today: today() }).catch((e: unknown) =>
+      logger.error('Routine apply failed', { error: e }),
+    );
   }
+  await reconcileCycle(db, today()).catch((e: unknown) =>
+    logger.error('Cycle update failed', { error: e }),
+  );
   await pruneSampleWorkouts(db).catch((e: unknown) =>
     logger.warn('Sample workout cleanup failed', { error: e }),
   );
 
   // Keep 8 weeks of rule occurrences materialized (AD-09). Never blocks startup.
   await scheduleRepo(db)
-    .materialize(routineFrom ?? today())
+    .materialize(today())
     .catch((e: unknown) => logger.warn('Materialization failed', { error: e }));
 });

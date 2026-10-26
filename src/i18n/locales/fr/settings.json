@@ -449,5 +449,17 @@
         "other": "Autre"
       }
     }
+  },
+  "setup": {
+    "title": "Fichier de configuration (modifiable)",
+    "intro": "Votre profil, objectifs, équipement, exercices, séances (séries, répétitions, charges, repos, vitesses) et jours du cycle dans un seul fichier JSON. Modifiez-le sur ordinateur puis réimportez-le. L'historique et les statistiques ne changent jamais.",
+    "export": "Exporter la configuration",
+    "import": "Importer la configuration",
+    "exportFailed": "Impossible d'exporter la configuration",
+    "unreadable": "Impossible de lire ce fichier",
+    "confirmTitle": "Appliquer cette configuration ?",
+    "confirmBody": "{{workouts}} séances, {{exercises}} exercices perso et {{days}} jours de cycle remplaceront votre configuration. L'historique reste intact ; une copie de sécurité est faite avant.",
+    "apply": "Appliquer",
+    "imported": "Configuration appliquée · {{workouts}} séances, {{exercises}} exercices, {{days}} jours de cycle"
   }
 }

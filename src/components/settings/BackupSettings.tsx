@@ -1,4 +1,5 @@
 import * as DocumentPicker from 'expo-document-picker';
+
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,7 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { toast } from '@/store/uiStore';
 import { makeStyles } from '@/theme';
 import { logger } from '@/utils/logger';
+import { SetupFileCard } from './SetupFileCard';
 
 const size = (bytes: number) =>
   bytes > 1_000_000
@@ -122,6 +124,8 @@ export function BackupSettings() {
     <ScreenContainer edges={['top', 'bottom']}>
       <Header title={t('backup.title')} onBack={() => goBack(routes.settings)} large={false} />
       <Text tone="muted">{t('backup.intro')}</Text>
+
+      <SetupFileCard />
 
       <SectionHeader title={t('backup.export')} />
       <OptionCard

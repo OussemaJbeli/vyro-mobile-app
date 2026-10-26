@@ -78,7 +78,7 @@ describe('profile & settings', () => {
     expect(await r.settings.get('theme')).toBe('dark');
     await r.settings.set('accent', 'blue');
     expect(await r.settings.get('accent')).toBe('blue');
-    expect((await r.settings.getAll()).seed_version).toBe(5);
+    expect((await r.settings.getAll()).seed_version).toBe(6);
     await expect(r.settings.set('accent', 'pink' as never)).rejects.toMatchObject({
       code: 'VALIDATION',
     });
@@ -678,13 +678,13 @@ describe('step 12: units and equipment impact', () => {
   it('counts exercises in active workouts that need each equipment item', async () => {
     const usage = await r.equipment.usage();
     // Cable machine: tricep_pushdown (Upper Body, Push, gym_push), face_pull (Pull),
-    // overhead_cable_extension + cable_leaning_lateral_raise (gym_push).
-    expect(usage[seedId.equipment('cable_machine')]).toEqual({ exercises: 4, templates: 4 });
+    // overhead_cable_extension (gym_push), cable_one_arm_twisting_row (gym_pull).
+    expect(usage[seedId.equipment('cable_machine')]).toEqual({ exercises: 4, templates: 5 });
     expect(usage[seedId.equipment('treadmill')]).toBeUndefined(); // runs use intervals, not exercises
     await r.templates.archive(seedId.template('pull'));
     expect((await r.equipment.usage())[seedId.equipment('cable_machine')]).toEqual({
       exercises: 3,
-      templates: 3,
+      templates: 4,
     });
   });
 });

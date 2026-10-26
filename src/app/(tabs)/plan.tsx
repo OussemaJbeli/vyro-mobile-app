@@ -233,15 +233,25 @@ export default function PlanScreen() {
           </Card>
         )}
       </ScrollView>
-      <View style={styles.footer}>
+      <View style={[styles.footer, styles.footerRow]}>
         <Button
-          label={t('addActivity')}
-          icon="add"
+          label={t('cycle.edit')}
+          icon="repeat"
           size="lg"
-          fullWidth
-          onPress={() => router.push({ pathname: '/session/new', params: { date: selected } })}
-          testID="plan-add"
+          variant="secondary"
+          onPress={() => router.push('/cycle')}
+          testID="plan-edit-cycle"
         />
+        <View style={styles.flex}>
+          <Button
+            label={t('addActivity')}
+            icon="add"
+            size="lg"
+            fullWidth
+            onPress={() => router.push({ pathname: '/session/new', params: { date: selected } })}
+            testID="plan-add"
+          />
+        </View>
       </View>
       {actions.element}
     </SafeAreaView>
@@ -251,6 +261,7 @@ export default function PlanScreen() {
 const useStyles = makeStyles((t) => ({
   screen: { flex: 1, backgroundColor: t.colors.bg },
   content: { paddingHorizontal: t.spacing.lg, paddingBottom: t.spacing.xxl, gap: t.spacing.md },
+  footerRow: { flexDirection: 'row', gap: t.spacing.sm },
   footer: {
     paddingHorizontal: t.spacing.lg,
     paddingBottom: t.spacing.xxxl,

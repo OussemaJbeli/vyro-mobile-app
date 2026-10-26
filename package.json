@@ -1,7 +1,7 @@
 {
   "name": "vyro",
   "main": "expo-router/entry",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "private": true,
   "scripts": {
     "start": "expo start --dev-client",
@@ -20,7 +20,8 @@
     "check": "pnpm typecheck && pnpm lint && pnpm test",
     "brand:assets": "node scripts/brand/generate-assets.mjs",
     "db:lock": "UPDATE_MIGRATION_LOCK=1 jest src/db/__tests__/lock.test.ts",
-    "eas-build-pre-install": "bash scripts/eas/pre-install.sh"
+    "eas-build-pre-install": "bash scripts/eas/pre-install.sh",
+    "build:apk": "NODE_OPTIONS='--dns-result-order=ipv4first --no-network-family-autoselection' npx eas-cli@latest build --platform android --profile preview"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",

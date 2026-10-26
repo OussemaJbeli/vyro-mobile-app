@@ -285,5 +285,24 @@
     "stats_one": "Completed {{count}} time · last {{date}}",
     "stats_other": "Completed {{count}} times · last {{date}}",
     "never": "Not completed yet"
+  },
+  "forecast": {
+    "title": "Forecast",
+    "estimate": "estimate",
+    "burned7_one": "kcal burned · {{count}} session (7 days)",
+    "burned7_other": "kcal burned · {{count}} sessions (7 days)",
+    "adherence_one": "plan done · {{count}} missed (28 days)",
+    "adherence_other": "plan done · {{count}} missed (28 days)",
+    "plannedWeek": "kcal/week planned training",
+    "eta": "≈ {{weeks}} weeks to {{target}} (around {{date}})",
+    "reached": "You're at your target ({{target}}). Set a new goal?",
+    "noGoal": "Set a weight goal to see when you could reach it.",
+    "setGoal": "Set a goal",
+    "noWeight": "Log your weight to start the forecast.",
+    "noPace": "Not enough data yet: keep training and weigh in weekly.",
+    "basisMeasured": "Based on your recorded weight trend: −{{pace}} per week (includes your diet).",
+    "basisTraining": "Training alone: −{{pace}} per week at your current adherence. Diet makes the biggest difference — log your weight weekly for a real trend.",
+    "disclaimer": "Estimates from your plan, completed sessions and weigh-ins — not a promise.",
+    "chartA11y": "Weekly weight, then the projected line to your target"
   }
 }

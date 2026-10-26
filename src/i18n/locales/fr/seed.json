@@ -38,7 +38,8 @@
     "elliptical": "Vélo elliptique",
     "stair_climber": "Simulateur d'escaliers",
     "incline_press_machine": "Machine développé incliné",
-    "biceps_curl_machine": "Machine à biceps"
+    "biceps_curl_machine": "Machine à biceps",
+    "decline_press_machine": "Machine développé décliné"
   },
   "exercise": {
     "bench_press": "Développé couché",
@@ -153,7 +154,11 @@
     "lever_lying_chest_press": "Développé couché machine",
     "incline_bench_press": "Développé incliné barre",
     "lever_preacher_curl": "Curl pupitre machine",
-    "cable_leaning_lateral_raise": "Élévation latérale penchée à la poulie"
+    "cable_leaning_lateral_raise": "Élévation latérale penchée à la poulie",
+    "decline_chest_press_machine": "Développé décliné machine",
+    "cable_one_arm_twisting_row": "Rowing assis un bras à la poulie avec rotation",
+    "lever_seated_row": "Rowing assis machine",
+    "smith_deadlift": "Soulevé de terre à la Smith"
   },
   "measurement": {
     "chest": "Poitrine",
@@ -206,7 +211,7 @@
     "run_easy_strides": "Course facile + accélérations",
     "run_long_aerobic": "Sortie longue aérobie",
     "gym_push": "Poussée · Pectoraux + Épaules + Triceps",
-    "gym_pull": "Tirage · Dos + Biceps",
+    "gym_pull": "Tirage · Dos + Arrière d'épaules + Biceps",
     "gym_legs": "Jambes · Quadriceps + Ischios + Mollets",
     "run_real_speed": "Vitesse pure",
     "run_tempo_endurance": "Endurance de vitesse",

@@ -1,5 +1,51 @@
 # Changelog
 
+## 1.4.0 — 2026-10-25
+
+### Your cycle, your way (Plan → Edit cycle)
+- Day groups: each training day pairs a run (first) with a gym workout. Rename a day, pick any
+  run or gym workout for it, reorder the days, add or remove one. Rest follows the last day.
+- Saved changes redraw the plan ahead and keep you on the same day group today.
+- The cycle starts with Day 1 on the day you set the app up (no longer tied to Sunday).
+
+### Setup file (Settings → Backup)
+- Export one editable JSON with profile, body + goals, equipment, custom exercises, workouts
+  (exercises, sets, reps, weights, rest, run intervals in mph or km/h) and the cycle days.
+- Import it back after editing: validated first (the wrong field is named), a safety copy is
+  made, history and statistics are never changed. A new current weight is logged as a weigh-in.
+
+## 1.3.0 — 2026-10-15
+
+### Fixes and additions (2026-10-16)
+- Plan empty after onboarding: a missing plan choice now means the VYRO plan, and an empty
+  plan is rebuilt on the next start (a stale "custom" choice with no plan no longer blocks it).
+- Starting weights updated from docs/plan/pro_plan.md; a program update keeps your place in
+  the cycle.
+- Progress → Overview "Forecast": training calories (7 days), adherence and missed days
+  (28 days), planned kcal/week, and an estimated date to reach your weight goal with a chart
+  (weekly weigh-ins, dashed projection, target line).
+
+### Plan: a cycle that waits for you
+- Push → Pull → Legs → Rest, repeating. A training day only moves the cycle on when its gym
+  workout is completed; a missed day comes back the next day (missed Monday's Pull → Tuesday
+  is Pull). Rest comes after 3 completed days.
+- Starts on Sunday with Push; the week view starts on Sunday.
+- Each day: the run first (your warm-up), the gym right after. Run times per weekday stay as
+  before (16:30, or 14:30 on Wed/Fri/Sun).
+
+### New workouts (docs/plan/pro_plan.md)
+- Push 21 sets: incline chest press, lying chest press, decline chest press, pec deck,
+  dumbbell shoulder press, lateral raise, pushdown, overhead cable extension.
+- Pull 16 sets: lat pulldown, seated cable row, cable one-arm twisting row, lever seated row,
+  lever preacher curl, dumbbell hammer curl.
+- Legs 15 sets: hack squat, Smith deadlift, leg press, leg curl, calf raise, back extension.
+- New exercises with demo videos: Decline Chest Press, Cable One Arm Twisting Seated Row,
+  Lever Seated Row, Smith Deadlift. Hammer Curl now shows the dumbbell video.
+- Lifts without a starting weight start from what you lifted before.
+
+### Fixes
+- Web preview: diagnostics and backups download through the browser instead of crashing.
+
 ## 1.2.0 — 2026-10-02
 
 ### New training program (docs/after_1_week_using/new_program.md)

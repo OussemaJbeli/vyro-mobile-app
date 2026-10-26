@@ -31,6 +31,7 @@ import { asLocalDate, formatDuration, toDate, toLocalDate, today } from '@/utils
 import { displayName } from '@/utils/seedNames';
 import { formatQuantity, fromCanonical, unitLabel } from '@/utils/units';
 
+import { ForecastCard } from './ForecastCard';
 import { HistoryTimeline } from './HistoryTimeline';
 import { GoalsSummary, LatestRecords, StreakCard, WeekPlannedCard } from './OverviewCards';
 import { useThisWeek } from './useProgressData';
@@ -249,6 +250,7 @@ function Overview() {
   return (
     <>
       <WeightCard />
+      <ForecastCard />
       <WeeklyStatsCard />
       <Card style={styles.gap} testID="body-measurements">
         <Text variant="heading">{t('body.measurements')}</Text>

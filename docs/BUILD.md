@@ -109,6 +109,7 @@ minutes). Revisit only if QA finds late alarms that matter.
 
 | Symptom | Fix |
 |---|---|
+| `request to https://api.expo.dev/graphql failed` / `ETIMEDOUT` (WSL) | WSL has no working IPv6 and Node gives up too fast: use `pnpm build:apk`, or export `NODE_OPTIONS='--dns-result-order=ipv4first --no-network-family-autoselection'` |
 | Tunnel fails to start | `pnpm go` retries; or set `GO_TUNNEL_ATTEMPTS=10` |
 | "Incompatible package versions" | `npx expo install --fix` |
 | Native module missing in Expo Go | it needs a development build (see above) |

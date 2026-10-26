@@ -3,12 +3,13 @@ import { render, screen, waitFor } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { QuickActions, TodayStatusCard, WeeklySummary } from '@/components/home/HomeCards';
+import { ForecastCard } from '@/components/progress/ForecastCard';
 import { openDatabase, type Database } from '@/db/client';
 import { migrations } from '@/db/migrations';
 import { runMigrations } from '@/db/migrations/runner';
 import { createRepositories } from '@/db/repositories';
+import { reconcileCycle } from '@/db/cycle';
 import { applyRoutine } from '@/db/routine';
-import { scheduleRepo } from '@/db/repositories/schedule';
 import { seedDatabase } from '@/db/seed/seed';
 import { openNodeDriver } from '@/db/testing/nodeDriver';
 import { createQueryClient, RepositoriesTestProvider } from '@/hooks/data';
@@ -30,12 +31,12 @@ beforeEach(async () => {
   await runMigrations(db, migrations);
   await seedDatabase(db);
   await applyRoutine(db, { today: today(), force: true });
-  await scheduleRepo(db).materialize(today());
+  await reconcileCycle(db, today());
 });
 afterEach(() => db.driver.close());
 
 // Render smoke test: the Home cards (1.1.0 redesign) render with a real routine day.
-it('renders Today, Quick Actions and This Week without errors', async () => {
+it('renders Today, Quick Actions, This Week and the Forecast without errors', async () => {
   const repos = createRepositories(db);
   const view = await render(
     <SafeAreaProvider initialMetrics={METRICS}>
@@ -44,11 +45,13 @@ it('renders Today, Quick Actions and This Week without errors', async () => {
           <TodayStatusCard />
           <QuickActions />
           <WeeklySummary />
+          <ForecastCard />
         </RepositoriesTestProvider>
       </ThemeProvider>
     </SafeAreaProvider>,
   );
   await waitFor(() => expect(screen.getByTestId(/^home-(today|rest)$/)).toBeTruthy());
   expect(screen.getByTestId('qa-workout')).toBeTruthy();
+  expect(screen.getByTestId('forecast-card')).toBeTruthy();
   await view.unmount();
 });

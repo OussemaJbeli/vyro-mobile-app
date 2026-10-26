@@ -1,6 +1,7 @@
 import { openDatabase, type Database } from '@/db/client';
 import { migrations } from '@/db/migrations';
 import { runMigrations } from '@/db/migrations/runner';
+import { reconcileCycle } from '@/db/cycle';
 import { applyRoutine } from '@/db/routine';
 import { scheduleRepo } from '@/db/repositories/schedule';
 import { seedDatabase } from '@/db/seed/seed';
@@ -193,7 +194,7 @@ describe('AIService', () => {
     await runMigrations(db, migrations);
     await seedDatabase(db);
     await applyRoutine(db, { today: '2026-09-27' });
-    await scheduleRepo(db).materialize('2026-09-21', '2026-10-05');
+    await reconcileCycle(db, '2026-09-27');
     config = base;
     provider = mockProvider();
     providerCalls = 0;
@@ -299,8 +300,8 @@ describe('AIService', () => {
     )!;
     const suggestion = (sessionId: string) => ({
       kind: 'move_session',
-      payload: JSON.stringify({ sessionId, date: '2026-10-01', startTime: '17:00' }),
-      rationale: 'Thursday is free',
+      payload: JSON.stringify({ sessionId, date: '2026-09-30', startTime: '17:00' }),
+      rationale: 'Wednesday is the rest day',
     });
     provider = {
       ...mockProvider(),

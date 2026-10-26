@@ -157,5 +157,28 @@
     "month": "{{month}} status"
   },
   "progressPct": "{{pct}} %",
-  "notDone": "Not done"
+  "notDone": "Not done",
+  "cycle": {
+    "title": "VYRO cycle",
+    "hint": "Your training days in order, then a rest day. Each day: the run first, then the gym. The cycle only moves on when you finish a day.",
+    "dayN": "Day {{n}}",
+    "current": "today's day",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "remove": "Remove this day",
+    "namePlaceholder": "Name (e.g. Push)",
+    "none": "None",
+    "run": "Run (first)",
+    "gym": "Gym",
+    "pickRun": "Choose the run",
+    "pickGym": "Choose the workout",
+    "add": "Add a day",
+    "save": "Save cycle",
+    "saved": "Cycle saved · plan updated",
+    "edit": "Edit cycle",
+    "restart": "Restart from Day 1 today",
+    "restartTitle": "Restart the cycle?",
+    "restartBody": "Today becomes Day 1 and the plan ahead is redrawn. Finished sessions and history stay.",
+    "restarted": "Cycle restarted · Day 1 today"
+  }
 }

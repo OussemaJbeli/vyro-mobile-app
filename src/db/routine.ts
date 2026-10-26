@@ -1,15 +1,16 @@
 /**
- * Applies the owner's routine once (docs/default programs): removes every other workout,
- * replaces the plan with the fixed week (docs/plan/weak.md) and switches speeds to
- * mph (distance stays km). History is untouched. Guarded by `routine_version`.
+ * Applies the owner's routine (docs/plan/pro_plan.md): removes every other workout, syncs the
+ * Push / Pull / Legs workouts, starts the completion-based cycle (src/db/cycle.ts) and
+ * switches speeds to mph (distance stays km). History is untouched. Guarded by
+ * `routine_version`.
  */
-import { weekStart } from '@/domain/scheduling/recurrence';
+import { readCycleState, startCycle } from './cycle';
 
 import { type Database, type Db } from './client';
 import { tables, toRow } from './mappers';
-import { insertModel, nowIso } from './repositories/base';
+import { nowIso } from './repositories/base';
 import { profileRepo } from './repositories/profile';
-import { routineExercises, routineTemplates, routineWeek } from './seed/data/routine';
+import { routineExercises, routineTemplates } from './seed/data/routine';
 import { seedData } from './seed/data/content';
 import { seedId } from './seed/ids';
 
@@ -20,23 +21,33 @@ import { seedId } from './seed/ids';
  * (per-day times, gym right after the run). v6 (1.2.0): Push / Pull / Legs with new runs
  * (docs/after_1_week_using/new_program.md), no six-pack, run before the gym. v7: exercise
  * swaps (lying chest press, incline/decline bench, preacher curl, leaning lateral raise); from
- * v7 the routine workouts are re-synced from the program on every apply.
+ * v7 the routine workouts are re-synced from the program on every apply. v8 (1.3.0): exercises
+ * from docs/plan/pro_plan.md and the completion-based cycle (Push → Pull → Legs → Rest, a missed
+ * day repeats) instead of weekly rules; the week starts on Sunday. v9: pro_plan.md starting
+ * weights; a program update keeps the current cycle position.
  */
-export const ROUTINE_VERSION = 7;
-
-/** Active rules left: 0 means the plan is empty and the routine must come back. */
-async function activeRules(db: Db): Promise<number> {
-  const row = await db.get<{ n: number }>(
-    'SELECT COUNT(*) AS n FROM schedule_rules WHERE deleted_at IS NULL AND active = 1',
-  );
-  return row?.n ?? 0;
-}
+export const ROUTINE_VERSION = 9;
 
 async function optedOut(db: Db): Promise<boolean> {
   const row = await db.get<{ value: string }>(
     "SELECT value FROM app_settings WHERE key = 'routine_opt_out'",
   );
   return row ? JSON.parse(row.value) === true : false;
+}
+
+async function customRules(db: Db): Promise<number> {
+  const row = await db.get<{ n: number }>(
+    'SELECT COUNT(*) AS n FROM schedule_rules WHERE deleted_at IS NULL AND active = 1',
+  );
+  return row?.n ?? 0;
+}
+
+async function plannedAhead(db: Db, today: string): Promise<number> {
+  const row = await db.get<{ n: number }>(
+    "SELECT COUNT(*) AS n FROM scheduled_sessions WHERE deleted_at IS NULL AND scheduled_date BETWEEN ? AND date(?, '+7 day')",
+    [today, today],
+  );
+  return row?.n ?? 0;
 }
 
 async function routineVersion(db: Db): Promise<number> {
@@ -50,14 +61,27 @@ export async function applyRoutine(
   db: Database,
   { today, force = false }: { today: string; force?: boolean },
 ): Promise<boolean> {
-  // The user chose their own plan (or none) in onboarding: never overwrite it.
-  if (!force && (await optedOut(db))) return false;
-  // Self-healing: an up-to-date routine with no active rule (plan emptied) is re-applied.
-  if (!force && (await routineVersion(db)) >= ROUTINE_VERSION && (await activeRules(db)) > 0) {
+  // The user chose their own plan in onboarding: never overwrite it — unless that plan has
+  // no active rule and nothing is planned ahead (an empty plan helps nobody).
+  if (
+    !force &&
+    (await optedOut(db)) &&
+    ((await customRules(db)) > 0 || (await plannedAhead(db, today)) > 0)
+  ) {
     return false;
   }
-  const from = weekStart(today, 1);
-  const byKey = new Map(routineTemplates.map((t) => [t.key, t]));
+  // Self-healing: an up-to-date routine is applied again when its cycle is missing or the
+  // plan ahead is empty (nothing planned in the next 7 days).
+  if (
+    !force &&
+    (await routineVersion(db)) >= ROUTINE_VERSION &&
+    (await readCycleState(db)) &&
+    (await plannedAhead(db, today)) > 0
+  ) {
+    return false;
+  }
+  // The plan is rewritten from today: past days keep what happened.
+  const from = today;
   const keep = routineTemplates.map((t) => seedId.template(t.key));
 
   await db.tx(async (tx) => {
@@ -97,27 +121,11 @@ export async function applyRoutine(
 
     await syncRoutineTemplates(tx, at);
 
-    for (const { key, days, time } of routineWeek) {
-      const tpl = key ? byKey.get(key) : undefined;
-      await insertModel(tx, tables.scheduleRules, {
-        templateId: key ? seedId.template(key) : null,
-        title: tpl?.name ?? 'Rest',
-        type: tpl?.type ?? 'rest',
-        freq: 'weekly',
-        interval: 1,
-        byWeekday: days,
-        byMonthDay: null,
-        startDate: from,
-        endDate: null,
-        startTime: time,
-        durationMinutes: tpl?.durationMinutes ?? null,
-        reminderOffsetMinutes: tpl ? 15 : null,
-        active: true,
-        materializedUntil: null,
-      });
-    }
+    // Keep where you are in the cycle on a program update; start it only the first time.
+    if (force || !(await readCycleState(tx))) await startCycle(tx, today);
 
-    await profileRepo(tx).upsert({ speedUnit: 'mph', distanceUnit: 'km' });
+    // The week starts on Sunday (the cycle starts there too).
+    await profileRepo(tx).upsert({ speedUnit: 'mph', distanceUnit: 'km', weekStartsOn: 0 });
     await tx.run(
       "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_version', ?, ?) " +
         'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',

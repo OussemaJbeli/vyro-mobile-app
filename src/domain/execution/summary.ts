@@ -5,6 +5,8 @@ export type LastPerformance = {
   reps: number | null;
   weightKg: number | null;
   durationSeconds: number | null;
+  /** From before the current program was applied: a planned starting weight wins over it. */
+  stale?: boolean;
 };
 
 export type Prefill = { reps: number; weightKg: number; durationSeconds: number };
@@ -26,8 +28,14 @@ export function prefill(
     .find((s) => s.status === 'done');
   return {
     reps: set?.plannedReps ?? prev?.actualReps ?? last?.reps ?? defaults.reps ?? 10,
-    // What you actually lifted wins over the plan's starting weight (progression memory).
-    weightKg: prev?.actualWeightKg ?? last?.weightKg ?? set?.plannedWeightKg ?? 0,
+    // What you actually lifted wins over the plan's starting weight (progression memory),
+    // except lifts from an older program: then the new starting weight applies, if any.
+    weightKg:
+      prev?.actualWeightKg ??
+      (last && !last.stale ? last.weightKg : null) ??
+      set?.plannedWeightKg ??
+      last?.weightKg ??
+      0,
     durationSeconds:
       set?.plannedDurationSeconds ??
       prev?.actualDurationSeconds ??

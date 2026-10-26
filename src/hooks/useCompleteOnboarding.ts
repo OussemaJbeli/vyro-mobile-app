@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { commitOnboarding } from '@/db/onboarding';
+import { reconcileCycle } from '@/db/cycle';
 import { applyRoutine } from '@/db/routine';
 import { scheduleRepo } from '@/db/repositories/schedule';
 import { useAppStore } from '@/store/appStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { toast } from '@/store/uiStore';
 import { type OnboardingDraft } from '@/types/onboarding';
-import { weekStart } from '@/domain/scheduling/recurrence';
 import { today } from '@/utils/dates';
 import { toUserMessage } from '@/utils/errors';
 
@@ -28,11 +28,14 @@ export function useCompleteOnboarding() {
       const goalTitle = (kind: string): string =>
         t(`onboarding:goal.options.${kind}` as 'onboarding:goal.options.custom');
       await commitOnboarding(db, draft, { today: today(), goalTitle });
-      // The VYRO week: the same week every week, filled from this Monday.
-      const vyro = draft.plan === 'vyro' && draft.acceptPlan;
-      if (vyro) await applyRoutine(db, { today: today(), force: true });
-      // The plan's rules become real sessions right away.
-      await scheduleRepo(db).materialize(vyro ? weekStart(today(), 1) : today());
+      // The VYRO cycle (Push → Pull → Legs → Rest), planned ahead right away.
+      // Only an explicit "Custom days" opts out (older drafts have no plan field).
+      if (draft.plan !== 'custom' && draft.acceptPlan) {
+        await applyRoutine(db, { today: today(), force: true });
+        await reconcileCycle(db, today());
+      }
+      // A custom plan's rules become real sessions right away.
+      await scheduleRepo(db).materialize(today());
       const settings = useSettingsStore.getState();
       settings.hydrate({
         ...settings.values,

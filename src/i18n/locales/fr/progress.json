@@ -285,5 +285,24 @@
     "stats_one": "Réalisée {{count}} fois · dernière le {{date}}",
     "stats_other": "Réalisée {{count}} fois · dernière le {{date}}",
     "never": "Pas encore réalisée"
+  },
+  "forecast": {
+    "title": "Prévision",
+    "estimate": "estimation",
+    "burned7_one": "kcal brûlées · {{count}} séance (7 jours)",
+    "burned7_other": "kcal brûlées · {{count}} séances (7 jours)",
+    "adherence_one": "du plan fait · {{count}} manquée (28 jours)",
+    "adherence_other": "du plan fait · {{count}} manquées (28 jours)",
+    "plannedWeek": "kcal/semaine d'entraînement prévu",
+    "eta": "≈ {{weeks}} semaines pour {{target}} (vers le {{date}})",
+    "reached": "Vous êtes à votre objectif ({{target}}). Un nouvel objectif ?",
+    "noGoal": "Définissez un objectif de poids pour voir quand vous pourriez l'atteindre.",
+    "setGoal": "Définir un objectif",
+    "noWeight": "Enregistrez votre poids pour démarrer la prévision.",
+    "noPace": "Pas encore assez de données : continuez et pesez-vous chaque semaine.",
+    "basisMeasured": "D'après votre tendance de poids : −{{pace}} par semaine (alimentation comprise).",
+    "basisTraining": "Entraînement seul : −{{pace}} par semaine à votre assiduité actuelle. L'alimentation compte le plus — pesez-vous chaque semaine pour une vraie tendance.",
+    "disclaimer": "Estimations à partir de votre plan, de vos séances et de vos pesées — pas une promesse.",
+    "chartA11y": "Poids par semaine, puis la projection jusqu'à votre objectif"
   }
 }

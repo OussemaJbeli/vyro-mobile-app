@@ -71,6 +71,18 @@ describe('prefill', () => {
       weightKg: 70,
       durationSeconds: 30,
     });
+    // A lift from an older program: the new starting weight wins; without one, the old lift.
+    expect(
+      prefill(
+        s.exercises[0]!,
+        0,
+        { reps: 8, weightKg: 70, durationSeconds: null, stale: true },
+        {
+          reps: 12,
+          durationSeconds: null,
+        },
+      ).weightKg,
+    ).toBe(60);
     // No session yet: the plan's starting weight.
     expect(
       prefill(s.exercises[0]!, 0, undefined, { reps: 12, durationSeconds: null }).weightKg,

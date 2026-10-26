@@ -38,7 +38,8 @@
     "elliptical": "Elliptical trainer",
     "stair_climber": "Stair climber",
     "incline_press_machine": "Incline press machine",
-    "biceps_curl_machine": "Biceps curl machine"
+    "biceps_curl_machine": "Biceps curl machine",
+    "decline_press_machine": "Decline press machine"
   },
   "exercise": {
     "bench_press": "Bench Press",
@@ -153,7 +154,11 @@
     "lever_lying_chest_press": "Lever Lying Chest Press",
     "incline_bench_press": "Incline Bench Press",
     "lever_preacher_curl": "Lever Preacher Curl",
-    "cable_leaning_lateral_raise": "Cable Leaning Lateral Raise"
+    "cable_leaning_lateral_raise": "Cable Leaning Lateral Raise",
+    "decline_chest_press_machine": "Decline Chest Press",
+    "cable_one_arm_twisting_row": "Cable One Arm Twisting Seated Row",
+    "lever_seated_row": "Lever Seated Row",
+    "smith_deadlift": "Smith Deadlift"
   },
   "measurement": {
     "chest": "Chest",
@@ -206,7 +211,7 @@
     "run_easy_strides": "Easy Run + Strides",
     "run_long_aerobic": "Long Aerobic Run",
     "gym_push": "Push · Chest + Shoulders + Triceps",
-    "gym_pull": "Pull · Back + Biceps",
+    "gym_pull": "Pull · Back + Rear Delts + Biceps",
     "gym_legs": "Legs · Quads + Hamstrings + Calves",
     "run_real_speed": "Real Speed",
     "run_tempo_endurance": "Speed Endurance",

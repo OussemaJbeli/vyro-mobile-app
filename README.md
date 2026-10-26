@@ -102,3 +102,5 @@ src/app (routes) → components → hooks + store → domain + services → db/r
 | production  | Play Store AAB              | `npx eas-cli@latest build --profile production -p android`  |
 
 Full release instructions arrive in roadmap step 30 (`docs/BUILD.md`).
+
+new build methode => `pnpm build:apk`

@@ -104,11 +104,12 @@
       "7": "Sun"
     },
     "replaceWarning": "Using this plan replaces your current weekly plan.",
-    "vyroSubtitle": "Your week, the same every week. Change any day later in Plan.",
-    "vyroWeek": "VYRO week",
+    "vyroSubtitle": "A 4-day cycle that only moves on when you finish a day: miss Pull and it waits for you.",
+    "vyroWeek": "VYRO cycle",
     "customWeek": "Custom days",
-    "vyroTitle": "Run · Gym",
-    "vyroHint": "Run first (your warm-up), then the gym. Thursday is the rest day. Tap any session in Plan to change it."
+    "vyroTitle": "Push → Pull → Legs → Rest",
+    "vyroHint": "Each day: the run first (your warm-up), then the gym. Day 1 starts today; edit the days any time in Plan → Edit cycle.",
+    "cycleDay": "Day {{n}}"
   },
   "notifications": {
     "title": "Stay on track",

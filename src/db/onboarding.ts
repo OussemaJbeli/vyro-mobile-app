@@ -106,7 +106,7 @@ export async function commitOnboarding(
     let plan: StarterPlan | null = null;
     // The VYRO week (docs/plan/weak.md) is applied right after this transaction
     // (applyRoutine). A custom plan, or no plan, opts out so it is never overwritten.
-    const vyroWeek = draft.plan === 'vyro' && draft.acceptPlan;
+    const vyroWeek = draft.plan !== 'custom' && draft.acceptPlan;
     await tx.run(
       "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_opt_out', ?, ?) " +
         'ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at',

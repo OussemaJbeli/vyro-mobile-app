@@ -43,6 +43,7 @@ export const routes = {
   measurements: '/body/measurements',
   measure: '/body/measure',
   measurement: (typeId: string) => ({ pathname: '/body/measurement/[typeId]', params: { typeId } }),
+  cycle: '/cycle',
   photos: '/photos',
   photoCapture: '/photos/capture',
   photoCaptureIn: (mode: string, sub: string) => ({

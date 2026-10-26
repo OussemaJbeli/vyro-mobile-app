@@ -54,7 +54,8 @@ export const TARGETS = [
   { slug: 'pike_push_up', names: ['pike-push-up'] },
   // Arms
   { slug: 'bicep_curl', names: ['dumbbell-biceps-curl', 'alternate-biceps-curl'] },
-  { slug: 'hammer_curl', names: ['hammer-curl'] },
+  // The dumbbell version (hammer-curl-6a is the cable one).
+  { slug: 'hammer_curl', pages: ['dumbbell-hammer-curl-6i5'] },
   { slug: 'cable_curl', names: ['cable-curl'] },
   { slug: 'ez_bar_curl', names: ['ez-barbell-curl'] },
   { slug: 'preacher_curl', names: ['barbell-preacher-curl'] },
@@ -126,6 +127,10 @@ export const TARGETS = [
   { slug: 'foam_roll', names: [], re: '^foam-roll|roller-.*(quad|back|thoracic)' },
 
   // 1.2.0 Push / Pull / Legs
+  { slug: 'decline_chest_press_machine', pages: ['lever-decline-chest-press-48'] },
+  { slug: 'cable_one_arm_twisting_row', pages: ['cable-one-arm-twisting-seated-row-75a'] },
+  { slug: 'lever_seated_row', pages: ['lever-seated-row-4s'] },
+  { slug: 'smith_deadlift', pages: ['smith-deadlift--8vt'] },
   { slug: 'lever_lying_chest_press', names: ['lever-lying-chest-press'] },
   { slug: 'incline_bench_press', pages: ['incline-bench-press-p'] },
   { slug: 'lever_preacher_curl', pages: ['lever-preacher-curl-16'] },

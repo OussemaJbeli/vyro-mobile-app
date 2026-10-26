@@ -12,6 +12,7 @@ import {
 } from '../types';
 
 export const routineEquipment: SeedEquipment[] = [
+  { slug: 'decline_press_machine', name: 'Decline press machine', category: 'machines' },
   { slug: 'incline_press_machine', name: 'Incline press machine', category: 'machines' },
   { slug: 'biceps_curl_machine', name: 'Biceps curl machine', category: 'machines' },
   { slug: 'squat_rack', name: 'Squat rack', category: 'free_weights' },
@@ -41,6 +42,65 @@ const lift = (
 });
 
 export const routineExercises: SeedExercise[] = [
+  lift({
+    slug: 'decline_chest_press_machine',
+    name: 'Decline Chest Press',
+    category: 'chest',
+    primaryMuscle: 'lower_chest',
+    secondaryMuscles: ['triceps', 'front_delts'],
+    equipment: ['decline_press_machine'],
+    defaultReps: 8,
+    instructions: [
+      'Set the seat so the handles start at your lower chest.',
+      'Press forward and slightly down without locking the elbows.',
+      'Return slowly to a comfortable stretch.',
+    ],
+  }),
+  lift({
+    slug: 'cable_one_arm_twisting_row',
+    name: 'Cable One Arm Twisting Seated Row',
+    category: 'back',
+    primaryMuscle: 'lats',
+    secondaryMuscles: ['mid_back', 'rear_delts', 'biceps'],
+    equipment: ['cable_machine'],
+    defaultReps: 12,
+    defaultRestSeconds: 75,
+    instructions: [
+      'Sit facing the low pulley, one handle in one hand, reach forward under control.',
+      'Row while turning the torso slightly, bringing the upper arm toward your side.',
+      'Return slowly; do all reps, then switch sides.',
+    ],
+  }),
+  lift({
+    slug: 'lever_seated_row',
+    name: 'Lever Seated Row',
+    category: 'back',
+    primaryMuscle: 'rear_delts',
+    secondaryMuscles: ['mid_back', 'upper_back'],
+    equipment: ['seated_row_machine'],
+    defaultReps: 12,
+    defaultRestSeconds: 90,
+    instructions: [
+      'Chest against the pad, grip the handles with arms straight.',
+      'Lead with the elbows and pull back without shrugging.',
+      'Return slowly to a full reach.',
+    ],
+  }),
+  lift({
+    slug: 'smith_deadlift',
+    name: 'Smith Deadlift',
+    category: 'legs',
+    primaryMuscle: 'hamstrings',
+    secondaryMuscles: ['glutes', 'lower_back'],
+    equipment: ['smith_machine'],
+    defaultReps: 8,
+    defaultRestSeconds: 180,
+    instructions: [
+      'Feet hip-width under the bar, hinge at the hips with a neutral spine.',
+      'Lower until your hamstrings reach their comfortable limit — do not chase the floor.',
+      'Drive the hips forward to stand tall.',
+    ],
+  }),
   lift({
     slug: 'lever_lying_chest_press',
     name: 'Lever Lying Chest Press',
@@ -263,6 +323,10 @@ export const routineExercises: SeedExercise[] = [
 
 /** exercise → alternatives (machines need a dumbbell-or-bodyweight option). */
 export const routineAlternatives: Record<string, string[]> = {
+  decline_chest_press_machine: ['dumbbell_bench_press', 'push_up'],
+  cable_one_arm_twisting_row: ['dumbbell_row', 'seated_row'],
+  lever_seated_row: ['rear_delt_fly', 'dumbbell_row'],
+  smith_deadlift: ['romanian_deadlift', 'glute_bridge'],
   lever_lying_chest_press: ['dumbbell_bench_press', 'push_up'],
   incline_bench_press: ['incline_dumbbell_press', 'push_up'],
   lever_preacher_curl: ['bicep_curl', 'ez_bar_curl'],
@@ -302,203 +366,156 @@ const rounds = (n: number, a: SeedInterval, b: SeedInterval) =>
 // the range and the progression rule (double progression, 1–2 reps in reserve).
 const C = 150;
 const I = 90;
-const range = (r: string) =>
-  `${r} reps · 1–2 reps in reserve · all sets at the top of the range → add weight`;
-const each = (r: string) => `${range(r)} · weight per dumbbell`;
+/** One planned exercise: sets × range (target = bottom), optional start weight, rest, note. */
+const x = (
+  exercise: string,
+  sets: number,
+  r: string,
+  weightKg: number | null,
+  restSeconds: number,
+  note?: string,
+) => ({
+  exercise,
+  sets,
+  targetReps: Number(r.split('–')[0]),
+  ...(weightKg !== null ? { targetWeightKg: weightKg } : {}),
+  restSeconds,
+  notes: `${r} reps · 1–2 reps in reserve · ${rule(r)}${note ? ` · ${note}` : ''}`,
+});
+const rule = (r: string) => `all sets at ${r.split('–')[1]} reps → add weight`;
 
 export const routineTemplates: SeedTemplate[] = [
-  // Day 1 — Push (chest, shoulders, triceps): 23 working sets.
+  // Push (docs/plan/pro_plan.md): upper-chest priority, 21 working sets.
   {
     key: 'gym_push',
     name: 'Push · Chest + Shoulders + Triceps',
     type: 'gym',
-    durationMinutes: 75,
+    durationMinutes: 70,
     difficulty: 'intermediate',
     coverKey: 'gym_push',
     description:
-      'After the Real Speed run. Start at the listed weights; progress by reps, then weight.',
+      'Upper-chest priority. If recovery gets hard, drop the decline press to 1 set first.',
     exercises: [
-      {
-        exercise: 'lever_lying_chest_press',
-        sets: 3,
-        targetReps: 6,
-        targetWeightKg: 35,
-        restSeconds: C,
-        notes: range('6–10'),
-      },
-      {
-        exercise: 'incline_bench_press',
-        sets: 3,
-        targetReps: 8,
-        targetWeightKg: 25,
-        restSeconds: C,
-        notes: `Barbell, total weight · ${range('8–12')}`,
-      },
-      {
-        exercise: 'decline_bench_press',
-        sets: 2,
-        targetReps: 8,
-        targetWeightKg: 20,
-        restSeconds: C,
-        notes: `Barbell, total weight · ${range('8–12')}`,
-      },
-      {
-        exercise: 'pec_deck',
-        sets: 2,
-        targetReps: 10,
-        targetWeightKg: 30,
-        restSeconds: I,
-        notes: range('10–15'),
-      },
-      {
-        exercise: 'dumbbell_shoulder_press',
-        sets: 3,
-        targetReps: 6,
-        targetWeightKg: 10,
-        restSeconds: C,
-        notes: each('6–10'),
-      },
-      {
-        exercise: 'lateral_raise',
-        sets: 3,
-        targetReps: 10,
-        targetWeightKg: 10,
-        restSeconds: I,
-        notes: each('10–15'),
-      },
-      {
-        exercise: 'cable_leaning_lateral_raise',
-        sets: 2,
-        targetReps: 12,
-        targetWeightKg: 15,
-        restSeconds: I,
-        notes: `Per side · ${range('12–15')}`,
-      },
-      {
-        exercise: 'tricep_pushdown',
-        sets: 3,
-        targetReps: 8,
-        targetWeightKg: 40,
-        restSeconds: I,
-        notes: range('8–12'),
-      },
-      {
-        exercise: 'overhead_cable_extension',
-        sets: 2,
-        targetReps: 10,
-        targetWeightKg: 25,
-        restSeconds: I,
-        notes: range('10–15'),
-      },
+      x('incline_chest_press_machine', 3, '8–12', 20, C),
+      x('lever_lying_chest_press', 3, '6–10', 35, C),
+      x(
+        'decline_chest_press_machine',
+        2,
+        '8–12',
+        40,
+        C,
+        'Moderate volume: upper chest is the priority',
+      ),
+      x(
+        'pec_deck',
+        3,
+        '10–15',
+        30,
+        I,
+        'Comfortable stretch, shoulders not forced back · replaces the Multi-Flight fly',
+      ),
+      x(
+        'dumbbell_shoulder_press',
+        2,
+        '6–10',
+        10,
+        C,
+        'Back supported, no excessive arch · weight per dumbbell',
+      ),
+      x(
+        'lateral_raise',
+        3,
+        '10–15',
+        10,
+        I,
+        'Strict: no swinging or shrugging · weight per dumbbell',
+      ),
+      x('tricep_pushdown', 3, '8–12', 40, I, 'Elbows close to your sides'),
+      x(
+        'overhead_cable_extension',
+        2,
+        '10–15',
+        25,
+        I,
+        'Comfortable shoulder position, control the stretch',
+      ),
     ],
   },
-  // Day 2 — Pull (back/lats, biceps, upper back): 15 working sets.
+  // Pull: width + thickness, rear delts, biceps + forearms, 16 working sets.
   {
     key: 'gym_pull',
-    name: 'Pull · Back + Biceps',
+    name: 'Pull · Back + Rear Delts + Biceps',
     type: 'gym',
-    durationMinutes: 55,
+    durationMinutes: 60,
     difficulty: 'intermediate',
     coverKey: 'gym_pull',
-    description: 'After the Speed Endurance run. Drop upright rows if they bother your shoulders.',
+    description: 'Preacher curl is the main biceps lift; hammer curls add arm and forearm work.',
     exercises: [
-      {
-        exercise: 'lat_pulldown',
-        sets: 3,
-        targetReps: 6,
-        targetWeightKg: 45,
-        restSeconds: C,
-        notes: `Wide grip · ${range('6–10')}`,
-      },
-      {
-        exercise: 'seated_row',
-        sets: 3,
-        targetReps: 8,
-        targetWeightKg: 40,
-        restSeconds: C,
-        notes: range('8–12'),
-      },
-      {
-        exercise: 'close_grip_pulldown',
-        sets: 2,
-        targetReps: 8,
-        targetWeightKg: 40,
-        restSeconds: C,
-        notes: range('8–12'),
-      },
-      {
-        exercise: 'ez_bar_curl',
-        sets: 3,
-        targetReps: 6,
-        targetWeightKg: 20,
-        restSeconds: I,
-        notes: range('6–10'),
-      },
-      {
-        exercise: 'lever_preacher_curl',
-        sets: 2,
-        targetReps: 10,
-        targetWeightKg: 15,
-        restSeconds: I,
-        notes: range('10–15'),
-      },
-      {
-        exercise: 'upright_row',
-        sets: 2,
-        targetReps: 10,
-        restSeconds: I,
-        notes: `Controlled weight · ${range('10–15')} · skip if the shoulders hurt`,
-      },
+      x('lat_pulldown', 3, '8–12', 45, C, 'To the upper chest, no swinging'),
+      x('seated_row', 3, '8–12', 40, C, 'Reach forward under control, no rocking'),
+      x(
+        'cable_one_arm_twisting_row',
+        2,
+        '10–15',
+        null,
+        75,
+        'Per side · start light · lat isolation, does not replace the pulldown',
+      ),
+      x(
+        'lever_seated_row',
+        3,
+        '12–15',
+        null,
+        I,
+        'Rear delts, reverse-fly setting: lead with the elbows, no shrugging · start controlled',
+      ),
+      x(
+        'lever_preacher_curl',
+        3,
+        '8–12',
+        15,
+        I,
+        'Upper arms on the pad, no bouncing at the bottom',
+      ),
+      x(
+        'hammer_curl',
+        2,
+        '10–15',
+        null,
+        I,
+        'Palms facing each other, wrists neutral · weight per dumbbell',
+      ),
     ],
   },
-  // Day 3 — Legs (quads, hamstrings, calves, posterior chain): 14 working sets.
+  // Legs: quads, hamstrings, glutes, calves, lower back, 15 working sets.
   {
     key: 'gym_legs',
     name: 'Legs · Quads + Hamstrings + Calves',
     type: 'gym',
-    durationMinutes: 55,
+    durationMinutes: 60,
     difficulty: 'intermediate',
     coverKey: 'gym_legs',
-    description: 'After the easy run. Never trade depth or control for more weight.',
+    description: 'Keep the deadlift technically controlled, especially while running regularly.',
     exercises: [
+      x('hack_squat', 3, '6–10', 80, 180, 'Hips and back on the pads, controlled depth'),
       {
-        exercise: 'hack_squat',
-        sets: 3,
-        targetReps: 6,
-        targetWeightKg: 80,
-        restSeconds: 180,
-        notes: range('6–10'),
-      },
-      {
-        exercise: 'leg_press',
+        exercise: 'smith_deadlift',
         sets: 3,
         targetReps: 8,
-        targetWeightKg: 100,
-        restSeconds: C,
-        notes: range('8–12'),
+        restSeconds: 180,
+        notes:
+          '8–10 reps · 2 reps in reserve · all sets at 10 reps → add a little · start light, hips back, neutral spine, stop at your hamstring limit',
       },
-      {
-        exercise: 'leg_curl',
-        sets: 3,
-        targetReps: 10,
-        targetWeightKg: 40,
-        restSeconds: I,
-        notes: `Prone · ${range('10–15')}`,
-      },
-      {
-        exercise: 'machine_calf_raise',
-        sets: 3,
-        targetReps: 10,
-        targetWeightKg: 90,
-        restSeconds: I,
-        notes: range('10–15'),
-      },
+      x('leg_press', 2, '8–12', 100, C, 'Hips on the pad, knees not locked hard'),
+      x('leg_curl', 3, '10–15', 40, I, 'Control the return'),
+      x('machine_calf_raise', 3, '10–15', 90, I, 'Full stretch, brief pause at the top'),
       {
         exercise: 'back_extension',
-        sets: 2,
+        sets: 1,
         targetReps: 12,
         restSeconds: I,
-        notes: `45° bench, bodyweight · ${range('12–15')}`,
+        notes:
+          '1–2 × 12–15 · bodyweight · 2 reps in reserve · torso in line with the legs, no hyperextension',
       },
     ],
   },
@@ -549,21 +566,26 @@ export const routineTemplates: SeedTemplate[] = [
   },
 ];
 
-type Day = 1 | 2 | 3 | 4 | 5 | 6 | 7;
-
 /**
- * The same week every week (ISO weekdays, 1 = Monday). Run first (it's the warm-up), gym
- * right after; per-day run times from docs/plan/weak.md.
+ * The cycle (1.3.0): each training day pairs its run (first, as the warm-up) with its gym
+ * workout. Rest days have neither. See src/domain/scheduling/cycle.ts.
  */
-const WEEK: { day: Day; run?: [key: string, time: string]; gym?: string }[] = [
-  { day: 1, run: ['run_real_speed', '16:30'], gym: 'gym_push' },
-  { day: 2, run: ['run_tempo_endurance', '16:30'], gym: 'gym_pull' },
-  { day: 3, run: ['run_easy_16', '14:30'], gym: 'gym_legs' },
-  { day: 4 },
-  { day: 5, run: ['run_real_speed', '14:30'], gym: 'gym_push' },
-  { day: 6, run: ['run_tempo_endurance', '16:30'], gym: 'gym_pull' },
-  { day: 7, run: ['run_easy_16', '14:30'], gym: 'gym_legs' },
-];
+export const CYCLE_PLAN: Record<'push' | 'pull' | 'legs', { run: string; gym: string }> = {
+  push: { run: 'run_real_speed', gym: 'gym_push' },
+  pull: { run: 'run_tempo_endurance', gym: 'gym_pull' },
+  legs: { run: 'run_easy_16', gym: 'gym_legs' },
+};
+
+/** Run start per ISO weekday (docs/plan/weak.md); the gym follows the run. */
+export const RUN_TIMES: Record<number, string> = {
+  1: '16:30',
+  2: '16:30',
+  3: '14:30',
+  4: '16:30',
+  5: '14:30',
+  6: '16:30',
+  7: '14:30',
+};
 
 const minutes = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
 const hhmm = (m: number) =>
@@ -574,14 +596,3 @@ export function afterRun(runKey: string, runTime: string): string {
   const length = routineTemplates.find((t) => t.key === runKey)?.durationMinutes ?? 30;
   return hhmm(Math.ceil((minutes(runTime) + length + 5) / 5) * 5);
 }
-
-/** One rule per activity and weekday (times differ per day); null key = rest day. */
-type RuleSpec = { key: string | null; days: Day[]; time: string | null };
-export const routineWeek: RuleSpec[] = WEEK.flatMap(({ day, run, gym }): RuleSpec[] =>
-  !run || !gym
-    ? [{ key: null, days: [day], time: null }]
-    : [
-        { key: run[0], days: [day], time: run[1] },
-        { key: gym, days: [day], time: afterRun(run[0], run[1]) },
-      ],
-);

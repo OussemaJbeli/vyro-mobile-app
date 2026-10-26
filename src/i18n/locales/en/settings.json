@@ -449,5 +449,17 @@
         "other": "Other"
       }
     }
+  },
+  "setup": {
+    "title": "Setup file (editable)",
+    "intro": "Your profile, goals, equipment, exercises, workouts (sets, reps, weights, rest, run speeds) and cycle days as one JSON file. Edit it on your computer and import it back. History and statistics are never changed.",
+    "export": "Export setup",
+    "import": "Import setup",
+    "exportFailed": "Couldn't export the setup file",
+    "unreadable": "Couldn't read this file",
+    "confirmTitle": "Apply this setup?",
+    "confirmBody": "{{workouts}} workouts, {{exercises}} custom exercises and {{days}} cycle days will replace your current setup. History stays as it is; a safety copy is made first.",
+    "apply": "Apply",
+    "imported": "Setup applied · {{workouts}} workouts, {{exercises}} exercises, {{days}} cycle days"
   }
 }

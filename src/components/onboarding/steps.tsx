@@ -24,7 +24,7 @@ import { useCompleteOnboarding } from '@/hooks/useCompleteOnboarding';
 import { PinSetup } from '@/components/security/PinSetup';
 import { requestNotificationPermission } from '@/services/notifications/permissions';
 import { makeStyles, useTheme } from '@/theme';
-import { vyroWeek } from '@/hooks/useVyroWeek';
+import { vyroCycle } from '@/hooks/useVyroWeek';
 import { type OnboardingDraft, type OnboardingGoal } from '@/types/onboarding';
 import {
   formatQuantity,
@@ -468,12 +468,12 @@ export function DaysStep() {
   const styles = useStyles();
   const theme = useTheme();
   const { draft, next, back, index, total } = useStepNav('days');
-  const [plan, setPlan] = useState<'vyro' | 'custom'>(draft.plan);
+  const [plan, setPlan] = useState<'vyro' | 'custom'>(draft.plan ?? 'vyro');
   const [custom, setCustom] = useState<Partial<OnboardingDraft>>({
     trainingDays: draft.trainingDays,
     trainingTime: draft.trainingTime,
   });
-  const week = vyroWeek();
+  const cycle = vyroCycle();
   const commit = (acceptPlan: boolean) =>
     next(plan === 'vyro' ? { plan, acceptPlan } : { plan, acceptPlan, ...custom });
 
@@ -509,36 +509,34 @@ export function DaysStep() {
               {t('days.replaceWarning')}
             </Text>
           ) : null}
-          {WEEKDAYS.map((d, i) => {
-            const items = week[d] ?? [];
-            const rest = items.every((x) => x.type === 'rest');
-            return (
-              <View key={d}>
-                {i > 0 ? <Divider /> : null}
-                <View style={styles.weekRow}>
-                  <Text variant="bodyStrong" style={styles.day}>
-                    {t(`days.weekdays.${d}`)}
-                  </Text>
-                  <View style={styles.flex}>
-                    {rest ? (
-                      <Text style={{ color: theme.colors.textMuted }}>{t('days.rest')}</Text>
-                    ) : (
-                      items.map((x) => (
-                        <View key={x.key + x.time} style={styles.planRow}>
-                          <Text variant="caption" tone="muted" style={styles.time}>
-                            {x.time}
+          {cycle.map(({ day, items }, i) => (
+            <View key={day}>
+              {i > 0 ? <Divider /> : null}
+              <View style={styles.weekRow}>
+                <Text variant="bodyStrong" style={styles.cycleDay}>
+                  {t('days.cycleDay', { n: i + 1 })}
+                </Text>
+                <View style={styles.flex}>
+                  {items.length === 0 ? (
+                    <Text style={{ color: theme.colors.textMuted }}>{t('days.rest')}</Text>
+                  ) : (
+                    items.map((x) => (
+                      <View key={x.key} style={styles.planRow}>
+                        <Text style={styles.flex} numberOfLines={1}>
+                          {t(`seed:template.${x.key}` as 'seed:template.abs')}
+                        </Text>
+                        {x.minutes ? (
+                          <Text variant="caption" tone="muted">
+                            {`${x.minutes} min`}
                           </Text>
-                          <Text style={styles.flex} numberOfLines={1}>
-                            {t(`seed:template.${x.key}` as 'seed:template.abs')}
-                          </Text>
-                        </View>
-                      ))
-                    )}
-                  </View>
+                        ) : null}
+                      </View>
+                    ))
+                  )}
                 </View>
               </View>
-            );
-          })}
+            </View>
+          ))}
         </Card>
       ) : (
         <CustomDays onChoose={(p) => setCustom((c) => ({ ...c, ...p }))} />
@@ -668,6 +666,7 @@ export function DoneStep() {
 const useStyles = makeStyles((t) => ({
   planRow: { flexDirection: 'row', alignItems: 'center', gap: t.spacing.md, minHeight: 40 },
   day: { width: 44 },
+  cycleDay: { width: 56 },
   weekRow: { flexDirection: 'row', gap: t.spacing.md, paddingVertical: t.spacing.sm },
   time: { width: 44 },
   flex: { flex: 1 },

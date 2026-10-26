@@ -6,8 +6,9 @@ import { runMigrations } from '../migrations/runner';
 import { seedData } from '../seed/data/content';
 import { seedId, seedKey } from '../seed/ids';
 import { getSeedVersion, seedDatabase } from '../seed/seed';
+import { readCyclePlan, reconcileCycle, saveCyclePlan } from '../cycle';
+import { type CycleGroup } from '@/domain/scheduling/cycle';
 import { applyRoutine, pruneSampleWorkouts } from '../routine';
-import { scheduleRepo } from '../repositories/schedule';
 import { openNodeDriver } from '../testing/nodeDriver';
 
 const COUNTED = [
@@ -47,7 +48,7 @@ describe('seed', () => {
     expect(c.workout_templates).toBe(seedData.templates.length);
     expect(c.measurement_types).toBe(10);
     expect(c.photo_categories).toBe(13);
-    expect(await getSeedVersion(db)).toBe(5);
+    expect(await getSeedVersion(db)).toBe(6);
     expect(await db.all('PRAGMA foreign_key_check')).toEqual([]);
   });
 
@@ -63,7 +64,7 @@ describe('seed', () => {
     await seedDatabase(db);
     await db.run("UPDATE exercises SET name = 'My Bench' WHERE slug = 'bench_press'");
     await db.run("UPDATE equipment SET available = 0 WHERE slug = 'cable_machine'");
-    const report = await seedDatabase(db, { version: 6 });
+    const report = await seedDatabase(db, { version: 7 });
     expect(report).toMatchObject({ ran: true, inserted: 0 });
     expect(await db.get("SELECT name FROM exercises WHERE slug = 'bench_press'")).toEqual({
       name: 'My Bench',
@@ -157,97 +158,151 @@ describe('seed content integrity', () => {
     expect(seedKey('3f2a-user-uuid')).toBeNull();
   });
 
-  it('applies the routine once: the same week every week, mph, only the routine left', async () => {
+  const dayOf = async (d: string) =>
+    (
+      await db.all<{ type: string; start_time: string | null }>(
+        'SELECT type, start_time FROM scheduled_sessions WHERE scheduled_date = ? AND deleted_at IS NULL ORDER BY order_in_day',
+        [d],
+      )
+    ).map((s) => (s.start_time ? `${s.type}@${s.start_time}` : s.type));
+
+  it('applies the routine once: Push → Pull → Legs → Rest from Sunday, run before gym, mph', async () => {
     await seedDatabase(db);
-    expect(await applyRoutine(db, { today: '2026-09-26' })).toBe(true);
-    expect(await applyRoutine(db, { today: '2026-09-26' })).toBe(false);
+    // Sunday 2026-10-18: the cycle starts with Push.
+    expect(await applyRoutine(db, { today: '2026-10-18' })).toBe(true);
+    await reconcileCycle(db, '2026-10-18');
+    expect(await applyRoutine(db, { today: '2026-10-18' })).toBe(false);
     const visible = await db.all('SELECT id FROM workout_templates WHERE deleted_at IS NULL');
     expect(visible).toHaveLength(6);
-    await scheduleRepo(db).materialize('2026-09-26', '2026-10-11');
-    const day = async (d: string) =>
+    expect(await dayOf('2026-10-18')).toEqual(['running@14:30', 'gym@15:00']); // Sun: Push
+    expect(await dayOf('2026-10-19')).toEqual(['running@16:30', 'gym@17:00']); // Mon: Pull
+    expect(await dayOf('2026-10-20')).toEqual(['running@16:30', 'gym@16:55']); // Tue: Legs
+    expect(await dayOf('2026-10-21')).toEqual(['rest']); // Wed: rest after 3 days
+    const profile = await db.get<{ speed_unit: string; week_starts_on: number }>(
+      'SELECT speed_unit, week_starts_on FROM user_profile',
+    );
+    expect(profile).toEqual({ speed_unit: 'mph', week_starts_on: 0 });
+  });
+
+  it('repeats a missed day: Pull missed on Monday comes back on Tuesday', async () => {
+    await seedDatabase(db);
+    await applyRoutine(db, { today: '2026-10-18' });
+    await reconcileCycle(db, '2026-10-18');
+    // Sunday's Push gym session completed; Monday nothing.
+    await db.run(
+      "UPDATE scheduled_sessions SET status = 'completed' WHERE scheduled_date = '2026-10-18' AND type = 'gym'",
+    );
+    await reconcileCycle(db, '2026-10-20');
+    const titles = async (d: string) =>
       (
-        await db.all<{ type: string; start_time: string | null }>(
-          'SELECT type, start_time FROM scheduled_sessions WHERE scheduled_date = ? ORDER BY order_in_day',
+        await db.all<{ title: string }>(
+          "SELECT title FROM scheduled_sessions WHERE scheduled_date = ? AND deleted_at IS NULL AND type = 'gym'",
           [d],
         )
-      ).map((s) => (s.start_time ? `${s.type}@${s.start_time}` : s.type));
-    // Push / Pull / Legs (1.2.0): the run first (warm-up), the gym right after; Thu rest.
-    expect(await day('2026-09-28')).toEqual(['running@16:30', 'gym@17:00']);
-    expect(await day('2026-09-30')).toEqual(['running@14:30', 'gym@14:55']);
-    expect(await day('2026-10-01')).toEqual(['rest']);
-    expect(await day('2026-10-02')).toEqual(['running@14:30', 'gym@15:00']);
-    expect(await day('2026-10-04')).toEqual(['running@14:30', 'gym@14:55']);
-    expect(await day('2026-10-05')).toEqual(await day('2026-09-28'));
-    expect(await day('2026-09-26')).toEqual(['running@16:30', 'gym@17:00']);
-    const profile = await db.get<{ speed_unit: string }>('SELECT speed_unit FROM user_profile');
-    expect(profile?.speed_unit).toBe('mph');
-    // The whole current week is filled from its Monday (startup materializes from there).
-    await scheduleRepo(db).materialize('2026-09-21', '2026-09-27');
-    expect(await day('2026-09-21')).toEqual(['running@16:30', 'gym@17:00']);
-    // Self-healing: an emptied plan brings the routine back on the next start.
-    await db.run('UPDATE schedule_rules SET deleted_at = ?', ['2026-09-27T00:00:00.000Z']);
-    expect(await applyRoutine(db, { today: '2026-09-27' })).toBe(true);
-    expect(await applyRoutine(db, { today: '2026-09-27' })).toBe(false);
+      ).map((s) => s.title);
+    expect(await titles('2026-10-20')).toEqual(['Pull · Back + Rear Delts + Biceps']);
+    expect(await titles('2026-10-21')).toEqual(['Legs · Quads + Hamstrings + Calves']);
+    expect(await dayOf('2026-10-22')).toEqual(['rest']);
   });
 
   it('applies the routine even when a future planned session was already started once', async () => {
     await seedDatabase(db);
-    const at = '2026-09-27T10:00:00.000Z';
+    const at = '2026-10-18T10:00:00.000Z';
     await db.run(
-      "INSERT INTO scheduled_sessions (id, title, type, scheduled_date, status, original_date, reschedule_count, is_exception, order_in_day, created_at, updated_at) VALUES ('s1', 'Old', 'gym', '2026-09-28', 'planned', '2026-09-28', 0, 0, 0, ?, ?)",
+      "INSERT INTO scheduled_sessions (id, title, type, scheduled_date, status, original_date, reschedule_count, is_exception, order_in_day, created_at, updated_at) VALUES ('s1', 'Old', 'gym', '2026-10-19', 'planned', '2026-10-19', 0, 0, 0, ?, ?)",
       [at, at],
     );
     await db.run(
       "INSERT INTO session_executions (id, scheduled_session_id, type, title, status, started_at, planned_snapshot, created_at, updated_at) VALUES ('e1', 's1', 'gym', 'Old', 'abandoned', ?, '{}', ?, ?)",
       [at, at, at],
     );
-    expect(await applyRoutine(db, { today: '2026-09-27' })).toBe(true);
-    await scheduleRepo(db).materialize('2026-09-27', '2026-09-29');
-    const monday = await db.all<{ title: string }>(
-      "SELECT title FROM scheduled_sessions WHERE scheduled_date = '2026-09-28' AND deleted_at IS NULL ORDER BY order_in_day",
-    );
-    expect(monday.map((s) => s.title)).toEqual([
-      'Real Speed',
-      'Push · Chest + Shoulders + Triceps',
-    ]);
+    expect(await applyRoutine(db, { today: '2026-10-18' })).toBe(true);
+    await reconcileCycle(db, '2026-10-18');
+    expect(await dayOf('2026-10-19')).toEqual(['running@16:30', 'gym@17:00']);
   });
 
-  it('removes sample workouts on start; Push keeps its starting weights', async () => {
+  it('keeps only the routine workouts; Push follows docs/plan/pro_plan.md', async () => {
     await seedDatabase(db);
     expect(await pruneSampleWorkouts(db)).toBeGreaterThan(0);
     const left = await db.all<{ id: string }>(
       'SELECT id FROM workout_templates WHERE deleted_at IS NULL',
     );
     expect(left).toHaveLength(6);
-    const push = await db.all<{ sets: number; target_reps: number; target_weight_kg: number }>(
-      "SELECT sets, target_reps, target_weight_kg FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_push' ORDER BY order_index",
+    const push = await db.all<{ exercise_id: string; sets: number; target_weight_kg: number }>(
+      "SELECT exercise_id, sets, target_weight_kg FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_push' ORDER BY order_index",
     );
-    expect(push[0]).toEqual({ sets: 3, target_reps: 6, target_weight_kg: 35 });
-    expect(push.reduce((n, x) => n + x.sets, 0)).toBe(23);
+    expect(push[0]).toEqual({
+      exercise_id: 'seed-ex-incline_chest_press_machine',
+      sets: 3,
+      target_weight_kg: 20,
+    });
+    expect(push.reduce((n, x) => n + x.sets, 0)).toBe(21);
   });
 
   it('re-syncs the routine workouts on an existing install (exercise swaps reach the phone)', async () => {
     await seedDatabase(db);
-    await applyRoutine(db, { today: '2026-10-02' });
-    // An older install: Push still starts with the old chest press, routine v6.
+    await applyRoutine(db, { today: '2026-10-18' });
     await db.run(
-      "UPDATE workout_template_exercises SET exercise_id = 'seed-ex-chest_press_machine' WHERE id = 'seed-te-gym_push-0'",
+      "UPDATE workout_template_exercises SET exercise_id = 'seed-ex-chest_press_machine' WHERE id = 'seed-te-gym_pull-0'",
     );
-    await db.run("UPDATE app_settings SET value = '6' WHERE key = 'routine_version'");
-    expect(await applyRoutine(db, { today: '2026-10-02' })).toBe(true);
-    const push = await db.all<{ exercise_id: string }>(
-      "SELECT exercise_id FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_push' ORDER BY order_index",
+    await db.run("UPDATE app_settings SET value = '7' WHERE key = 'routine_version'");
+    expect(await applyRoutine(db, { today: '2026-10-18' })).toBe(true);
+    const pull = await db.all<{ exercise_id: string }>(
+      "SELECT exercise_id FROM workout_template_exercises WHERE template_id = 'seed-tpl-gym_pull' ORDER BY order_index",
     );
-    expect(push.map((x) => x.exercise_id.replace('seed-ex-', ''))).toEqual([
-      'lever_lying_chest_press',
-      'incline_bench_press',
-      'decline_bench_press',
-      'pec_deck',
-      'dumbbell_shoulder_press',
-      'lateral_raise',
-      'cable_leaning_lateral_raise',
-      'tricep_pushdown',
-      'overhead_cable_extension',
+    expect(pull.map((x) => x.exercise_id.replace('seed-ex-', ''))).toEqual([
+      'lat_pulldown',
+      'seated_row',
+      'cable_one_arm_twisting_row',
+      'lever_seated_row',
+      'lever_preacher_curl',
+      'hammer_curl',
+    ]);
+  });
+
+  it('rebuilds an empty plan on start, even after a stale "custom" opt-out', async () => {
+    await seedDatabase(db);
+    await applyRoutine(db, { today: '2026-10-18' });
+    await db.run('DELETE FROM scheduled_sessions');
+    await db.run(
+      "INSERT INTO app_settings (key, value, updated_at) VALUES ('routine_opt_out', 'true', 'x') ON CONFLICT(key) DO UPDATE SET value = 'true'",
+    );
+    expect(await applyRoutine(db, { today: '2026-10-18' })).toBe(true);
+    await reconcileCycle(db, '2026-10-18');
+    expect(await dayOf('2026-10-18')).toEqual(['running@14:30', 'gym@15:00']);
+  });
+
+  it('edits the day groups: Legs first, a different run on Push, same day kept, plan redrawn', async () => {
+    await seedDatabase(db);
+    await applyRoutine(db, { today: '2026-10-20' }); // Day 1 (Push) starts on the setup day
+    await reconcileCycle(db, '2026-10-20');
+    const plan = await readCyclePlan(db);
+    const [push, pull, legs] = plan.groups as [CycleGroup, CycleGroup, CycleGroup];
+    await saveCyclePlan(
+      db,
+      { groups: [legs, { ...push, runTemplateId: 'seed-tpl-run_easy_16' }, pull] },
+      '2026-10-20',
+    );
+    const titles = async (d: string) =>
+      (
+        await db.all<{ title: string }>(
+          'SELECT title FROM scheduled_sessions WHERE scheduled_date = ? AND deleted_at IS NULL ORDER BY order_in_day',
+          [d],
+        )
+      ).map((s) => s.title);
+    // Today stays Push (now with the easy run), then Pull, then rest, then Legs.
+    expect(await titles('2026-10-20')).toEqual([
+      'Easy Controlled Run',
+      'Push · Chest + Shoulders + Triceps',
+    ]);
+    expect(await titles('2026-10-21')).toEqual([
+      'Speed Endurance',
+      'Pull · Back + Rear Delts + Biceps',
+    ]);
+    expect(await titles('2026-10-22')).toEqual(['Rest']);
+    expect(await titles('2026-10-23')).toEqual([
+      'Easy Controlled Run',
+      'Legs · Quads + Hamstrings + Calves',
     ]);
   });
 });

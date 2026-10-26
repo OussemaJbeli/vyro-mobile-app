@@ -456,16 +456,16 @@ export function executionRepo(db: Database) {
         reps: number | null;
         weightKg: number | null;
         durationSeconds: number | null;
+        stale: number;
       }>(
         'SELECT se.exercise_id AS exerciseId, x.id AS executionId, s.actual_reps AS reps, ' +
-          's.actual_weight_kg AS weightKg, s.actual_duration_seconds AS durationSeconds ' +
+          's.actual_weight_kg AS weightKg, s.actual_duration_seconds AS durationSeconds, ' +
+          // Before the current program was applied: its planned starting weights win.
+          "(x.started_at < COALESCE((SELECT json_extract(value, '$') FROM app_settings WHERE key = 'routine_applied_at'), '')) AS stale " +
           'FROM exercise_sets s ' +
           'JOIN session_exercises se ON se.id = s.session_exercise_id ' +
           'JOIN session_executions x ON x.id = se.execution_id ' +
           "WHERE s.status = 'done' AND x.status = 'completed' AND x.id <> ? " +
-          // Only sessions since the current program was applied: its starting weights
-          // apply first, then whatever you actually lift.
-          "AND x.started_at >= COALESCE((SELECT json_extract(value, '$') FROM app_settings WHERE key = 'routine_applied_at'), '') " +
           'AND s.deleted_at IS NULL AND se.deleted_at IS NULL AND x.deleted_at IS NULL ' +
           'AND se.exercise_id IN (' +
           exerciseIds.map(() => '?').join(', ') +
@@ -490,6 +490,7 @@ export function executionRepo(db: Database) {
             reps: r.reps,
             weightKg: r.weightKg,
             durationSeconds: r.durationSeconds,
+            ...(r.stale ? { stale: true } : {}),
           };
         }
       }

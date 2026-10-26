@@ -104,11 +104,12 @@
       "7": "Dim"
     },
     "replaceWarning": "Utiliser ce plan remplace votre plan hebdomadaire actuel.",
-    "vyroSubtitle": "Votre semaine, la même chaque semaine. Modifiable dans Planning.",
-    "vyroWeek": "Semaine VYRO",
+    "vyroSubtitle": "Un cycle de 4 jours qui n'avance que quand vous terminez une journée : un Tirage manqué vous attend.",
+    "vyroWeek": "Cycle VYRO",
     "customWeek": "Jours au choix",
-    "vyroTitle": "Course · Salle",
-    "vyroHint": "D'abord la course (votre échauffement), puis la salle. Le jeudi est le jour de repos. Touchez une séance dans Planning pour la modifier."
+    "vyroTitle": "Poussée → Tirage → Jambes → Repos",
+    "vyroHint": "Chaque jour : d'abord la course (échauffement), puis la salle. Le jour 1 commence aujourd'hui ; modifiez les jours dans Planning → Modifier le cycle.",
+    "cycleDay": "Jour {{n}}"
   },
   "notifications": {
     "title": "Restez sur la bonne voie",

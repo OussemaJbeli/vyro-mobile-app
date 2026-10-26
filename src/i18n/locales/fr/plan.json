@@ -157,5 +157,28 @@
     "month": "Bilan de {{month}}"
   },
   "progressPct": "{{pct}} %",
-  "notDone": "Pas fait"
+  "notDone": "Pas fait",
+  "cycle": {
+    "title": "Cycle VYRO",
+    "hint": "Vos jours d'entraînement dans l'ordre, puis un jour de repos. Chaque jour : la course d'abord, puis la salle. Le cycle n'avance que quand vous terminez un jour.",
+    "dayN": "Jour {{n}}",
+    "current": "jour du jour",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "remove": "Supprimer ce jour",
+    "namePlaceholder": "Nom (ex. Poussée)",
+    "none": "Aucun",
+    "run": "Course (d'abord)",
+    "gym": "Salle",
+    "pickRun": "Choisir la course",
+    "pickGym": "Choisir la séance",
+    "add": "Ajouter un jour",
+    "save": "Enregistrer le cycle",
+    "saved": "Cycle enregistré · planning mis à jour",
+    "edit": "Modifier le cycle",
+    "restart": "Recommencer au jour 1 aujourd'hui",
+    "restartTitle": "Recommencer le cycle ?",
+    "restartBody": "Aujourd'hui devient le jour 1 et le planning est redessiné. Les séances faites et l'historique restent.",
+    "restarted": "Cycle recommencé · jour 1 aujourd'hui"
+  }
 }

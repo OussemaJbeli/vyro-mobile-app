@@ -1,5 +1,8 @@
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { Platform } from 'react-native';
+
+import { downloadOnWeb } from '@/services/webDownload';
 
 import { toAppError } from '@/utils/errors';
 import { logger } from '@/utils/logger';
@@ -15,7 +18,12 @@ export async function exportDiagnostics(extra: { error?: unknown } = {}) {
     error: extra.error ? { code: toAppError(extra.error).code } : null,
     logs: logger.entries(),
   };
-  const file = new File(Paths.cache, `vyro-diagnostics-${Date.now()}.json`);
+  const name = `vyro-diagnostics-${Date.now()}.json`;
+  if (Platform.OS === 'web') {
+    downloadOnWeb(name, JSON.stringify(payload, null, 2), 'application/json');
+    return;
+  }
+  const file = new File(Paths.cache, name);
   file.write(JSON.stringify(payload, null, 2));
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(file.uri, { mimeType: 'application/json' });
